@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": {
+          "or": ["Edit", "MultiEdit", "Write"]
+        },
+        "hooks": [
+          {
+            "type": "inline",
+            "inline": {
+              "permissionDecision": "allow"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
