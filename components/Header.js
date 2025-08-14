@@ -1,179 +1,107 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import ButtonSignin from "./ButtonSignin";
-import logo from "@/app/icon.png";
-import config from "@/config";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const links = [
-  {
-    href: "/#pricing",
-    label: "Pricing",
-  },
-  {
-    href: "/#testimonials",
-    label: "Reviews",
-  },
-  {
-    href: "/#faq",
-    label: "FAQ",
-  },
-];
-
-const cta = <ButtonSignin extraStyle="btn-primary" />;
-
-// A header with a logo on the left, links in the center (like Pricing, etc...), and a CTA (like Get Started or Login) on the right.
-// The header is responsive, and on mobile, the links are hidden behind a burger button.
-const Header = () => {
-  const searchParams = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-
-  // setIsOpen(false) when the route changes (i.e: when the user clicks on a link on mobile)
-  useEffect(() => {
-    setIsOpen(false);
-  }, [searchParams]);
+export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-base-200">
-      <nav
-        className="container flex items-center justify-between px-8 py-4 mx-auto"
-        aria-label="Global"
-      >
-        {/* Your logo/name on large screens */}
-        <div className="flex lg:flex-1">
-          <Link
-            className="flex items-center gap-2 shrink-0 "
-            href="/"
-            title={`${config.appName} hompage`}
-          >
-            <Image
-              src={logo}
-              alt={`${config.appName} logo`}
-              className="w-8"
-              placeholder="blur"
-              priority={true}
-              width={32}
-              height={32}
+    <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: 'white', borderBottom: '1px solid #e5e7eb' }}>
+      <nav style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <img 
+              src="/images/estampandalogonobg.png" 
+              alt="Estampanda" 
+              className="h-12"
+              style={{ height: '48px', width: 'auto' }}
             />
-            <span className="font-extrabold text-lg">{config.appName}</span>
+            <span className="text-2xl md:text-3xl font-bold" style={{ color: '#275D5C' }}>
+              Estampanda.
+            </span>
           </Link>
-        </div>
-        {/* Burger button to open menu on mobile */}
-        <div className="flex lg:hidden">
-          <button
-            type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
-            onClick={() => setIsOpen(true)}
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6 text-base-content"
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link href="/productos" className="font-medium" style={{ color: '#275D5C' }}>
+              Productos
+            </Link>
+            <Link href="/muestras" className="font-medium" style={{ color: '#275D5C' }}>
+              Muestras
+            </Link>
+            <Link href="/precios" className="font-medium" style={{ color: '#275D5C' }}>
+              Precios
+            </Link>
+            <Link href="/ayuda" className="font-medium" style={{ color: '#275D5C' }}>
+              Ayuda
+            </Link>
+          </div>
+
+          {/* Desktop CTA */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link href="/login" className="font-medium" style={{ color: '#275D5C' }}>
+              Iniciar sesión
+            </Link>
+            <Link
+              href="/designer"
+              className="font-medium"
+              style={{ 
+                backgroundColor: '#275D5C', 
+                color: 'white', 
+                padding: '0.5rem 1.5rem',
+                borderRadius: '0.375rem'
+              }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
+              Crear stickers
+            </Link>
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2"
+          >
+            {mobileMenuOpen ? (
+              <XMarkIcon className="h-6 w-6 text-gray-700" />
+            ) : (
+              <Bars3Icon className="h-6 w-6 text-gray-700" />
+            )}
           </button>
         </div>
 
-        {/* Your links on large screens */}
-        <div className="hidden lg:flex lg:justify-center lg:gap-12 lg:items-center">
-          {links.map((link) => (
-            <Link
-              href={link.href}
-              key={link.href}
-              className="link link-hover"
-              title={link.label}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA on large screens */}
-        <div className="hidden lg:flex lg:justify-end lg:flex-1">{cta}</div>
-      </nav>
-
-      {/* Mobile menu, show/hide based on menu state. */}
-      <div className={`relative z-50 ${isOpen ? "" : "hidden"}`}>
-        <div
-          className={`fixed inset-y-0 right-0 z-10 w-full px-8 py-4 overflow-y-auto bg-base-200 sm:max-w-sm sm:ring-1 sm:ring-neutral/10 transform origin-right transition ease-in-out duration-300`}
-        >
-          {/* Your logo/name on small screens */}
-          <div className="flex items-center justify-between">
-            <Link
-              className="flex items-center gap-2 shrink-0 "
-              title={`${config.appName} hompage`}
-              href="/"
-            >
-              <Image
-                src={logo}
-                alt={`${config.appName} logo`}
-                className="w-8"
-                placeholder="blur"
-                priority={true}
-                width={32}
-                height={32}
-              />
-              <span className="font-extrabold text-lg">{config.appName}</span>
-            </Link>
-            <button
-              type="button"
-              className="-m-2.5 rounded-md p-2.5"
-              onClick={() => setIsOpen(false)}
-            >
-              <span className="sr-only">Close menu</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="flex flex-col space-y-4">
+              <Link href="/productos" className="font-medium" style={{ color: '#275D5C' }}>
+                Productos
+              </Link>
+              <Link href="/muestras" className="font-medium" style={{ color: '#275D5C' }}>
+                Muestras
+              </Link>
+              <Link href="/precios" className="font-medium" style={{ color: '#275D5C' }}>
+                Precios
+              </Link>
+              <Link href="/ayuda" className="font-medium" style={{ color: '#275D5C' }}>
+                Ayuda
+              </Link>
+              <Link href="/login" className="font-medium" style={{ color: '#275D5C' }}>
+                Iniciar sesión
+              </Link>
+              <Link
+                href="/designer"
+                className="text-white px-6 py-2 rounded-md font-medium text-center transition-all hover:shadow-lg"
+                style={{ backgroundColor: '#275D5C' }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-
-          {/* Your links on small screens */}
-          <div className="flow-root mt-6">
-            <div className="py-4">
-              <div className="flex flex-col gap-y-4 items-start">
-                {links.map((link) => (
-                  <Link
-                    href={link.href}
-                    key={link.href}
-                    className="link link-hover"
-                    title={link.label}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
+                Crear stickers
+              </Link>
             </div>
-            <div className="divider"></div>
-            {/* Your CTA on small screens */}
-            <div className="flex flex-col">{cta}</div>
           </div>
-        </div>
-      </div>
+        )}
+      </nav>
     </header>
   );
-};
-
-export default Header;
+}

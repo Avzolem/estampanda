@@ -24,6 +24,13 @@ Estamos construyendo una plataforma de venta de stickers personalizados con:
 - Ver `Plan de Construccion.md` para el roadmap completo
 - Ver `COMPONENTS_STRUCTURE.md` para entender la arquitectura actual
 
+## ⚠️ REGLAS IMPORTANTES DE GIT
+- **NUNCA hacer `git push` a menos que se pida explícitamente**
+- **NUNCA añadir co-authored-by de Claude en los commits**
+- **NO incluir emojis ni referencias a Claude en mensajes de commit**
+- Solo hacer commits locales cuando sea necesario
+- Usar mensajes de commit descriptivos y profesionales
+
 ## Common Development Commands
 
 ### Development
