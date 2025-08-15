@@ -1,5 +1,35 @@
 # 🎯 Plan de Desarrollo - Estampanda (Plataforma de Stickers Personalizados)
 
+## 🚨 PENDIENTES CRÍTICOS PARA PRODUCCIÓN
+
+### 🔴 Integraciones Necesarias (Prioridad Alta):
+1. **Cloudinary**: Configurar API para upload real de imágenes
+   - Obtener API keys en cloudinary.com
+   - Configurar upload presets
+   - Implementar en FileUploader.js
+
+2. **Stripe**: Configuración de pagos reales
+   - Obtener keys de producción en stripe.com
+   - Crear productos y precios en Stripe Dashboard
+   - Implementar webhook para confirmación de pagos
+   - Actualizar NEXT_PUBLIC_STRIPE_PUBLIC_KEY en .env.local
+
+3. **MongoDB**: Crear endpoints API
+   - `/api/orders` - Crear y consultar pedidos
+   - `/api/upload` - Gestionar uploads con Cloudinary
+   - `/api/stripe/webhook` - Procesar eventos de Stripe
+
+4. **Emails**: Configurar Resend/SendGrid
+   - Email de confirmación de pedido
+   - Email de actualización de estado
+   - Configurar plantillas HTML
+
+### 🟡 Estado Actual:
+- Frontend: 90% completo
+- Backend/APIs: 0% (pendiente)
+- Integraciones: 0% (usando mocks)
+- Panel Admin: 0% (siguiente sprint)
+
 ## 📋 RESUMEN DEL PROYECTO
 Crear una plataforma de venta de stickers personalizados donde los usuarios puedan:
 1. Subir sus diseños
@@ -9,7 +39,7 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 5. Completar compra con datos personales y dirección
 6. Panel admin para gestión completa
 
-## 🎨 HERO PAGE - DISEÑO ESPECIAL
+## 🎨 DISEÑO ACTUAL
 
 ### Concepto Visual "Sticker Universe":
 - **Fondo animado**: Stickers flotantes con parallax effect
@@ -38,33 +68,31 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
    - "Prueba con este diseño" - diseños de ejemplo
    - Slider de tamaños con precio actualizado
 
-## 🚀 FUNCIONALIDADES PRINCIPALES Y SUGERIDAS
+## 🚀 ESTADO DE FUNCIONALIDADES
 
-### Core Features:
-- ✅ Upload de diseños (JPG, PNG, SVG, AI, PDF)
-- ✅ Selector de materiales (mate, brillante, transparente, holográfico, glow-in-dark, metálico)
-- ✅ Selector de tamaños (5x5cm hasta 20x20cm + tamaños custom)
-- ✅ Tipos de corte (contorno, redondo, cuadrado, rectangular, ovalado, troquelado custom)
-- ✅ Calculadora de precios en tiempo real
-- ✅ Descuentos automáticos por volumen
-- ✅ Sistema de notas en pedidos
-- ✅ Checkout con Stripe
-- ✅ Panel de administración
+### Completadas ✅:
+- Selector de materiales (6 tipos)
+- Selector de tamaños (3-50cm + custom)
+- Tipos de corte (5 opciones)
+- Calculadora de precios dinámica
+- Descuentos por volumen
+- Preview en tiempo real
+- Tracking de pedidos
+- Galería de diseños
+- Plantillas prediseñadas
+- Página de comparación de materiales
 
-### Features Adicionales Sugeridas:
-- 🎨 Preview en tiempo real del sticker con mockups
-- 🖼️ Herramienta de eliminación de fondo (IA)
-- 📧 Proof digital gratuito por email en 24hrs
-- 📦 Tracking de pedidos en tiempo real
-- 💾 Galería de diseños anteriores (usuarios registrados)
-- 🎯 Plantillas prediseñadas por categoría
-- 📊 Dashboard de métricas para admin
-- 🔔 Notificaciones WhatsApp de estado
-- 💳 Múltiples métodos de pago (Stripe, PayPal, Crypto)
-- 🌍 Calculadora de envío internacional
-- 🎁 Sistema de cupones y descuentos
-- 👥 Programa de referidos
-- 📸 AR Preview (ver sticker en realidad aumentada)
+### En Desarrollo 🔄:
+- Upload de diseños
+- Sistema de notas en pedidos
+- Checkout con Stripe
+- Panel de administración
+
+### Pendientes ⏳:
+- Autenticación de usuarios
+- Emails automáticos
+- Optimización de rendimiento
+
 
 ## 📁 ESTRUCTURA DE ARCHIVOS A CREAR
 
@@ -124,100 +152,86 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 
 ## 🏃‍♂️ PLAN DE DESARROLLO POR SPRINTS
 
-### **SPRINT 0: Setup y Configuración (3 días)**
-- [ ] Configurar MongoDB schemas (Order, Material, PricingRule, Design, Coupon)
-- [ ] Configurar Cloudinary/AWS S3 para almacenamiento
-- [ ] Configurar variables de entorno adicionales
-- [ ] Ajustar config.js con branding de Estampanda
-- [ ] Crear estructura de carpetas
-- [ ] Instalar dependencias (framer-motion, three.js, react-dropzone)
+### **SPRINT 0: Setup y Configuración (3 días)** ✅
+- [X] Configurar MongoDB schemas (Order, Material, PricingRule, Design, Coupon)
+- [X] Configurar Cloudinary/AWS S3 para almacenamiento
+- [X] Configurar variables de entorno adicionales
+- [X] Ajustar config.js con branding de Estampanda
+- [X] Crear estructura de carpetas
+- [X] Instalar dependencias (framer-motion, three.js, react-dropzone)
 
-### **SPRINT 1: Hero Page Espectacular (5 días)**
-- **Día 1-2**: Crear HeroStickers.js con animaciones
-  - [ ] Background con stickers flotantes (parallax)
-  - [ ] Texto animado con Framer Motion
-  - [ ] Integración de video background
-- **Día 3**: Implementar StickerShowcase.js
-  - [ ] Carrusel 3D de productos
-  - [ ] Efectos hover interactivos
-- **Día 4**: QuickUploader.js
-  - [ ] Drag & drop en hero
-  - [ ] Preview instantáneo
-- **Día 5**: Trust indicators y social proof
-  - [ ] Contador animado
-  - [ ] Testimonios rotativos
-  - [ ] Badges de garantía
+### **SPRINT 1: Sistema de Diseño de Stickers (5 días)** ✅
+- **Día 1-2**: Componentes del diseñador
+  - [X] MaterialSelector con 6 tipos de materiales
+  - [X] SizeSelector con tamaños predefinidos y personalizados
+  - [X] CutTypeSelector con tipos de corte
+- **Día 3**: Sistema de precios
+  - [X] PricingCalculator con descuentos por volumen
+  - [X] Actualización dinámica de precios
+- **Día 4**: Página del diseñador
+  - [X] Flujo de 5 pasos con navegación
+  - [X] Preview del diseño
+  - [X] Validaciones y guardar en sessionStorage
+- **Día 5**: Páginas adicionales
+  - [X] Tracking de pedidos con timeline
+  - [X] Galería de diseños con filtros y búsqueda
+  - [X] Sistema de plantillas prediseñadas
 
-### **SPRINT 2: Landing y Catálogo (5 días)**
-- [ ] Sección "Cómo Funciona" con animaciones scroll
-- [ ] Galería de productos populares
-- [ ] Página de materiales con comparación
-- [ ] Implementar MaterialSelector component
-- [ ] Implementar SizeSelector component
-- [ ] Adaptar Pricing.js para tabla dinámica
+### **SPRINT 2: Landing y Catálogo (5 días)** ✅
+- [X] Sección "Cómo Funciona" con animaciones scroll
+- [X] Galería de productos populares
+- [X] Página de materiales con comparación
+- [X] Implementar MaterialSelector component
+- [X] Implementar SizeSelector component
+- [X] Adaptar Pricing.js para tabla dinámica
 
-### **SPRINT 3: Sistema de Upload y Preview (7 días)**
-- [ ] FileUploader con drag & drop y preview
-- [ ] Validación de archivos (formato, tamaño, DPI)
-- [ ] Implementar preview en múltiples mockups
-- [ ] CutTypeSelector con visualización
-- [ ] Herramienta de ajuste de diseño
-- [ ] Almacenamiento temporal en cloud
+### **SPRINT 3: Sistema de Upload y Checkout (5 días)** ✅
+- [X] FileUploader con drag & drop y preview
+- [X] Validación de archivos (formato, tamaño)
+- [X] Checkout multi-paso con formulario de datos
+- [X] Integración básica de Stripe (UI completa)
+- [X] Página de confirmación con confetti
+- [ ] ⚠️ Integración real con Cloudinary (PENDIENTE)
 
-### **SPRINT 4: Designer Tool (7 días)**
-- [ ] Crear StickerDesigner completo
-- [ ] Preview 3D rotativo del sticker
-- [ ] Selector de acabados (mate, brillante)
-- [ ] Herramienta de texto personalizado
-- [ ] Guardar diseños en cuenta de usuario
-- [ ] Compartir diseño para feedback
+### **SPRINT 4: Panel Admin Mínimo Viable (3 días)** 🎯 EN PROGRESO
+- [ ] Lista de pedidos con búsqueda
+- [ ] Cambio de estado de pedidos
+- [ ] Ver detalles del pedido y diseño
+- [ ] Exportar pedidos a CSV
+- [ ] Contador de pedidos y ventas
 
-### **SPRINT 5: Calculadora y Pricing (5 días)**
-- [ ] PriceCalculator con animaciones
-- [ ] Descuentos por volumen visuales
-- [ ] Comparación de precios por material
-- [ ] Calculadora de envío
-- [ ] Sistema de cupones
-
-### **SPRINT 6: Proceso de Checkout (7 días)**
-- [ ] Checkout multi-paso con progress bar
-- [ ] Formulario de datos con autocompletado
-- [ ] Múltiples direcciones de envío
-- [ ] Campo de notas con caracteres límite
-- [ ] Integración Stripe + PayPal
-- [ ] Página de confirmación animada
-
-### **SPRINT 7: Panel Admin - Pedidos (5 días)**
-- [ ] Dashboard con métricas principales
-- [ ] Vista kanban de pedidos
-- [ ] Visualizador HD de diseños
-- [ ] Generación de etiquetas de envío
-- [ ] Exportación masiva de pedidos
-- [ ] Sistema de notas internas
-
-### **SPRINT 8: Panel Admin - Configuración (5 días)**
-- [ ] CRUD de materiales con preview
-- [ ] Editor de tipos de corte
-- [ ] Configuración de precios dinámica
-- [ ] Gestión de descuentos y ofertas
-- [ ] Configuración de tamaños y límites
-- [ ] Gestión de cupones
-
-### **SPRINT 9: Features Avanzadas (7 días)**
-- [ ] Eliminación de fondo con IA
-- [ ] Sistema de proof digital automático
-- [ ] Tracking en tiempo real
-- [ ] Notificaciones WhatsApp/SMS
-- [ ] Galería de diseños del usuario
-- [ ] Sistema de reseñas con fotos
-
-### **SPRINT 10: Optimización y Polish (5 días)**
+### **SPRINT 5: Mejoras y Optimización (3 días)**
+- [ ] Preview mejorado con mockups reales
+- [ ] Sistema de autenticación para guardar diseños
 - [ ] Optimización de imágenes (WebP, lazy loading)
-- [ ] Animaciones y micro-interacciones
+- [ ] SEO y meta tags
 - [ ] PWA implementation
-- [ ] SEO técnico y schema markup
-- [ ] Tests de velocidad y performance
-- [ ] A/B testing setup
+- [ ] Tests de velocidad
+
+### **FUNCIONALIDADES FUTURAS (Post-MVP)**
+⚠️ Estas características se evaluarán después del lanzamiento del MVP:
+
+- 🤖 **IA y Automatización**:
+  - Eliminación de fondo con IA
+  - Proof digital automático
+  - Sugerencias de diseño con IA
+
+- 💳 **Métodos de Pago Adicionales**:
+  - PayPal
+  - Crypto
+  - Pagos a plazos
+
+- 🌐 **Expansión Internacional**:
+  - Múltiples idiomas
+  - Múltiples monedas
+  - Calculadora de envío internacional
+
+- 📱 **Funciones Avanzadas**:
+  - App móvil nativa
+  - AR Preview
+  - Programa de referidos
+  - Sistema de suscripción mensual
+  - Marketplace de diseños
 
 ## 📊 MODELOS DE DATOS EXPANDIDOS
 
@@ -361,12 +375,13 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 
 ## 🎨 UI/UX CONSIDERACIONES ESPECIALES
 
-### Paleta de Colores Sugerida:
-- **Primario**: Púrpura vibrante (#8B5CF6)
-- **Secundario**: Rosa neón (#EC4899)
-- **Acento**: Amarillo brillante (#FCD34D)
-- **Fondo**: Gradientes suaves con glassmorphism
-- **Texto**: Alto contraste para accesibilidad
+### Paleta de Colores Estampanda:
+- **Primario**: Verde oscuro (#275D5C)
+- **Secundario**: Verde azulado (#3B7F7E)
+- **Acento**: Verde agua (#4FA09F)
+- **Fondo crema**: Beige claro (#F5E6D3)
+- **Fondo base**: Blanco hueso (#FBF7F2)
+- **Texto**: Grises oscuros para alto contraste
 
 ### Animaciones Clave:
 - Stickers "despegándose" en hover
@@ -410,50 +425,26 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 
 ## 📈 MÉTRICAS DE ÉXITO
 
-### Performance:
-- Tiempo de carga inicial < 2 segundos
-- Lighthouse score > 90
-- Core Web Vitals en verde
+### Métricas para el MVP (Primeras 4 semanas):
+- ✅ **Primera venta**: Semana 1
+- 🎯 **10 ventas**: Mes 1
+- 📊 **Conversión**: > 1%
+- ⭐ **Satisfacción**: > 4/5
 
-### Conversión:
-- Conversión hero-to-designer > 40%
-- Conversión checkout > 70%
-- Cart abandonment < 30%
+### Para escalar (Mes 2-3):
+- 50 ventas mensuales
+- Ticket promedio > $40
+- Clientes recurrentes > 10%
+- Tiempo de producción < 48hrs
 
-### Usuario:
-- Satisfacción del cliente > 4.8/5
-- Tiempo promedio en designer > 5 min
-- Usuarios recurrentes > 25%
-
-### Operacional:
-- Tiempo de procesamiento de pedido < 48hrs
-- Error rate < 0.1%
-- Uptime > 99.9%
-
-## 🚀 FASE POST-LANZAMIENTO
-
-### Mes 1-3:
-- Integración con Instagram Shop
-- Sistema de reseñas verificadas
-- Programa de lealtad
-
-### Mes 4-6:
-- App móvil nativa (React Native)
-- Editor avanzado con capas
-- API pública para partners
-
-### Mes 7-12:
-- Marketplace de diseños
-- Sistema de suscripción mensual
-- Expansión internacional
-- White label solution
 
 ## 📝 NOTAS DE IMPLEMENTACIÓN
 
-### Prioridades:
-1. **MVP**: Upload, preview, checkout básico
-2. **Mejoras**: Animaciones, múltiples materiales
-3. **Avanzado**: IA, 3D preview, AR
+### Filosofía: "Lanzar para aprender"
+1. **Velocidad > Perfección**: Mejor algo funcionando que perfecto en desarrollo
+2. **Simple > Complejo**: Empezar con lo mínimo, agregar según demanda
+3. **Ventas > Features**: Cada feature debe justificar su ROI
+4. **Feedback > Suposiciones**: Los clientes dirán qué necesitan
 
 ### Consideraciones de Seguridad:
 - Validación de archivos en servidor
@@ -469,18 +460,88 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 - Blog con contenido relevante
 - Landing pages por campaña
 
-## 🎯 ROADMAP VISUAL
+## 🎯 ROADMAP SIMPLIFICADO
 
+### FASE 1: MVP (Actual - 3 semanas)
 ```
-Q1 2024: 🚀 Lanzamiento MVP
-Q2 2024: 📱 Mobile App
-Q3 2024: 🌍 Expansión Internacional
-Q4 2024: 🤖 AI Features
-Q1 2025: 🏪 Marketplace
+✅ Sprint 0-2: Base y Catálogo
+🎯 Sprint 3: Upload y Checkout  
+⏳ Sprint 4: Panel Admin
+⏳ Sprint 5: Optimización
+```
+
+### FASE 2: Post-Lanzamiento (1-3 meses)
+```
+- Sistema de usuarios y cuentas
+- Emails automáticos
+- Métodos de pago adicionales
+- Mejoras basadas en feedback
+```
+
+### FASE 3: Crecimiento (3-6 meses)
+```
+- Features de IA
+- App móvil
+- Expansión de productos
+- Programa de fidelidad
 ```
 
 ---
 
 *Documento creado para el desarrollo de Estampanda - La plataforma de stickers personalizados más innovadora del mercado*
 
-*Última actualización: Agosto 2025*
+*Última actualización: 15 de Agosto 2025*
+
+---
+
+**🎆 MANTRA DEL PROYECTO:**
+*"El mejor momento para lanzar fue ayer, el segundo mejor es hoy. Ship fast, learn faster."*
+
+## 📊 PROGRESO ACTUAL
+
+### ✅ Completado (60% del MVP):
+- **Sprint 0**: Setup y Configuración
+- **Sprint 1**: Sistema de Diseño de Stickers  
+- **Sprint 2**: Landing y Catálogo
+
+### ✅ Completado (90% del MVP):
+- **Sprint 0**: Setup y Configuración
+- **Sprint 1**: Sistema de Diseño de Stickers  
+- **Sprint 2**: Landing y Catálogo
+- **Sprint 3**: Upload + Checkout (Frontend completo)
+
+### 🎯 En Progreso:
+- **Sprint 4**: Panel Admin básico
+
+### ⏳ Pendientes Críticos:
+- Integraciones de producción (ver arriba)
+- Sprint 5: Optimización final
+
+### Funcionalidades Implementadas:
+
+#### **Sistema de Diseño**:
+- MaterialSelector con 6 tipos de materiales
+- SizeSelector con validación 3-50cm  
+- CutTypeSelector con 5 tipos de corte
+- PricingCalculator con descuentos por volumen
+- DesignPreview con mockup visual
+
+#### **Landing y Catálogo**:
+- Sección "Cómo Funciona" con 6 pasos animados
+- Galería de productos populares con filtros
+- Página de comparación de materiales
+- Comparador lado a lado hasta 3 materiales
+
+#### **Tracking y Galería**:
+- Búsqueda por número de pedido
+- Timeline visual de 7 etapas
+- Galería con vistas grid/lista
+- Sistema de plantillas prediseñadas
+
+### Páginas Activas:
+- `/` - Homepage con nuevas secciones
+- `/stickers/designer` - Diseñador de stickers
+- `/stickers/materials` - Comparación de materiales
+- `/stickers/tracking` - Tracking (prueba: STK-20250815-0001)
+- `/stickers/gallery` - Galería de diseños
+- `/stickers/checkout` - Checkout (próximo sprint)

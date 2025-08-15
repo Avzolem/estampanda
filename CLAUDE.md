@@ -4,13 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 🎯 PROYECTO ACTUAL: ESTAMPANDA - Plataforma de Stickers Personalizados
 
-### 📍 ÚLTIMO PROGRESO (Agosto 2025)
-- ✅ Creado `COMPONENTS_STRUCTURE.md` - Documentación de componentes
-- ✅ Creado `Plan de Construccion.md` - Plan completo de desarrollo por sprints
-- 🔄 **SIGUIENTE TAREA**: Iniciar Sprint 0 - Setup y Configuración
-  - Configurar MongoDB schemas
-  - Configurar Cloudinary/AWS S3
-  - Ajustar config.js con branding Estampanda
+### 🚨 PENDIENTES CRÍTICOS PARA PRODUCCIÓN
+**IMPORTANTE**: El frontend está 90% completo, pero faltan las integraciones reales:
+
+1. **Cloudinary** (FileUploader.js):
+   - Configurar API keys reales
+   - Implementar upload real en lugar de URL.createObjectURL
+
+2. **Stripe** (checkout/page.js):
+   - Configurar keys de producción
+   - Crear endpoint `/api/stripe/create-checkout`
+   - Implementar webhook `/api/stripe/webhook`
+
+3. **MongoDB** - Crear APIs:
+   - `/api/orders` - CRUD de pedidos
+   - `/api/upload` - Gestión de uploads
+   - `/api/admin/orders` - Panel admin
+
+4. **Emails** (Resend):
+   - Configurar plantillas de confirmación
+   - Email de cambio de estado
+
+### 📍 ÚLTIMO PROGRESO (15 Agosto 2025)
+- ✅ Sprint 0: Setup y Configuración - COMPLETO
+- ✅ Sprint 1: Sistema de Diseño - COMPLETO
+- ✅ Sprint 2: Landing y Catálogo - COMPLETO
+- ✅ Sprint 3: Upload y Checkout - COMPLETO (falta integración)
+- 🔄 **SPRINT ACTUAL**: Sprint 4 - Panel Admin Básico
+  - Lista de pedidos
+  - Cambio de estados
+  - Exportar CSV
   
 ### 🎨 CONTEXTO DEL PROYECTO
 Estamos construyendo una plataforma de venta de stickers personalizados con:

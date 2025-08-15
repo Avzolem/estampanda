@@ -46,7 +46,7 @@ export default function Header() {
               Iniciar sesión
             </Link>
             <Link
-              href="/designer"
+              href="/stickers/designer"
               className="font-medium"
               style={{ 
                 backgroundColor: '#275D5C', 
@@ -92,7 +92,7 @@ export default function Header() {
                 Iniciar sesión
               </Link>
               <Link
-                href="/designer"
+                href="/stickers/designer"
                 className="text-white px-6 py-2 rounded-md font-medium text-center transition-all hover:shadow-lg"
                 style={{ backgroundColor: '#275D5C' }}
               >
