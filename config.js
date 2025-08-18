@@ -1,4 +1,4 @@
-import themes from "daisyui/theme/object.js";
+import themes from "daisyui/theme";
 
 const config = {
   // REQUIRED
