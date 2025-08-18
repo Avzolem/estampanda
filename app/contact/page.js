@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function ContactPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -34,12 +36,12 @@ export default function ContactPage() {
         </div>
         
         <div className="mt-8">
-          <a 
+          <Link 
             href="/"
             className="text-gray-600 hover:text-gray-800 underline"
           >
             Volver al inicio
-          </a>
+          </Link>
         </div>
       </div>
     </div>
