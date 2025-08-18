@@ -15,7 +15,7 @@ const Avatar = ({ article }) => {
           src={article.author.avatar}
           // alt={`Avatar of ${article.author.name}`}
           alt=""
-          className="w-7 h-7 rounded-full object-cover object-center"
+          className="w-7 h-7 rounded-lg object-cover object-center"
           width={28}
           height={28}
         />

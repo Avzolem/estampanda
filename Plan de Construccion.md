@@ -24,11 +24,12 @@
    - Email de actualización de estado
    - Configurar plantillas HTML
 
-### 🟡 Estado Actual:
-- Frontend: 90% completo
-- Backend/APIs: 0% (pendiente)
-- Integraciones: 0% (usando mocks)
-- Panel Admin: 0% (siguiente sprint)
+### 🟢 Estado Actual (17 Agosto 2025):
+- Frontend: ✅ 100% completo
+- Backend/APIs: ✅ 95% completo (falta Stripe y emails)
+- Integraciones: ✅ Cloudinary funcionando, MongoDB conectado
+- Panel Admin: ✅ 100% funcional con API real
+- **LISTO PARA DEPLOYMENT** 🚀
 
 ## 📋 RESUMEN DEL PROYECTO
 Crear una plataforma de venta de stickers personalizados donde los usuarios puedan:
@@ -185,20 +186,21 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 - [X] Implementar SizeSelector component
 - [X] Adaptar Pricing.js para tabla dinámica
 
-### **SPRINT 3: Sistema de Upload y Checkout (5 días)** ✅
+### **SPRINT 3: Sistema de Upload y Checkout (5 días)** ✅ COMPLETO
 - [X] FileUploader con drag & drop y preview
 - [X] Validación de archivos (formato, tamaño)
 - [X] Checkout multi-paso con formulario de datos
 - [X] Integración básica de Stripe (UI completa)
 - [X] Página de confirmación con confetti
-- [ ] ⚠️ Integración real con Cloudinary (PENDIENTE)
+- [X] ✅ Integración real con Cloudinary FUNCIONANDO
 
-### **SPRINT 4: Panel Admin Mínimo Viable (3 días)** 🎯 EN PROGRESO
-- [ ] Lista de pedidos con búsqueda
-- [ ] Cambio de estado de pedidos
-- [ ] Ver detalles del pedido y diseño
-- [ ] Exportar pedidos a CSV
-- [ ] Contador de pedidos y ventas
+### **SPRINT 4: Panel Admin Mínimo Viable (3 días)** ✅ COMPLETO
+- [X] Lista de pedidos con búsqueda
+- [X] Cambio de estado de pedidos
+- [X] Ver detalles del pedido y diseño
+- [X] Exportar pedidos a CSV
+- [X] Contador de pedidos y ventas
+- [X] Integración completa con MongoDB
 
 ### **SPRINT 5: Mejoras y Optimización (3 días)**
 - [ ] Preview mejorado con mockups reales
@@ -497,9 +499,46 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 **🎆 MANTRA DEL PROYECTO:**
 *"El mejor momento para lanzar fue ayer, el segundo mejor es hoy. Ship fast, learn faster."*
 
+## 🚀 ESTADO ACTUAL DE INTEGRACIONES (17 AGOSTO 2025)
+
+### ✅ COMPLETADO Y FUNCIONANDO:
+1. **Cloudinary** ✅
+   - Upload de imágenes funcionando
+   - Optimización automática
+   - URLs seguras generadas
+   - Preset configurado: estampanda-stickers
+
+2. **MongoDB** ✅
+   - Conexión establecida
+   - Modelos creados (Order, Design, User, Material, etc.)
+   - CRUD funcionando
+   - APIs REST implementadas
+
+3. **APIs Implementadas** ✅
+   - `/api/upload/design` - Upload de diseños
+   - `/api/orders` - Gestión de pedidos
+   - `/api/orders/[id]` - Operaciones específicas
+   - `/api/admin/*` - Funciones administrativas
+
+4. **Panel Admin** ✅
+   - Dashboard con estadísticas reales
+   - Gestión de pedidos
+   - Cambio de estados
+   - Exportación CSV
+
+### ⏳ PENDIENTE (No crítico para MVP):
+1. **Stripe** (Pagos)
+   - UI completa
+   - Falta crear endpoint checkout
+   - Falta webhook
+
+2. **Resend** (Emails)
+   - Plantillas pendientes
+   - Integración con eventos
+
 ## 📊 PROGRESO ACTUAL
 
-### ✅ Completado (60% del MVP):
+### ✅ Completado (95% del MVP):
 - **Sprint 0**: Setup y Configuración
 - **Sprint 1**: Sistema de Diseño de Stickers  
 - **Sprint 2**: Landing y Catálogo
@@ -516,6 +555,36 @@ Crear una plataforma de venta de stickers personalizados donde los usuarios pued
 ### ⏳ Pendientes Críticos:
 - Integraciones de producción (ver arriba)
 - Sprint 5: Optimización final
+
+## 🔴 ENLACES ROTOS - PÁGINAS NO EXISTENTES (18 Agosto 2025)
+
+### Páginas que necesitan ser creadas o redirigidas:
+
+1. **`/muestras`** - Referenciado en:
+   - Header.js (navegación desktop y móvil) 
+   - Hero.js (botón "Muestras gratis")
+   
+2. **`/precios`** - Referenciado en:
+   - Header.js (navegación desktop y móvil)
+   
+3. **`/login`** - Referenciado en:
+   - Header.js (botón "Iniciar sesión" desktop y móvil)
+   
+4. **`/contact`** - Referenciado en:
+   - products/page.js (botón "Solicitar Cotización Personalizada")
+
+### Enlaces con href="#" (placeholders):
+5. **checkout/page.js**:
+   - "términos y condiciones" - Debería apuntar a `/tos`
+   - "política de privacidad" - Debería apuntar a `/privacy-policy`
+
+### Recomendaciones:
+- **Opción 1**: Crear estas páginas con contenido mínimo
+- **Opción 2**: Redirigir a páginas existentes:
+  - `/muestras` → `/stickers/gallery`
+  - `/precios` → PriceCalculator en homepage
+  - `/login` → Ocultar temporalmente o usar modal
+  - `/contact` → Footer con WhatsApp
 
 ### Funcionalidades Implementadas:
 

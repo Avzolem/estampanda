@@ -116,7 +116,7 @@ export default function HeroPro() {
                 >
                   {features.map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <div className="w-5 h-5 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
                         <CheckIcon className="w-3 h-3 text-green-600" />
                       </div>
                       <span className="text-gray-700 text-sm">{feature}</span>
@@ -175,7 +175,7 @@ export default function HeroPro() {
                 <motion.div
                   animate={{ y: [-10, 10, -10] }}
                   transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute -top-4 -right-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-full font-bold shadow-lg"
+                  className="absolute -top-4 -right-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg font-bold shadow-lg"
                 >
                   <span className="text-sm">Sin pedido mínimo</span>
                 </motion.div>
@@ -183,7 +183,7 @@ export default function HeroPro() {
                 <motion.div
                   animate={{ y: [10, -10, 10] }}
                   transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-                  className="absolute -bottom-4 -left-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full font-bold shadow-lg"
+                  className="absolute -bottom-4 -left-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg"
                 >
                   <span className="text-sm">Envío en 48hrs</span>
                 </motion.div>

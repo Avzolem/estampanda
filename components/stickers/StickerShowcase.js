@@ -124,13 +124,13 @@ export default function StickerShowcase() {
                     <div className="p-8 md:p-12">
                       <div className="grid md:grid-cols-2 gap-8 items-center">
                         <div className="text-white">
-                          <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-sm font-medium mb-4">
+                          <span className="inline-block px-3 py-1 bg-white/20 rounded-lg text-sm font-medium mb-4">
                             {sticker.category}
                           </span>
                           <h3 className="text-3xl font-bold mb-2">{sticker.title}</h3>
                           <p className="text-lg mb-4 opacity-90">Material: {sticker.material}</p>
                           <div className="text-4xl font-bold mb-6">{sticker.price}</div>
-                          <button className="px-6 py-3 bg-white text-purple-600 font-bold rounded-full hover:bg-purple-50 transition-colors">
+                          <button className="px-6 py-3 bg-white text-purple-600 font-bold rounded-lg hover:bg-purple-50 transition-colors">
                             Ver Diseño
                           </button>
                         </div>
@@ -144,7 +144,7 @@ export default function StickerShowcase() {
                           </div>
                           {currentIndex === sticker.id - 1 && (
                             <motion.div
-                              className="absolute -top-2 -right-2 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold"
+                              className="absolute -top-2 -right-2 bg-yellow-400 text-black px-3 py-1 rounded-lg text-sm font-bold"
                               initial={{ scale: 0, rotate: -180 }}
                               animate={{ scale: 1, rotate: 0 }}
                               transition={{ type: "spring" }}
@@ -163,14 +163,14 @@ export default function StickerShowcase() {
 
           <button
             onClick={handlePrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            className="absolute left-2 top-1/2 -translate-y-1/2 p-3 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
           >
             <ChevronLeftIcon className="w-6 h-6 text-purple-600" />
           </button>
 
           <button
             onClick={handleNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
           >
             <ChevronRightIcon className="w-6 h-6 text-purple-600" />
           </button>
@@ -183,8 +183,8 @@ export default function StickerShowcase() {
               onClick={() => setCurrentIndex(index)}
               className={`transition-all ${
                 index === currentIndex
-                  ? "w-8 h-2 bg-purple-600 rounded-full"
-                  : "w-2 h-2 bg-gray-300 rounded-full hover:bg-gray-400"
+                  ? "w-8 h-2 bg-purple-600 rounded-lg"
+                  : "w-2 h-2 bg-gray-300 rounded-lg hover:bg-gray-400"
               }`}
             />
           ))}
@@ -197,7 +197,7 @@ export default function StickerShowcase() {
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full hover:shadow-xl transition-shadow">
+          <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg hover:shadow-xl transition-shadow">
             Ver Toda la Galería
           </button>
         </motion.div>

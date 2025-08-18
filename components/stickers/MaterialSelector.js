@@ -90,7 +90,7 @@ export default function MaterialSelector({ selectedMaterial, onMaterialChange })
             whileTap={{ scale: 0.98 }}
           >
             {material.popular && (
-              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-400 to-pink-400 text-white text-xs px-2 py-1 rounded-full font-semibold">
+              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-400 to-pink-400 text-white text-xs px-2 py-1 rounded-lg font-semibold">
                 Popular
               </span>
             )}

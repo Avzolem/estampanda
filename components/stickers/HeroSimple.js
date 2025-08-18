@@ -18,7 +18,7 @@ export default function HeroSimple() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-6"
+              className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium mb-6"
             >
               ✨ Envío GRATIS en pedidos +100 unidades
             </motion.div>
@@ -52,13 +52,13 @@ export default function HeroSimple() {
               transition={{ delay: 0.5 }}
               className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
             >
-              <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
+              <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
                 <span className="flex items-center justify-center gap-2">
                   Crear Mi Sticker
                   <ArrowRightIcon className="w-5 h-5" />
                 </span>
               </button>
-              <button className="px-8 py-4 bg-white text-purple-600 font-semibold rounded-full border-2 border-purple-200 hover:border-purple-400 transition-all">
+              <button className="px-8 py-4 bg-white text-purple-600 font-semibold rounded-lg border-2 border-purple-200 hover:border-purple-400 transition-all">
                 Ver Catálogo
               </button>
             </motion.div>

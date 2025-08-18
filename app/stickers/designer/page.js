@@ -32,7 +32,14 @@ export default function StickerDesigner() {
 
   const handleFileUpload = (fileData) => {
     if (fileData) {
-      setDesignFile(fileData);
+      // Store the complete file data including Cloudinary URLs
+      setDesignFile({
+        ...fileData,
+        cloudinaryUrl: fileData.url || fileData.processedFileUrl,
+        thumbnailUrl: fileData.thumbnailUrl,
+        previewUrl: fileData.previewUrl,
+        designId: fileData.designId,
+      });
       if (currentStep === 1) {
         setTimeout(() => setCurrentStep(2), 1000); // Auto advance after successful upload
       }
@@ -86,23 +93,23 @@ export default function StickerDesigner() {
     <div className="min-h-screen bg-gradient-to-br from-estampanda-light via-white to-estampanda-cream">
       {/* Header con progreso */}
       <div className="bg-white shadow-sm sticky top-0 z-20">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+        <div className="container mx-auto px-4 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-0">
             <button
               onClick={() => router.push("/")}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+              className="self-start sm:self-auto flex items-center gap-2 px-8 py-2.5 sm:px-16 sm:py-3 md:px-24 md:py-3.5 text-sm sm:text-base text-white bg-[#275D5C] hover:bg-[#3B7F7E] rounded-lg transition-all font-medium"
             >
-              <ArrowLeftIcon className="w-5 h-5" />
+              <ArrowLeftIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>Volver</span>
             </button>
 
             {/* Progress Steps */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto w-full sm:w-auto">
               {steps.map((step, index) => (
                 <div key={step.id} className="flex items-center">
                   <button
                     onClick={() => step.completed && setCurrentStep(step.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+                    className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm transition-all ${
                       currentStep === step.id
                         ? "bg-estampanda-primary text-white"
                         : step.completed
@@ -112,14 +119,14 @@ export default function StickerDesigner() {
                     disabled={!step.completed && currentStep !== step.id}
                   >
                     {step.completed && currentStep !== step.id ? (
-                      <CheckCircleIcon className="w-5 h-5" />
+                      <CheckCircleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     ) : (
                       <span>{step.icon}</span>
                     )}
-                    <span className="hidden md:inline font-medium">{step.name}</span>
+                    <span className="hidden sm:inline font-medium">{step.name}</span>
                   </button>
                   {index < steps.length - 1 && (
-                    <div className={`w-8 h-0.5 mx-2 ${
+                    <div className={`w-4 sm:w-8 h-0.5 mx-1 sm:mx-2 ${
                       step.completed ? "bg-green-400" : "bg-gray-300"
                     }`} />
                   )}
@@ -127,7 +134,7 @@ export default function StickerDesigner() {
               ))}
             </div>
 
-            <div className="text-sm text-gray-500">
+            <div className="text-xs sm:text-sm text-gray-500 self-end sm:self-auto">
               Paso {currentStep} de {steps.length}
             </div>
           </div>
@@ -135,8 +142,8 @@ export default function StickerDesigner() {
       </div>
 
       {/* Contenido principal */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Panel izquierdo - Configuración */}
           <div>
             <AnimatePresence mode="wait">
@@ -234,17 +241,17 @@ export default function StickerDesigner() {
             </AnimatePresence>
 
             {/* Botones de navegación */}
-            <div className="flex justify-between mt-8 bg-white rounded-2xl shadow-lg p-6">
+            <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8 bg-white rounded-2xl shadow-lg p-4 sm:p-6">
               <button
                 onClick={handlePrevious}
                 disabled={currentStep === 1}
-                className={`flex items-center gap-2 px-8 py-3 rounded-lg font-semibold transition-all ${
+                className={`flex items-center justify-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all w-full sm:w-auto order-2 sm:order-1 ${
                   currentStep === 1
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : "bg-white text-[#275D5C] hover:bg-[#F5E6D3] border-2 border-[#275D5C]"
                 }`}
               >
-                <ArrowLeftIcon className="w-5 h-5" />
+                <ArrowLeftIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 Anterior
               </button>
 
@@ -252,20 +259,20 @@ export default function StickerDesigner() {
                 <button
                   onClick={handleNext}
                   disabled={!canProceed()}
-                  className={`flex items-center gap-2 px-8 py-3 rounded-lg font-semibold transition-all ${
+                  className={`flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all w-full sm:w-auto order-1 sm:order-2 ${
                     canProceed()
                       ? "bg-[#275D5C] text-white hover:bg-[#3B7F7E] shadow-md hover:shadow-lg"
                       : "bg-gray-100 text-gray-400 cursor-not-allowed"
                   }`}
                 >
                   Siguiente
-                  <ArrowRightIcon className="w-5 h-5" />
+                  <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               ) : (
                 <motion.button
                   onClick={handleProceedToCheckout}
                   disabled={!allStepsCompleted}
-                  className={`flex items-center gap-2 px-8 py-3 rounded-lg font-bold transition-all ${
+                  className={`flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base font-bold transition-all w-full sm:w-auto order-1 sm:order-2 ${
                     allStepsCompleted
                       ? "bg-gradient-to-r from-[#275D5C] to-[#4FA09F] text-white hover:from-[#3B7F7E] hover:to-[#4FA09F] shadow-lg"
                       : "bg-gray-100 text-gray-400 cursor-not-allowed"
@@ -274,14 +281,14 @@ export default function StickerDesigner() {
                   whileTap={allStepsCompleted ? { scale: 0.95 } : {}}
                 >
                   Proceder al Checkout
-                  <ArrowRightIcon className="w-5 h-5" />
+                  <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </motion.button>
               )}
             </div>
           </div>
 
           {/* Panel derecho - Preview */}
-          <div className="lg:sticky lg:top-24 h-fit">
+          <div className="order-first lg:order-last lg:sticky lg:top-24 h-fit">
             <DesignPreview
               designFile={designFile}
               material={selectedMaterial}
@@ -294,10 +301,10 @@ export default function StickerDesigner() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-6 bg-gradient-to-r from-estampanda-primary to-estampanda-secondary text-white rounded-2xl p-6"
+                className="mt-4 sm:mt-6 bg-gradient-to-r from-estampanda-primary to-estampanda-secondary text-white rounded-2xl p-4 sm:p-6"
               >
-                <h3 className="text-xl font-bold mb-4">Resumen del pedido</h3>
-                <div className="space-y-2">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Resumen del pedido</h3>
+                <div className="space-y-2 text-sm sm:text-base">
                   <div className="flex justify-between">
                     <span>Material:</span>
                     <span className="font-semibold">{selectedMaterial.name}</span>
@@ -317,7 +324,7 @@ export default function StickerDesigner() {
                     <span className="font-semibold">{quantity} unidades</span>
                   </div>
                   <div className="border-t border-white/30 pt-2 mt-2">
-                    <div className="flex justify-between text-xl">
+                    <div className="flex justify-between text-lg sm:text-xl">
                       <span>Total:</span>
                       <span className="font-bold">${pricing.total}</span>
                     </div>

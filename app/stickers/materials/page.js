@@ -328,7 +328,7 @@ export default function MaterialsPage() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-4 right-4">
-                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                    <span className={`px-3 py-1 rounded-lg text-sm font-bold ${
                       material.priceMultiplier === 1 
                         ? "bg-green-100 text-green-700"
                         : material.priceMultiplier < 1.5

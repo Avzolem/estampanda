@@ -121,7 +121,7 @@ export default function PricingCalculator({
                 whileTap={{ scale: 0.98 }}
               >
                 {discount && discount.discount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-lg font-bold">
                     -{discount.discount}%
                   </span>
                 )}
@@ -173,11 +173,11 @@ export default function PricingCalculator({
               onChange={(e) => setRushOrder(e.target.checked)}
               className="sr-only"
             />
-            <div className={`w-14 h-8 rounded-full transition-colors ${
+            <div className={`w-14 h-8 rounded-lg transition-colors ${
               rushOrder ? "bg-orange-500" : "bg-gray-300"
             }`}>
               <motion.div
-                className="w-6 h-6 bg-white rounded-full shadow-md"
+                className="w-6 h-6 bg-white rounded-lg shadow-md"
                 animate={{ x: rushOrder ? 24 : 2 }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 style={{ marginTop: "4px" }}

@@ -151,17 +151,17 @@ const Testimonial = ({ i }) => {
           <p className="text-sm text-base-content/80">{testimonial.text}</p>
         </blockquote>
         <figcaption className="relative flex items-center justify-start gap-4 pt-4 mt-4 border-t border-base-content/5">
-          <div className="overflow-hidden rounded-full bg-base-300 shrink-0">
+          <div className="overflow-hidden rounded-lg bg-base-300 shrink-0">
             {testimonial.img ? (
               <Image
-                className="w-10 h-10 rounded-full object-cover"
+                className="w-10 h-10 rounded-lg object-cover"
                 src={list[i].img}
                 alt={`${list[i].name}'s testimonial for ${config.appName}`}
                 width={48}
                 height={48}
               />
             ) : (
-              <span className="w-10 h-10 rounded-full flex justify-center items-center text-lg font-medium bg-base-300">
+              <span className="w-10 h-10 rounded-lg flex justify-center items-center text-lg font-medium bg-base-300">
                 {testimonial.name.charAt(0)}
               </span>
             )}
@@ -370,10 +370,10 @@ const Testimonials11 = () => {
                     </p>
                   </blockquote>
                   <figcaption className="relative flex items-center justify-start gap-4 pt-4 mt-4 border-t border-base-content/5">
-                    <div className="overflow-hidden rounded-full bg-base-300 shrink-0">
+                    <div className="overflow-hidden rounded-lg bg-base-300 shrink-0">
                       {list[list.length - 1].img ? (
                         <Image
-                          className="w-12 h-12 rounded-full object-cover"
+                          className="w-12 h-12 rounded-lg object-cover"
                           src={list[list.length - 1].img}
                           alt={`${
                             list[list.length - 1].name
@@ -382,7 +382,7 @@ const Testimonials11 = () => {
                           height={48}
                         />
                       ) : (
-                        <span className="w-12 h-12 rounded-full flex justify-center items-center text-xl font-medium bg-base-300">
+                        <span className="w-12 h-12 rounded-lg flex justify-center items-center text-xl font-medium bg-base-300">
                           {list[list.length - 1].name.charAt(0)}
                         </span>
                       )}

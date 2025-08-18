@@ -64,7 +64,7 @@ export default function HeaderPro() {
             <div className="flex items-center gap-4">
               <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
                 <ShoppingCartIcon className="w-5 h-5 text-gray-700" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-purple-600 text-white text-xs rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-purple-600 text-white text-xs rounded-lg flex items-center justify-center">
                   0
                 </span>
               </button>

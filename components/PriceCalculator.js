@@ -48,7 +48,7 @@ export default function PriceCalculator() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`py-3 px-4 rounded-xl font-medium transition-all transform hover:scale-105 ${
+                    className={`px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 rounded-xl text-sm sm:text-base md:text-lg font-semibold transition-all transform hover:scale-105 ${
                       selectedSize === size
                         ? "text-white shadow-lg"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -76,7 +76,7 @@ export default function PriceCalculator() {
                   <button
                     key={material.id}
                     onClick={() => setSelectedMaterial(material.id)}
-                    className={`p-4 rounded-xl transition-all transform hover:scale-105 ${
+                    className={`px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 rounded-xl text-sm sm:text-base md:text-lg transition-all transform hover:scale-105 ${
                       selectedMaterial === material.id
                         ? "text-white shadow-lg"
                         : "bg-gray-100 hover:bg-gray-200"
@@ -128,12 +128,12 @@ export default function PriceCalculator() {
                 {/* Descuentos por cantidad */}
                 <div className="mt-4 flex flex-wrap gap-2">
                   {quantity >= 1000 && (
-                    <span className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full font-medium">
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-lg font-medium">
                       🎉 Descuento por volumen aplicado
                     </span>
                   )}
                   {quantity >= 100 && (
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full font-medium">
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-lg font-medium">
                       🚚 Envío gratis incluido
                     </span>
                   )}
@@ -185,7 +185,7 @@ export default function PriceCalculator() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full mt-8 py-4 text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transition-all"
+                className="w-full mt-8 px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 text-white text-sm sm:text-base md:text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
                 style={{ backgroundColor: '#275D5C' }}
               >
                 Ordenar Ahora - Entrega en 48hrs

@@ -176,35 +176,35 @@ export default function GalleryPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#FBF7F2] via-white to-[#F5E6D3]/20">
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-20">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
+        <div className="container mx-auto px-4 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
             <div>
-              <h1 className="text-3xl font-bold text-[#275D5C]">
+              <h1 className="text-2xl sm:text-3xl font-bold text-[#275D5C]">
                 Mi Galería de Diseños
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-sm sm:text-base text-gray-600 mt-1">
                 {designs.length} diseños guardados
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
               <button
                 onClick={() => setShowTemplates(!showTemplates)}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                className={`flex-1 sm:flex-none px-5 sm:px-6 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all ${
                   showTemplates
                     ? "bg-[#F5E6D3] text-[#275D5C]"
                     : "bg-white text-[#275D5C] border-2 border-[#275D5C] hover:bg-[#F5E6D3]"
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <SparklesIcon className="w-5 h-5" />
+                  <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   Plantillas
                 </span>
               </button>
               <Link
                 href="/stickers/designer"
-                className="flex items-center gap-2 px-6 py-3 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base font-semibold hover:bg-[#3B7F7E] transition-colors"
               >
-                <PlusIcon className="w-5 h-5" />
+                <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 Nuevo Diseño
               </Link>
             </div>
@@ -212,10 +212,10 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         {/* Filters and Search */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
             {/* Search */}
             <div className="flex-1">
               <div className="relative">
@@ -224,25 +224,25 @@ export default function GalleryPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Buscar por nombre o etiqueta..."
-                  className="w-full px-4 py-3 pl-12 border-2 border-gray-200 rounded-xl focus:border-[#275D5C] focus:outline-none"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pl-10 sm:pl-12 text-sm sm:text-base border-2 border-gray-200 rounded-xl focus:border-[#275D5C] focus:outline-none"
                 />
-                <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
               </div>
             </div>
 
             {/* Categories */}
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium whitespace-nowrap transition-all ${
                     selectedCategory === category.id
                       ? "bg-[#275D5C] text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1 sm:gap-2">
                     <span>{category.icon}</span>
                     {category.name}
                   </span>
@@ -260,7 +260,7 @@ export default function GalleryPage() {
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <Squares2X2Icon className="w-5 h-5" />
+                <Squares2X2Icon className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
@@ -270,7 +270,7 @@ export default function GalleryPage() {
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <ListBulletIcon className="w-5 h-5" />
+                <ListBulletIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
@@ -285,10 +285,10 @@ export default function GalleryPage() {
               exit={{ opacity: 0, height: 0 }}
               className="mb-8"
             >
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">
                 Plantillas prediseñadas
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {templates.map((template) => (
                   <motion.div
                     key={template.id}
@@ -302,21 +302,21 @@ export default function GalleryPage() {
                         className="w-full h-full object-cover"
                       />
                       {template.isPremium && (
-                        <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-2 py-1 rounded-full text-xs font-bold">
+                        <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-2 py-1 rounded-lg text-xs font-bold">
                           PREMIUM
                         </div>
                       )}
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Link
                           href="/stickers/designer"
-                          className="px-4 py-2 bg-white text-[#275D5C] rounded-lg font-semibold"
+                          className="px-5 py-2.5 bg-white text-[#275D5C] rounded-lg font-semibold"
                         >
                           Usar plantilla
                         </Link>
                       </div>
                     </div>
-                    <div className="p-3">
-                      <p className="font-semibold text-gray-800">{template.name}</p>
+                    <div className="p-2 sm:p-3">
+                      <p className="text-sm sm:text-base font-semibold text-gray-800 truncate">{template.name}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -327,7 +327,7 @@ export default function GalleryPage() {
 
         {/* Designs Grid/List */}
         {viewMode === "grid" ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
             <AnimatePresence>
               {filteredDesigns.map((design, index) => (
                 <motion.div
@@ -351,7 +351,7 @@ export default function GalleryPage() {
                         <div className="flex gap-2">
                           <Link
                             href="/stickers/designer"
-                            className="flex-1 py-2 bg-[#275D5C] text-white rounded-lg text-center text-sm font-semibold hover:bg-[#3B7F7E] transition-colors"
+                            className="flex-1 py-2 sm:py-2.5 bg-[#275D5C] text-white rounded-lg text-center text-xs sm:text-sm font-semibold hover:bg-[#3B7F7E] transition-colors"
                           >
                             Usar
                           </Link>
@@ -377,9 +377,9 @@ export default function GalleryPage() {
                       className="absolute top-2 right-2 p-2 bg-white/90 rounded-lg hover:bg-white transition-all"
                     >
                       {likedDesigns.includes(design.id) ? (
-                        <HeartSolidIcon className="w-5 h-5 text-red-500" />
+                        <HeartSolidIcon className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                       ) : (
-                        <HeartIcon className="w-5 h-5 text-gray-600" />
+                        <HeartIcon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
                       )}
                     </button>
 
@@ -391,20 +391,20 @@ export default function GalleryPage() {
                     )}
                   </div>
 
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-800 truncate">
+                  <div className="p-3 sm:p-4">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
                       {design.name}
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
                       {design.material} • {design.size}
                     </p>
                     <div className="flex items-center justify-between mt-3">
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <ClockIcon className="w-4 h-4" />
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs text-gray-500">
+                        <ClockIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                         {new Date(design.createdAt).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-1 text-xs">
-                        <HeartIcon className="w-4 h-4 text-gray-400" />
+                        <HeartIcon className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
                         <span className="text-gray-600">{design.likes}</span>
                       </div>
                     </div>
@@ -423,17 +423,17 @@ export default function GalleryPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-xl shadow-lg p-4 flex items-center gap-4"
+                  className="bg-white rounded-xl shadow-lg p-3 sm:p-4 flex items-center gap-3 sm:gap-4"
                 >
                   <img
                     src={design.thumbnail}
                     alt={design.name}
-                    className="w-20 h-20 rounded-lg object-cover"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
                   />
                   
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-800">{design.name}</h3>
-                    <p className="text-sm text-gray-500">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-800">{design.name}</h3>
+                    <p className="text-xs sm:text-sm text-gray-500">
                       {design.material} • {design.size} • Usado {design.usageCount} veces
                     </p>
                     <div className="flex gap-2 mt-2">
@@ -451,7 +451,7 @@ export default function GalleryPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href="/stickers/designer"
-                      className="px-4 py-2 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
+                      className="px-5 py-2.5 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
                     >
                       Usar diseño
                     </Link>
@@ -502,7 +502,7 @@ export default function GalleryPage() {
             </p>
             <Link
               href="/stickers/designer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
             >
               <PlusIcon className="w-5 h-5" />
               Crear nuevo diseño

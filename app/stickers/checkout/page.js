@@ -118,43 +118,81 @@ export default function CheckoutPage() {
     setIsProcessing(true);
     
     try {
-      // Create order in database
+      // Prepare order data
       const orderData = {
-        ...configuration,
-        customer: formData,
-        status: "pending",
-        orderNumber: `STK-${Date.now()}`,
-        createdAt: new Date().toISOString(),
+        designUrl: configuration.designFile?.cloudinaryUrl || configuration.designFile?.url,
+        designThumbnail: configuration.designFile?.thumbnailUrl,
+        designId: configuration.designFile?.designId,
+        material: configuration.material?.type,
+        size: {
+          width: configuration.size?.width,
+          height: configuration.size?.height,
+          unit: "cm"
+        },
+        cutType: configuration.cutType?.type,
+        quantity: configuration.quantity,
+        unitPrice: configuration.pricing?.unitPrice,
+        totalPrice: configuration.pricing?.total,
+        discount: configuration.pricing?.discount || 0,
+        notes: formData.notes || configuration.notes,
+        shippingAddress: {
+          fullName: `${formData.firstName} ${formData.lastName}`,
+          street: formData.street,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode,
+          country: formData.country,
+          phone: formData.phone,
+        },
+        paymentMethod: "card", // Por ahora, hasta integrar Stripe
+        paymentIntentId: `temp_${Date.now()}`, // Temporal hasta integrar Stripe
       };
 
-      // Here you would call your API to create the order
-      // const response = await fetch('/api/orders', { 
-      //   method: 'POST', 
-      //   body: JSON.stringify(orderData) 
+      // Create order in database
+      const response = await fetch('/api/orders', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData) 
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Error creating order');
+      }
+
+      // TODO: Integrate with Stripe
+      // const stripe = await stripePromise;
+      // Create checkout session on backend
+      // const checkoutResponse = await fetch('/api/stripe/create-checkout', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ orderId: result.order._id })
       // });
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Create Stripe checkout session
-      const stripe = await stripePromise;
-      
-      // In production, create checkout session on backend
-      // const { sessionId } = await response.json();
+      // const { sessionId } = await checkoutResponse.json();
       // const { error } = await stripe.redirectToCheckout({ sessionId });
 
-      // For now, just simulate success
       toast.success("¡Pedido creado exitosamente!");
+      
+      // Save order info for success page
+      sessionStorage.setItem("lastOrder", JSON.stringify({
+        orderNumber: result.order.orderNumber,
+        orderId: result.order._id,
+        total: result.order.totalPrice,
+        email: formData.email
+      }));
       
       // Clear configuration
       sessionStorage.removeItem("stickerConfiguration");
       
       // Redirect to success page
-      router.push(`/stickers/success?order=${orderData.orderNumber}`);
+      router.push(`/stickers/success?order=${result.order.orderNumber}`);
       
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error("Error al procesar el pago. Intenta de nuevo.");
+      toast.error(error.message || "Error al procesar el pedido. Intenta de nuevo.");
     } finally {
       setIsProcessing(false);
     }
@@ -163,7 +201,7 @@ export default function CheckoutPage() {
   if (!configuration) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#275D5C]"></div>
+        <div className="animate-spin rounded-lg h-12 w-12 border-b-2 border-[#275D5C]"></div>
       </div>
     );
   }
@@ -172,24 +210,24 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#FBF7F2] via-white to-[#F5E6D3]/20">
       {/* Header */}
       <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
             <button
               onClick={() => router.push("/stickers/designer")}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+              className="self-start sm:self-auto flex items-center gap-1 sm:gap-2 text-sm sm:text-base text-gray-600 hover:text-gray-900"
             >
-              <ArrowLeftIcon className="w-5 h-5" />
+              <ArrowLeftIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>Volver al diseñador</span>
             </button>
 
             {/* Steps */}
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-3 sm:gap-6 md:gap-8 overflow-x-auto w-full sm:w-auto">
               {steps.map((step, index) => {
                 const Icon = step.icon;
                 return (
                   <div
                     key={step.id}
-                    className={`flex items-center gap-2 ${
+                    className={`flex items-center gap-1 sm:gap-2 ${
                       currentStep === step.id
                         ? "text-[#275D5C] font-semibold"
                         : currentStep > step.id
@@ -198,7 +236,7 @@ export default function CheckoutPage() {
                     }`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-all ${
                         currentStep === step.id
                           ? "bg-[#275D5C] text-white"
                           : currentStep > step.id
@@ -207,15 +245,15 @@ export default function CheckoutPage() {
                       }`}
                     >
                       {currentStep > step.id ? (
-                        <CheckCircleIcon className="w-6 h-6" />
+                        <CheckCircleIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                       ) : (
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                       )}
                     </div>
-                    <span className="hidden md:inline">{step.name}</span>
+                    <span className="hidden sm:inline text-sm sm:text-base">{step.name}</span>
                     {index < steps.length - 1 && (
                       <div
-                        className={`hidden md:block w-20 h-0.5 ${
+                        className={`hidden sm:block w-12 sm:w-16 md:w-20 h-0.5 ${
                           currentStep > step.id ? "bg-green-500" : "bg-gray-300"
                         }`}
                       />
@@ -225,14 +263,14 @@ export default function CheckoutPage() {
               })}
             </div>
 
-            <div className="w-24" /> {/* Spacer for balance */}
+            <div className="hidden lg:block w-24" /> {/* Spacer for balance */}
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Form Section */}
             <div className="lg:col-span-2">
               <AnimatePresence mode="wait">
@@ -243,13 +281,13 @@ export default function CheckoutPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="bg-white rounded-2xl shadow-lg p-6"
+                    className="bg-white rounded-2xl shadow-lg p-4 sm:p-6"
                   >
-                    <h2 className="text-2xl font-bold text-[#275D5C] mb-6">
+                    <h2 className="text-xl sm:text-2xl font-bold text-[#275D5C] mb-4 sm:mb-6">
                       Datos personales
                     </h2>
                     
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Nombre *
@@ -558,33 +596,33 @@ export default function CheckoutPage() {
               </AnimatePresence>
 
               {/* Navigation */}
-              <div className="mt-6 flex justify-between">
+              <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
                 <button
                   onClick={handlePrevious}
                   disabled={currentStep === 1}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  className={`flex items-center justify-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all w-full sm:w-auto order-2 sm:order-1 ${
                     currentStep === 1
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-white border-2 border-[#275D5C] text-[#275D5C] hover:bg-[#F5E6D3]"
                   }`}
                 >
-                  <ArrowLeftIcon className="w-5 h-5" />
+                  <ArrowLeftIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   Anterior
                 </button>
 
                 {currentStep < 3 ? (
                   <button
                     onClick={handleNext}
-                    className="flex items-center gap-2 px-6 py-3 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
+                    className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base font-semibold hover:bg-[#3B7F7E] transition-colors w-full sm:w-auto order-1 sm:order-2"
                   >
                     Siguiente
-                    <ArrowRightIcon className="w-5 h-5" />
+                    <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 ) : (
                   <button
                     onClick={handlePayment}
                     disabled={isProcessing}
-                    className={`flex items-center gap-2 px-8 py-3 rounded-lg font-semibold transition-all ${
+                    className={`flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all w-full sm:w-auto order-1 sm:order-2 ${
                       isProcessing
                         ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                         : "bg-gradient-to-r from-[#275D5C] to-[#4FA09F] text-white hover:shadow-lg"
@@ -592,7 +630,7 @@ export default function CheckoutPage() {
                   >
                     {isProcessing ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-lg h-5 w-5 border-b-2 border-white"></div>
                         Procesando...
                       </>
                     ) : (

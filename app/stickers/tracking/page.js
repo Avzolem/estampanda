@@ -141,38 +141,45 @@ export default function TrackingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FBF7F2] via-white to-[#F5E6D3]/20">
+    <div className="min-h-screen bg-[#F5E6D3]">
       {/* Header */}
       <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 py-4 sm:py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-[#275D5C]">
-                Rastrear Pedido
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Ingresa tu número de pedido para ver el estado
-              </p>
-            </div>
+            <Link
+              href="/"
+              className="px-8 sm:px-16 md:px-32 py-2.5 sm:py-3 md:py-4 bg-gray-100 text-gray-700 rounded-lg text-sm sm:text-base md:text-lg font-semibold hover:bg-gray-200 transition-all"
+            >
+              Volver al Inicio
+            </Link>
             <Link
               href="/stickers/designer"
-              className="flex items-center gap-2 px-6 py-3 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
+              className="px-8 sm:px-16 md:px-32 py-2.5 sm:py-3 md:py-4 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base md:text-lg font-semibold hover:bg-[#3B7F7E] transition-all"
             >
               Nuevo Pedido
-              <ArrowRightIcon className="w-5 h-5" />
             </Link>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8 sm:py-12">
+        {/* Title */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#275D5C] mb-2">
+            Rastrear Pedido
+          </h1>
+          <p className="text-lg text-gray-600">
+            Ingresa tu número de pedido para ver el estado
+          </p>
+        </div>
+
         {/* Search Form */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="max-w-2xl mx-auto mb-12"
         >
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
             <form onSubmit={handleSearch} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -184,9 +191,9 @@ export default function TrackingPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Ej: STK-20250815-0001"
-                    className="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-xl focus:border-[#275D5C] focus:outline-none text-lg"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 border-2 border-gray-200 rounded-xl focus:border-[#275D5C] focus:outline-none text-base sm:text-lg"
                   />
-                  <MagnifyingGlassIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" />
+                  <MagnifyingGlassIcon className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                 </div>
               </div>
 
@@ -203,7 +210,7 @@ export default function TrackingPage() {
               <button
                 type="submit"
                 disabled={isSearching}
-                className={`w-full py-3 rounded-xl font-semibold transition-all ${
+                className={`px-8 sm:px-16 md:px-32 py-2.5 sm:py-3 md:py-4 rounded-lg text-sm sm:text-base md:text-lg font-semibold transition-all mx-auto block ${
                   isSearching
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-[#275D5C] text-white hover:bg-[#3B7F7E]"
@@ -211,11 +218,11 @@ export default function TrackingPage() {
               >
                 {isSearching ? (
                   <span className="flex items-center justify-center gap-2">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-lg h-5 w-5 border-b-2 border-white"></div>
                     Buscando...
                   </span>
                 ) : (
-                  "Buscar pedido"
+                  "Buscar Pedido"
                 )}
               </button>
             </form>
@@ -237,19 +244,19 @@ export default function TrackingPage() {
               exit={{ opacity: 0, y: -20 }}
               className="max-w-6xl mx-auto"
             >
-              <div className="grid lg:grid-cols-3 gap-8">
+              <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                   {/* Status Header */}
-                  <div className="bg-white rounded-2xl shadow-lg p-6">
+                  <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <p className="text-sm text-gray-500">Número de pedido</p>
-                        <p className="text-2xl font-bold text-[#275D5C]">
+                        <p className="text-xs sm:text-sm text-gray-500">Número de pedido</p>
+                        <p className="text-xl sm:text-2xl font-bold text-[#275D5C]">
                           {orderData.orderNumber}
                         </p>
                       </div>
-                      <div className={`px-4 py-2 rounded-full ${statusInfo[orderData.status].bgColor}`}>
+                      <div className={`px-4 py-2 rounded-lg ${statusInfo[orderData.status].bgColor}`}>
                         <span className={`flex items-center gap-2 font-semibold ${statusInfo[orderData.status].color}`}>
                           {statusInfo[orderData.status].icon}
                           {statusInfo[orderData.status].label}
@@ -258,17 +265,17 @@ export default function TrackingPage() {
                     </div>
 
                     {orderData.trackingNumber && (
-                      <div className="p-4 bg-blue-50 rounded-xl">
+                      <div className="p-4 bg-yellow-100 rounded-xl">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm text-gray-600">Número de guía ({orderData.carrier})</p>
-                            <p className="font-mono font-semibold text-blue-600">
+                            <p className="text-sm text-gray-700">Número de guía ({orderData.carrier})</p>
+                            <p className="font-mono font-semibold text-gray-800">
                               {orderData.trackingNumber}
                             </p>
                           </div>
                           <button
                             onClick={copyTrackingNumber}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                            className="px-8 sm:px-16 md:px-24 py-2 sm:py-3 md:py-3.5 bg-[#9B2C47] text-white rounded-lg text-sm sm:text-base md:text-lg font-semibold hover:bg-[#8B1C37] transition-colors"
                           >
                             Copiar
                           </button>
@@ -278,8 +285,8 @@ export default function TrackingPage() {
                   </div>
 
                   {/* Timeline */}
-                  <div className="bg-white rounded-2xl shadow-lg p-6">
-                    <h2 className="text-xl font-bold text-gray-800 mb-6">
+                  <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
                       Historial del pedido
                     </h2>
                     
@@ -295,7 +302,7 @@ export default function TrackingPage() {
                             className="flex items-start gap-4"
                           >
                             <div
-                              className={`relative z-10 w-16 h-16 rounded-full flex items-center justify-center ${
+                              className={`relative z-10 w-16 h-16 rounded-lg flex items-center justify-center ${
                                 step.completed
                                   ? step.current
                                     ? "bg-gradient-to-br from-[#275D5C] to-[#4FA09F] text-white animate-pulse"
@@ -455,7 +462,7 @@ export default function TrackingPage() {
             </p>
             <button
               onClick={() => setSearchQuery("STK-20250815-0001")}
-              className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-mono hover:bg-gray-200 transition-colors"
+              className="px-8 sm:px-16 md:px-28 py-2.5 sm:py-3 md:py-3.5 bg-gray-100 text-gray-700 rounded-lg text-sm sm:text-base md:text-lg font-mono hover:bg-gray-200 transition-colors"
             >
               STK-20250815-0001
             </button>

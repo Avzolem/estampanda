@@ -76,9 +76,9 @@ export default function FooterPro() {
                   <input
                     type="email"
                     placeholder="tu@email.com"
-                    className="flex-1 px-6 py-4 bg-white/20 backdrop-blur border border-white/30 rounded-full text-white placeholder-white/70 focus:outline-none focus:bg-white/30 transition-all"
+                    className="flex-1 px-6 py-4 bg-white/20 backdrop-blur border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:bg-white/30 transition-all"
                   />
-                  <button className="px-8 py-4 bg-yellow-400 text-gray-900 font-bold rounded-full hover:bg-yellow-300 transition-all">
+                  <button className="px-8 py-4 bg-yellow-400 text-gray-900 font-bold rounded-lg hover:bg-yellow-300 transition-all">
                     Suscribirme
                   </button>
                 </form>
