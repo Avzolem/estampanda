@@ -131,7 +131,7 @@ export default function PopularProducts() {
   };
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-12 sm:py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -139,16 +139,16 @@ export default function PopularProducts() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-10 md:mb-12"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#275D5C]/10 to-[#4FA09F]/10 text-[#275D5C] rounded-full text-sm font-semibold mb-4">
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#275D5C]/10 to-[#4FA09F]/10 text-[#275D5C] rounded-lg text-sm font-semibold mb-4">
             <SparklesIcon className="w-4 h-4" />
             Los más vendidos
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-[#275D5C] mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#275D5C] mb-3 sm:mb-4">
             Diseños Populares
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
             Inspírate con los stickers más vendidos de nuestra comunidad
           </p>
         </motion.div>
@@ -159,7 +159,7 @@ export default function PopularProducts() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-3 mb-12"
+          className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 md:mb-12 px-2"
         >
           {categories.map((category) => (
             <motion.button
@@ -167,14 +167,14 @@ export default function PopularProducts() {
               onClick={() => setSelectedCategory(category.id)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`px-5 py-2.5 rounded-full font-medium transition-all ${
+              className={`px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 rounded-lg text-sm sm:text-base md:text-lg font-semibold transition-all ${
                 selectedCategory === category.id
                   ? "bg-gradient-to-r from-[#275D5C] to-[#4FA09F] text-white shadow-lg"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
               <span className="flex items-center gap-2">
-                <span className="text-lg">{category.emoji}</span>
+                <span className="text-base sm:text-lg">{category.emoji}</span>
                 {category.name}
               </span>
             </motion.button>
@@ -184,7 +184,7 @@ export default function PopularProducts() {
         {/* Products Grid */}
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           <AnimatePresence mode="popLayout">
             {filteredProducts.map((product, index) => (
@@ -208,13 +208,13 @@ export default function PopularProducts() {
                       <motion.span
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
-                        className="px-3 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold rounded-full"
+                        className="px-3 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold rounded-lg"
                       >
                         BESTSELLER
                       </motion.span>
                     )}
                     {product.discount > 0 && (
-                      <span className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+                      <span className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-lg">
                         -{product.discount}%
                       </span>
                     )}
@@ -223,7 +223,7 @@ export default function PopularProducts() {
                   {/* Like Button */}
                   <button
                     onClick={() => toggleLike(product.id)}
-                    className="absolute top-4 right-4 z-10 p-2 bg-white/90 backdrop-blur rounded-full hover:bg-white transition-all"
+                    className="absolute top-4 right-4 z-10 p-2 bg-white/90 backdrop-blur rounded-lg hover:bg-white transition-all"
                   >
                     {likedProducts.includes(product.id) ? (
                       <HeartIcon className="w-5 h-5 text-red-500" />
@@ -248,7 +248,7 @@ export default function PopularProducts() {
                     >
                       <Link
                         href="/stickers/designer"
-                        className="px-6 py-3 bg-white text-[#275D5C] rounded-full font-semibold hover:bg-[#F5E6D3] transition-colors"
+                        className="px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 bg-white text-[#275D5C] rounded-lg text-sm sm:text-base md:text-lg font-semibold hover:bg-[#F5E6D3] transition-all"
                       >
                         Personalizar este diseño
                       </Link>
@@ -264,11 +264,11 @@ export default function PopularProducts() {
                     {/* Specs */}
                     <div className="flex gap-3 text-sm text-gray-600 mb-3">
                       <span className="flex items-center gap-1">
-                        <span className="w-2 h-2 bg-[#4FA09F] rounded-full"></span>
+                        <span className="w-2 h-2 bg-[#4FA09F] rounded-lg"></span>
                         {product.material}
                       </span>
                       <span className="flex items-center gap-1">
-                        <span className="w-2 h-2 bg-[#275D5C] rounded-full"></span>
+                        <span className="w-2 h-2 bg-[#275D5C] rounded-lg"></span>
                         {product.size}
                       </span>
                     </div>
@@ -307,7 +307,7 @@ export default function PopularProducts() {
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="p-2 bg-[#275D5C] text-white rounded-full hover:bg-[#3B7F7E] transition-colors"
+                        className="p-2 bg-[#275D5C] text-white rounded-lg hover:bg-[#3B7F7E] transition-colors"
                       >
                         <ArrowRightIcon className="w-5 h-5" />
                       </motion.button>
@@ -325,11 +325,11 @@ export default function PopularProducts() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
-          className="text-center mt-16"
+          className="text-center mt-10 sm:mt-12 md:mt-16"
         >
           <Link
             href="/stickers/gallery"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-white border-2 border-[#275D5C] text-[#275D5C] font-bold rounded-full hover:bg-[#275D5C] hover:text-white transition-all"
+            className="inline-flex items-center gap-2 sm:gap-3 px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 bg-white border-2 border-[#275D5C] text-[#275D5C] text-sm sm:text-base md:text-lg font-semibold rounded-lg hover:bg-[#275D5C] hover:text-white transition-all"
           >
             Ver todos los diseños
             <ArrowRightIcon className="w-5 h-5" />

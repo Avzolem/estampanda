@@ -67,7 +67,7 @@ export default function HowItWorks() {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold mb-4"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-semibold mb-4"
           >
             <span className="text-lg">⚡</span>
             Proceso Simple
@@ -109,7 +109,7 @@ export default function HowItWorks() {
 
               <div className="relative bg-white rounded-2xl p-6 text-center group hover:shadow-xl transition-all duration-300">
                 {/* Step Number */}
-                <div className="absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                <div className="absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg flex items-center justify-center font-bold text-sm">
                   {step.number}
                 </div>
 
@@ -154,7 +154,7 @@ export default function HowItWorks() {
                   "Garantía de satisfacción 100%"
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-6 h-6 bg-green-500 text-white rounded-lg flex items-center justify-center flex-shrink-0">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
@@ -176,7 +176,7 @@ export default function HowItWorks() {
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="relative w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl"
+                  className="relative w-20 h-20 bg-white rounded-lg flex items-center justify-center shadow-xl"
                 >
                   <svg className="w-8 h-8 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
@@ -188,7 +188,7 @@ export default function HowItWorks() {
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="absolute -top-4 -right-4 bg-yellow-400 text-black px-4 py-2 rounded-full font-bold shadow-lg"
+                className="absolute -top-4 -right-4 bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold shadow-lg"
               >
                 Demo 2 min
               </motion.div>

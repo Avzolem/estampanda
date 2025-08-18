@@ -52,17 +52,17 @@ const Testimonial = ({ i }) => {
               )}
             </div>
 
-            <div className="overflow-hidden rounded-full bg-base-300 shrink-0">
+            <div className="overflow-hidden rounded-lg bg-base-300 shrink-0">
               {testimonial.img ? (
                 <Image
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover"
                   src={list[i].img}
                   alt={`${list[i].name}'s testimonial for ${config.appName}`}
                   width={48}
                   height={48}
                 />
               ) : (
-                <span className="w-10 h-10 md:w-12 md:h-12 rounded-full flex justify-center items-center text-lg font-medium bg-base-300">
+                <span className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex justify-center items-center text-lg font-medium bg-base-300">
                   {testimonial.name.charAt(0)}
                 </span>
               )}

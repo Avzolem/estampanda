@@ -96,19 +96,19 @@ export default function HowItWorks() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-[#FBF7F2]" ref={containerRef}>
+    <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-white to-[#FBF7F2]" ref={containerRef}>
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-12 md:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-[#275D5C] mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#275D5C] mb-3 sm:mb-4">
             ¿Cómo Funciona?
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
             Crear tus stickers personalizados es más fácil que nunca. 
             Solo 6 pasos para tener tus diseños en tus manos.
           </p>
@@ -119,7 +119,7 @@ export default function HowItWorks() {
           variants={containerVariants}
           initial="hidden"
           animate={controls}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {steps.map((step, index) => {
             const Icon = step.icon;
@@ -146,7 +146,7 @@ export default function HowItWorks() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="relative bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer group"
+                  className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-5 md:p-6 hover:shadow-xl transition-shadow cursor-pointer group"
                 >
                   {/* Step Number */}
                   <motion.div
@@ -157,7 +157,7 @@ export default function HowItWorks() {
                       type: "spring", 
                       stiffness: 200 
                     }}
-                    className="absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br from-[#275D5C] to-[#4FA09F] text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg"
+                    className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#275D5C] to-[#4FA09F] text-white rounded-lg flex items-center justify-center font-bold text-base sm:text-lg shadow-lg"
                   >
                     {step.id}
                   </motion.div>
@@ -165,16 +165,16 @@ export default function HowItWorks() {
                   {/* Icon Container */}
                   <motion.div
                     whileHover={{ rotate: isEven ? 10 : -10 }}
-                    className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-lg transition-all`}
+                    className={`w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:shadow-lg transition-all`}
                   >
-                    <Icon className="w-10 h-10 text-white" />
+                    <Icon className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 text-white" />
                   </motion.div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     {step.description}
                   </p>
 
@@ -203,18 +203,18 @@ export default function HowItWorks() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="text-center mt-16"
+          className="text-center mt-10 sm:mt-12 md:mt-16"
         >
-          <p className="text-lg text-gray-600 mb-6">
+          <p className="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6 px-4">
             ¿Listo para crear tus stickers personalizados?
           </p>
           <motion.a
             href="/stickers/designer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#275D5C] to-[#4FA09F] text-white text-lg font-bold rounded-full shadow-lg hover:shadow-xl transition-all"
+            className="inline-flex items-center gap-2 sm:gap-3 px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 bg-gradient-to-r from-[#275D5C] to-[#4FA09F] text-white text-sm sm:text-base md:text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
           >
-            <SparklesIcon className="w-6 h-6" />
+            <SparklesIcon className="w-5 h-5 sm:w-6 sm:h-6" />
             Empezar Ahora
             <motion.span
               animate={{ x: [0, 5, 0] }}
@@ -230,7 +230,7 @@ export default function HowItWorks() {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 1, duration: 0.6 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 pt-12 border-t border-gray-200"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mt-12 sm:mt-16 md:mt-20 pt-8 sm:pt-10 md:pt-12 border-t border-gray-200"
         >
           {[
             { number: "50,000+", label: "Stickers creados" },
@@ -246,7 +246,7 @@ export default function HowItWorks() {
               className="text-center"
             >
               <motion.div
-                className="text-3xl md:text-4xl font-bold text-[#275D5C] mb-2"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#275D5C] mb-1 sm:mb-2"
                 animate={isInView ? { 
                   scale: [1, 1.1, 1],
                 } : {}}
@@ -257,7 +257,7 @@ export default function HowItWorks() {
               >
                 {stat.number}
               </motion.div>
-              <div className="text-gray-600">{stat.label}</div>
+              <div className="text-sm sm:text-base text-gray-600">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>

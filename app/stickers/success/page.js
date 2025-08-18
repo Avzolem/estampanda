@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -10,13 +10,12 @@ import {
   EnvelopeIcon,
   DocumentDuplicateIcon,
   HomeIcon,
-  SparklesIcon,
   TruckIcon,
   ClockIcon,
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 
-export default function SuccessPage() {
+function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [orderNumber, setOrderNumber] = useState("");
@@ -110,7 +109,7 @@ export default function SuccessPage() {
               }}
               className="inline-block"
             >
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-24 h-24 bg-white rounded-lg flex items-center justify-center mx-auto mb-4">
                 <CheckCircleIcon className="w-16 h-16 text-green-500" />
               </div>
             </motion.div>
@@ -287,5 +286,17 @@ export default function SuccessPage() {
         </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-lg h-12 w-12 border-b-2 border-[#275D5C]"></div>
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }

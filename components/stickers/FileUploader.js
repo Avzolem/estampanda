@@ -14,7 +14,7 @@ import {
   PhotoIcon,
 } from "@heroicons/react/24/outline";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB - Updated to match API limit
 const ACCEPTED_FORMATS = {
   'image/jpeg': ['.jpg', '.jpeg'],
   'image/png': ['.png'],
@@ -36,7 +36,7 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
     if (rejectedFiles.length > 0) {
       const rejection = rejectedFiles[0];
       if (rejection.errors[0]?.code === 'file-too-large') {
-        setError(`El archivo es muy grande. Máximo 10MB.`);
+        setError(`El archivo es muy grande. Máximo 50MB.`);
       } else if (rejection.errors[0]?.code === 'file-invalid-type') {
         setError(`Formato no válido. Usa JPG, PNG, SVG o WebP.`);
       } else {
@@ -49,40 +49,82 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
 
     const selectedFile = acceptedFiles[0];
     
-    // Create preview
+    // Create local preview immediately
     const reader = new FileReader();
-    reader.onload = (readerEvent) => {
+    reader.onload = async (readerEvent) => {
       const previewUrl = readerEvent.target.result;
       setPreview(previewUrl);
-      
-      // Simulate upload process
       setIsUploading(true);
       setFile(selectedFile);
       
-      // Simulate progress
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        setUploadProgress(progress);
+      try {
+        // Prepare FormData for upload
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('name', selectedFile.name.split('.')[0]);
+        formData.append('category', 'user-upload');
+        formData.append('tags', 'sticker,custom');
+        formData.append('removeBackground', 'false');
         
-        if (progress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsUploading(false);
-            // Call parent callback with file info
-            if (onFileUpload) {
-              onFileUpload({
-                file: selectedFile,
-                preview: previewUrl,
-                url: URL.createObjectURL(selectedFile), // In production, this would be Cloudinary URL
-                name: selectedFile.name,
-                size: selectedFile.size,
-                type: selectedFile.type,
-              });
+        // Track upload progress
+        const xhr = new XMLHttpRequest();
+        
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = Math.round((event.loaded / event.total) * 100);
+            setUploadProgress(percentComplete);
+          }
+        };
+        
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            
+            if (response.success) {
+              setIsUploading(false);
+              setUploadProgress(100);
+              
+              // Call parent callback with Cloudinary URLs
+              if (onFileUpload) {
+                onFileUpload({
+                  file: selectedFile,
+                  preview: response.design.thumbnailUrl || previewUrl,
+                  url: response.design.processedFileUrl,
+                  originalUrl: response.design.originalFileUrl,
+                  thumbnailUrl: response.design.thumbnailUrl,
+                  previewUrl: response.design.previewUrl,
+                  name: response.design.name,
+                  size: selectedFile.size,
+                  type: selectedFile.type,
+                  dimensions: response.design.dimensions,
+                  hasTransparency: response.design.hasTransparency,
+                  designId: response.design.id,
+                });
+              }
+            } else {
+              throw new Error(response.error || 'Upload failed');
             }
-          }, 500);
-        }
-      }, 200);
+          } else {
+            throw new Error(`Upload failed with status ${xhr.status}`);
+          }
+        };
+        
+        xhr.onerror = () => {
+          throw new Error('Network error during upload');
+        };
+        
+        // Send request to our API endpoint
+        xhr.open('POST', '/api/upload/design');
+        xhr.send(formData);
+        
+      } catch (error) {
+        console.error('Upload error:', error);
+        setError(error.message || 'Error al subir el archivo. Intenta de nuevo.');
+        setIsUploading(false);
+        setFile(null);
+        setPreview(null);
+        setUploadProgress(0);
+      }
     };
     reader.readAsDataURL(selectedFile);
   }, [onFileUpload]);
@@ -168,7 +210,7 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
                 {Object.keys(ACCEPTED_FORMATS).map((format) => (
                   <span
                     key={format}
-                    className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
+                    className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm"
                   >
                     {format.split('/')[1].toUpperCase()}
                   </span>
@@ -176,7 +218,7 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
               </div>
 
               <p className="text-xs text-gray-400">
-                Tamaño máximo: 10MB • Resolución recomendada: 300 DPI
+                Tamaño máximo: 50MB • Resolución recomendada: 300 DPI
               </p>
             </motion.div>
 
@@ -275,10 +317,10 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    className="w-24 h-24 border-4 border-gray-200 rounded-full"
+                    className="w-24 h-24 border-4 border-gray-200 rounded-lg"
                   />
                   <motion.div
-                    className="absolute inset-0 w-24 h-24 border-4 border-[#275D5C] rounded-full"
+                    className="absolute inset-0 w-24 h-24 border-4 border-[#275D5C] rounded-lg"
                     style={{
                       borderTopColor: "transparent",
                       borderRightColor: "transparent",
@@ -303,7 +345,7 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
               >
                 <button
                   onClick={removeFile}
-                  className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow z-10"
+                  className="absolute top-4 right-4 p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow z-10"
                 >
                   <XMarkIcon className="w-5 h-5 text-gray-600" />
                 </button>
@@ -323,7 +365,7 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
                       </div>
                     )}
                     <div className="absolute top-2 right-2">
-                      <CheckCircleIcon className="w-6 h-6 text-green-500 bg-white rounded-full" />
+                      <CheckCircleIcon className="w-6 h-6 text-green-500 bg-white rounded-lg" />
                     </div>
                   </div>
 
@@ -339,7 +381,7 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: "100%" }}
-                      className="h-2 bg-green-500 rounded-full"
+                      className="h-2 bg-green-500 rounded-lg"
                     />
                     <p className="text-xs text-green-600 mt-2 font-semibold">
                       ✓ Archivo subido correctamente

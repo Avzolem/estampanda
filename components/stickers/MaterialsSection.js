@@ -88,7 +88,7 @@ export default function MaterialsSection() {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-semibold mb-4"
           >
             <span>🎯</span>
             Materiales Premium
@@ -123,7 +123,7 @@ export default function MaterialsSection() {
                   }`}
                 >
                   {material.best && (
-                    <div className="absolute -top-2 -right-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                    <div className="absolute -top-2 -right-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs px-2 py-1 rounded-lg font-bold">
                       POPULAR
                     </div>
                   )}
@@ -147,8 +147,8 @@ export default function MaterialsSection() {
             <div className={`bg-gradient-to-br ${selected.gradient} rounded-3xl p-8 text-white shadow-2xl`}>
               {/* Decorative Background */}
               <div className="absolute inset-0 rounded-3xl overflow-hidden">
-                <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
-                <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+                <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-lg blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-white/10 rounded-lg blur-3xl" />
               </div>
 
               <div className="relative z-10">
@@ -181,7 +181,7 @@ export default function MaterialsSection() {
                       transition={{ delay: i * 0.1 }}
                       className="flex items-center gap-3"
                     >
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${
                         feature.highlight ? "bg-yellow-400" : "bg-white/20"
                       }`}>
                         <CheckIcon className={`w-4 h-4 ${
@@ -196,7 +196,7 @@ export default function MaterialsSection() {
                 </div>
 
                 {/* CTA */}
-                <button className="w-full bg-white text-gray-900 font-bold py-4 rounded-full hover:bg-yellow-400 transition-colors">
+                <button className="w-full bg-white text-gray-900 font-bold py-4 rounded-lg hover:bg-yellow-400 transition-colors">
                   Pedir Muestra Gratis
                 </button>
               </div>
@@ -206,7 +206,7 @@ export default function MaterialsSection() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 3, repeat: Infinity }}
-              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 px-6 py-2 rounded-full font-bold shadow-xl"
+              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 px-6 py-2 rounded-lg font-bold shadow-xl"
             >
               🚚 Envío Gratis
             </motion.div>

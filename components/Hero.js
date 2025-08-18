@@ -36,15 +36,15 @@ export default function Hero() {
             className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
           >
             <Link
-              href="/designer"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white rounded-md transition-colors"
+              href="/stickers/designer"
+              className="inline-flex items-center justify-center px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 text-sm sm:text-base md:text-lg font-semibold text-white rounded-md transition-all hover:opacity-90"
               style={{ backgroundColor: '#275D5C' }}
             >
               Empieza a diseñar
             </Link>
             <Link
               href="/muestras"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-md transition-colors"
+              className="inline-flex items-center justify-center px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 text-sm sm:text-base md:text-lg font-semibold rounded-md transition-all hover:opacity-90"
               style={{ color: '#275D5C', backgroundColor: '#F5E6D3' }}
             >
               Muestras gratis

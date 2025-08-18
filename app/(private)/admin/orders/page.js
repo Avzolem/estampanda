@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   MagnifyingGlassIcon,
@@ -19,10 +19,23 @@ import {
   PencilIcon,
   PrinterIcon,
   EnvelopeIcon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 
-// Mock data para demostración
+// Status configuration
+const statusColors = {
+  pending: { bg: "bg-yellow-100", text: "text-yellow-800", icon: ClockIcon, label: "Pendiente" },
+  processing: { bg: "bg-blue-100", text: "text-blue-800", icon: ClockIcon, label: "Procesando" },
+  printing: { bg: "bg-purple-100", text: "text-purple-800", icon: PrinterIcon, label: "Imprimiendo" },
+  cutting: { bg: "bg-orange-100", text: "text-orange-800", icon: DocumentTextIcon, label: "Cortando" },
+  "quality-check": { bg: "bg-cyan-100", text: "text-cyan-800", icon: CheckCircleIcon, label: "Control Calidad" },
+  shipped: { bg: "bg-indigo-100", text: "text-indigo-800", icon: TruckIcon, label: "Enviado" },
+  delivered: { bg: "bg-green-100", text: "text-green-800", icon: CheckCircleIcon, label: "Entregado" },
+  cancelled: { bg: "bg-red-100", text: "text-red-800", icon: XCircleIcon, label: "Cancelado" },
+};
+
+// Mock data para demostración (se eliminará cuando conectemos con API)
 const mockOrders = [
   {
     id: 1,
@@ -129,105 +142,143 @@ const mockOrders = [
   },
 ];
 
-const statusColors = {
-  pending: { bg: "bg-yellow-100", text: "text-yellow-800", icon: ClockIcon, label: "Pendiente" },
-  processing: { bg: "bg-blue-100", text: "text-blue-800", icon: ClockIcon, label: "Procesando" },
-  printing: { bg: "bg-purple-100", text: "text-purple-800", icon: PrinterIcon, label: "Imprimiendo" },
-  shipped: { bg: "bg-indigo-100", text: "text-indigo-800", icon: TruckIcon, label: "Enviado" },
-  delivered: { bg: "bg-green-100", text: "text-green-800", icon: CheckCircleIcon, label: "Entregado" },
-  cancelled: { bg: "bg-red-100", text: "text-red-800", icon: XCircleIcon, label: "Cancelado" },
-};
-
 export default function OrdersAdminPage() {
-  const [orders, setOrders] = useState(mockOrders);
-  const [filteredOrders, setFilteredOrders] = useState(mockOrders);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [showOrderDetails, setShowOrderDetails] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
   const ordersPerPage = 10;
 
-  // Estadísticas
-  const stats = {
-    total: orders.length,
-    pending: orders.filter(o => o.status === "pending").length,
-    processing: orders.filter(o => o.status === "processing" || o.status === "printing").length,
-    shipped: orders.filter(o => o.status === "shipped").length,
-    revenue: orders.reduce((sum, o) => sum + o.total, 0),
-  };
+  // Fetch orders from API
+  const fetchOrders = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: ordersPerPage.toString(),
+        status: statusFilter,
+        search: searchTerm,
+        admin: 'true',
+        sortBy: 'createdAt',
+        sortOrder: 'desc'
+      });
 
-  // Filtrar pedidos
-  useEffect(() => {
-    let filtered = [...orders];
+      const response = await fetch(`/api/orders?${params}`);
+      const data = await response.json();
 
-    // Búsqueda
-    if (searchTerm) {
-      filtered = filtered.filter(order => 
-        order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customer.email.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Filtro por estado
-    if (statusFilter !== "all") {
-      filtered = filtered.filter(order => order.status === statusFilter);
-    }
-
-    // Filtro por fecha
-    if (dateFilter !== "all") {
-      const now = new Date();
-      const dateFilters = {
-        today: 0,
-        week: 7,
-        month: 30,
-      };
-      const daysAgo = dateFilters[dateFilter];
-      if (daysAgo !== undefined) {
-        const cutoffDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-        filtered = filtered.filter(order => new Date(order.createdAt) >= cutoffDate);
+      if (data.success) {
+        setOrders(data.orders);
+        setTotalPages(data.pagination.pages);
+        setStats(data.stats);
+      } else {
+        throw new Error(data.error || 'Error fetching orders');
       }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      toast.error('Error al cargar pedidos');
+      // Use mock data as fallback
+      setOrders(mockOrders);
+    } finally {
+      setLoading(false);
     }
+  }, [currentPage, statusFilter, searchTerm]);
 
-    setFilteredOrders(filtered);
-    setCurrentPage(1);
-  }, [searchTerm, statusFilter, dateFilter, orders]);
+  // Fetch orders on component mount and when filters change
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
-  // Paginación
-  const indexOfLastOrder = currentPage * ordersPerPage;
-  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
-  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+  // Update order status
+  const updateOrderStatus = async (orderId, newStatus, statusNote = '') => {
+    setIsUpdating(true);
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus, statusNote })
+      });
 
-  // Cambiar estado del pedido
-  const changeOrderStatus = (orderId, newStatus) => {
-    setOrders(prevOrders => 
-      prevOrders.map(order => 
-        order.id === orderId 
-          ? { ...order, status: newStatus }
-          : order
-      )
-    );
-    toast.success(`Estado actualizado a ${statusColors[newStatus].label}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success(`Estado actualizado a ${statusColors[newStatus].label}`);
+        fetchOrders(); // Refresh the list
+      } else {
+        throw new Error(data.error || 'Error updating status');
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      toast.error('Error al actualizar el estado');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  // Exportar a CSV
+  // Update multiple orders
+  const updateMultipleOrders = async (newStatus) => {
+    if (selectedOrders.length === 0) {
+      toast.error('Selecciona al menos un pedido');
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderIds: selectedOrders,
+          updates: { status: newStatus }
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success(`${data.modifiedCount} pedidos actualizados`);
+        setSelectedOrders([]);
+        fetchOrders();
+      } else {
+        throw new Error(data.error || 'Error updating orders');
+      }
+    } catch (error) {
+      console.error('Error updating orders:', error);
+      toast.error('Error al actualizar pedidos');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+  // Toggle order selection
+  const toggleOrderSelection = (orderId) => {
+    setSelectedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
+
+  // Export to CSV
   const exportToCSV = () => {
-    const csvData = filteredOrders.map(order => ({
+    const csvData = orders.map(order => ({
       "Número de Pedido": order.orderNumber,
-      "Cliente": order.customer.name,
-      "Email": order.customer.email,
-      "Teléfono": order.customer.phone,
-      "Material": order.items.material,
-      "Tamaño": order.items.size,
-      "Cantidad": order.items.quantity,
-      "Tipo de Corte": order.items.cutType,
-      "Total": `$${order.total}`,
-      "Estado": statusColors[order.status].label,
+      "Cliente": order.userId?.name || order.shippingAddress?.fullName || "N/A",
+      "Email": order.userId?.email || "N/A",
+      "Teléfono": order.shippingAddress?.phone || "N/A",
+      "Material": order.material,
+      "Tamaño": `${order.size?.width}x${order.size?.height} ${order.size?.unit || 'cm'}`,
+      "Cantidad": order.quantity,
+      "Tipo de Corte": order.cutType,
+      "Total": `$${order.totalPrice}`,
+      "Estado": statusColors[order.status]?.label || order.status,
       "Fecha": new Date(order.createdAt).toLocaleDateString('es-MX'),
-      "Entrega Estimada": new Date(order.estimatedDelivery).toLocaleDateString('es-MX'),
+      "Entrega Estimada": order.estimatedDelivery ? new Date(order.estimatedDelivery).toLocaleDateString('es-MX') : "N/A",
       "Notas": order.notes || "",
     }));
 
@@ -249,20 +300,12 @@ export default function OrdersAdminPage() {
     toast.success("Pedidos exportados exitosamente");
   };
 
-  // Seleccionar/deseleccionar pedidos
-  const toggleOrderSelection = (orderId) => {
-    setSelectedOrders(prev => 
-      prev.includes(orderId)
-        ? prev.filter(id => id !== orderId)
-        : [...prev, orderId]
-    );
-  };
 
   const selectAllOrders = () => {
-    if (selectedOrders.length === currentOrders.length) {
+    if (selectedOrders.length === orders.length) {
       setSelectedOrders([]);
     } else {
-      setSelectedOrders(currentOrders.map(order => order.id));
+      setSelectedOrders(orders.map(order => order._id));
     }
   };
 
@@ -280,7 +323,7 @@ export default function OrdersAdminPage() {
             </div>
             <button
               onClick={exportToCSV}
-              className="flex items-center gap-2 px-4 py-2 bg-[#275D5C] text-white rounded-lg hover:bg-[#3B7F7E] transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#275D5C] text-white rounded-lg hover:bg-[#3B7F7E] transition-colors"
             >
               <ArrowDownTrayIcon className="w-5 h-5" />
               Exportar CSV
@@ -290,19 +333,19 @@ export default function OrdersAdminPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="px-6 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="px-4 sm:px-6 py-4 sm:py-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm p-4"
+            className="bg-white rounded-xl shadow-sm p-3 sm:p-4"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Pedidos</p>
-                <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Total Pedidos</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-800">{stats?.totalOrders || 0}</p>
               </div>
-              <DocumentTextIcon className="w-8 h-8 text-gray-400" />
+              <DocumentTextIcon className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
             </div>
           </motion.div>
 
@@ -310,14 +353,14 @@ export default function OrdersAdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl shadow-sm p-4"
+            className="bg-white rounded-xl shadow-sm p-3 sm:p-4"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Pendientes</p>
-                <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Pendientes</p>
+                <p className="text-lg sm:text-2xl font-bold text-yellow-600">{stats?.pending || 0}</p>
               </div>
-              <ClockIcon className="w-8 h-8 text-yellow-400" />
+              <ClockIcon className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400" />
             </div>
           </motion.div>
 
@@ -325,14 +368,14 @@ export default function OrdersAdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl shadow-sm p-4"
+            className="bg-white rounded-xl shadow-sm p-3 sm:p-4"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">En Proceso</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.processing}</p>
+                <p className="text-xs sm:text-sm text-gray-600">En Proceso</p>
+                <p className="text-lg sm:text-2xl font-bold text-blue-600">{stats?.monthOrders || 0}</p>
               </div>
-              <PrinterIcon className="w-8 h-8 text-blue-400" />
+              <PrinterIcon className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
             </div>
           </motion.div>
 
@@ -340,14 +383,14 @@ export default function OrdersAdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-xl shadow-sm p-4"
+            className="bg-white rounded-xl shadow-sm p-3 sm:p-4"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Enviados</p>
-                <p className="text-2xl font-bold text-indigo-600">{stats.shipped}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Total Pedidos</p>
+                <p className="text-lg sm:text-2xl font-bold text-indigo-600">{stats?.totalOrders || 0}</p>
               </div>
-              <TruckIcon className="w-8 h-8 text-indigo-400" />
+              <TruckIcon className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400" />
             </div>
           </motion.div>
 
@@ -355,25 +398,25 @@ export default function OrdersAdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-xl shadow-sm p-4"
+            className="bg-white rounded-xl shadow-sm p-3 sm:p-4"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Ingresos</p>
-                <p className="text-2xl font-bold text-green-600">
-                  ${stats.revenue.toLocaleString()}
+                <p className="text-xs sm:text-sm text-gray-600">Ingresos</p>
+                <p className="text-lg sm:text-2xl font-bold text-green-600">
+                  ${(stats?.totalRevenue || 0).toLocaleString()}
                 </p>
               </div>
-              <CurrencyDollarIcon className="w-8 h-8 text-green-400" />
+              <CurrencyDollarIcon className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
             </div>
           </motion.div>
         </div>
       </div>
 
       {/* Filters and Search */}
-      <div className="px-6 pb-4">
-        <div className="bg-white rounded-xl shadow-sm p-4">
-          <div className="flex flex-col md:flex-row gap-4">
+      <div className="px-4 sm:px-6 pb-3 sm:pb-4">
+        <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             {/* Search */}
             <div className="flex-1">
               <div className="relative">
@@ -383,7 +426,7 @@ export default function OrdersAdminPage() {
                   placeholder="Buscar por número, cliente o email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#275D5C]"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#275D5C]"
                 />
               </div>
             </div>
@@ -392,7 +435,7 @@ export default function OrdersAdminPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#275D5C]"
+              className="px-3 sm:px-4 py-2.5 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#275D5C]"
             >
               <option value="all">Todos los estados</option>
               <option value="pending">Pendiente</option>
@@ -407,7 +450,7 @@ export default function OrdersAdminPage() {
             <select
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#275D5C]"
+              className="px-3 sm:px-4 py-2.5 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#275D5C]"
             >
               <option value="all">Todas las fechas</option>
               <option value="today">Hoy</option>
@@ -419,7 +462,7 @@ export default function OrdersAdminPage() {
       </div>
 
       {/* Orders Table */}
-      <div className="px-6 pb-6">
+      <div className="px-4 sm:px-6 pb-4 sm:pb-6">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -428,7 +471,7 @@ export default function OrdersAdminPage() {
                   <th className="px-6 py-3 text-left">
                     <input
                       type="checkbox"
-                      checked={selectedOrders.length === currentOrders.length && currentOrders.length > 0}
+                      checked={selectedOrders.length === orders.length && orders.length > 0}
                       onChange={selectAllOrders}
                       className="w-4 h-4 text-[#275D5C] rounded focus:ring-[#275D5C]"
                     />
@@ -457,85 +500,105 @@ export default function OrdersAdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {currentOrders.map((order) => {
-                  const StatusIcon = statusColors[order.status].icon;
-                  return (
-                    <motion.tr
-                      key={order.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="hover:bg-gray-50 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedOrders.includes(order.id)}
-                          onChange={() => toggleOrderSelection(order.id)}
-                          className="w-4 h-4 text-[#275D5C] rounded focus:ring-[#275D5C]"
-                        />
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={order.designUrl}
-                            alt="Diseño"
-                            className="w-10 h-10 rounded-lg object-cover bg-gray-100"
+                {loading ? (
+                  <tr>
+                    <td colSpan="8" className="px-6 py-12 text-center">
+                      <div className="flex justify-center">
+                        <ArrowPathIcon className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400 animate-spin" />
+                      </div>
+                      <p className="mt-2 text-gray-500">Cargando pedidos...</p>
+                    </td>
+                  </tr>
+                ) : orders.length === 0 ? (
+                  <tr>
+                    <td colSpan="8" className="px-6 py-12 text-center text-gray-500">
+                      No se encontraron pedidos
+                    </td>
+                  </tr>
+                ) : (
+                  orders.map((order) => {
+                    const StatusIcon = statusColors[order.status]?.icon || ClockIcon;
+                    return (
+                      <motion.tr
+                        key={order._id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <input
+                            type="checkbox"
+                            checked={selectedOrders.includes(order._id)}
+                            onChange={() => toggleOrderSelection(order._id)}
+                            className="w-4 h-4 text-[#275D5C] rounded focus:ring-[#275D5C]"
+                            disabled={isUpdating}
                           />
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={order.designThumbnail || order.designUrl || "/api/placeholder/200/200"}
+                              alt="Diseño"
+                              className="w-10 h-10 rounded-lg object-cover bg-gray-100"
+                            />
+                            <div>
+                              <p className="font-semibold text-gray-900">
+                                {order.orderNumber}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {order.quantity} unidades
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
                           <div>
-                            <p className="font-semibold text-gray-900">
-                              {order.orderNumber}
+                            <p className="font-medium text-gray-900">
+                              {order.userId?.name || order.shippingAddress?.fullName || "N/A"}
                             </p>
-                            <p className="text-xs text-gray-500">
-                              {order.items.quantity} unidades
+                            <p className="text-sm text-gray-500">
+                              {order.userId?.email || "N/A"}
                             </p>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {order.customer.name}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div>
+                            <p className="text-sm text-gray-900">
+                              {order.material}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {order.size?.width}x{order.size?.height} {order.size?.unit || 'cm'} • {order.cutType}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="font-semibold text-gray-900">
+                            ${order.totalPrice}
                           </p>
-                          <p className="text-sm text-gray-500">
-                            {order.customer.email}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div>
-                          <p className="text-sm text-gray-900">
-                            {order.items.material}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {order.items.size} • {order.items.cutType}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="font-semibold text-gray-900">
-                          ${order.total}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="relative">
-                          <select
-                            value={order.status}
-                            onChange={(e) => changeOrderStatus(order.id, e.target.value)}
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              statusColors[order.status].bg
-                            } ${
-                              statusColors[order.status].text
-                            } border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#275D5C]`}
-                          >
-                            <option value="pending">Pendiente</option>
-                            <option value="processing">Procesando</option>
-                            <option value="printing">Imprimiendo</option>
-                            <option value="shipped">Enviado</option>
-                            <option value="delivered">Entregado</option>
-                            <option value="cancelled">Cancelado</option>
-                          </select>
-                        </div>
-                      </td>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="relative">
+                            <select
+                              value={order.status}
+                              onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                              disabled={isUpdating}
+                              className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                                statusColors[order.status]?.bg || 'bg-gray-100'
+                              } ${
+                                statusColors[order.status]?.text || 'text-gray-800'
+                              } border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#275D5C] disabled:opacity-50 disabled:cursor-not-allowed`}
+                            >
+                              <option value="pending">Pendiente</option>
+                              <option value="processing">Procesando</option>
+                              <option value="printing">Imprimiendo</option>
+                              <option value="cutting">Cortando</option>
+                              <option value="quality-check">Control Calidad</option>
+                              <option value="shipped">Enviado</option>
+                              <option value="delivered">Entregado</option>
+                              <option value="cancelled">Cancelado</option>
+                            </select>
+                          </div>
+                        </td>
                       <td className="px-6 py-4">
                         <div>
                           <p className="text-sm text-gray-900">
@@ -572,10 +635,11 @@ export default function OrdersAdminPage() {
                           </button>
                         </div>
                       </td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
+                        </motion.tr>
+                      );
+                    })
+                  )}
+                </tbody>
             </table>
           </div>
 
@@ -584,17 +648,17 @@ export default function OrdersAdminPage() {
             <div className="px-6 py-4 border-t flex items-center justify-between">
               <p className="text-sm text-gray-700">
                 Mostrando{" "}
-                <span className="font-medium">{indexOfFirstOrder + 1}</span> a{" "}
+                <span className="font-medium">{(currentPage - 1) * ordersPerPage + 1}</span> a{" "}
                 <span className="font-medium">
-                  {Math.min(indexOfLastOrder, filteredOrders.length)}
+                  {Math.min(currentPage * ordersPerPage, stats?.totalOrders || orders.length)}
                 </span>{" "}
-                de <span className="font-medium">{filteredOrders.length}</span> pedidos
+                de <span className="font-medium">{stats?.totalOrders || orders.length}</span> pedidos
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
@@ -602,7 +666,7 @@ export default function OrdersAdminPage() {
                   <button
                     key={index}
                     onClick={() => setCurrentPage(index + 1)}
-                    className={`px-3 py-1 rounded-lg ${
+                    className={`px-3 py-1.5 rounded-lg ${
                       currentPage === index + 1
                         ? "bg-[#275D5C] text-white"
                         : "border border-gray-300 hover:bg-gray-50"
@@ -614,7 +678,7 @@ export default function OrdersAdminPage() {
                 <button
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
                 </button>
@@ -652,18 +716,18 @@ export default function OrdersAdminPage() {
                 <h3 className="font-semibold text-gray-800 mb-3">Información del Pedido</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Número de pedido</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Número de pedido</p>
                     <p className="font-semibold">{showOrderDetails.orderNumber}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Estado</p>
-                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${statusColors[showOrderDetails.status].bg} ${statusColors[showOrderDetails.status].text}`}>
+                    <p className="text-xs sm:text-sm text-gray-600">Estado</p>
+                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-medium ${statusColors[showOrderDetails.status].bg} ${statusColors[showOrderDetails.status].text}`}>
                       {React.createElement(statusColors[showOrderDetails.status].icon, { className: "w-4 h-4" })}
                       {statusColors[showOrderDetails.status].label}
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Fecha de pedido</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Fecha de pedido</p>
                     <p className="font-semibold">
                       {new Date(showOrderDetails.createdAt).toLocaleDateString('es-MX', {
                         year: 'numeric',
@@ -675,7 +739,7 @@ export default function OrdersAdminPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Entrega estimada</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Entrega estimada</p>
                     <p className="font-semibold">
                       {new Date(showOrderDetails.estimatedDelivery).toLocaleDateString('es-MX', {
                         year: 'numeric',
@@ -692,15 +756,15 @@ export default function OrdersAdminPage() {
                 <h3 className="font-semibold text-gray-800 mb-3">Información del Cliente</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Nombre</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Nombre</p>
                     <p className="font-semibold">{showOrderDetails.customer.name}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Email</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Email</p>
                     <p className="font-semibold">{showOrderDetails.customer.email}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Teléfono</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Teléfono</p>
                     <p className="font-semibold">{showOrderDetails.customer.phone}</p>
                   </div>
                 </div>
@@ -717,19 +781,19 @@ export default function OrdersAdminPage() {
                   />
                   <div className="flex-1 grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-600">Material</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Material</p>
                       <p className="font-semibold">{showOrderDetails.items.material}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Tamaño</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Tamaño</p>
                       <p className="font-semibold">{showOrderDetails.items.size}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Cantidad</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Cantidad</p>
                       <p className="font-semibold">{showOrderDetails.items.quantity} unidades</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Tipo de corte</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Tipo de corte</p>
                       <p className="font-semibold">{showOrderDetails.items.cutType}</p>
                     </div>
                   </div>
@@ -761,7 +825,7 @@ export default function OrdersAdminPage() {
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center">
                   <p className="text-lg font-semibold text-gray-800">Total</p>
-                  <p className="text-2xl font-bold text-[#275D5C]">
+                  <p className="text-lg sm:text-2xl font-bold text-[#275D5C]">
                     ${showOrderDetails.total}
                   </p>
                 </div>

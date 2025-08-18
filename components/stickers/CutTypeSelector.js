@@ -70,7 +70,7 @@ export default function CutTypeSelector({ selectedCutType, onCutTypeChange }) {
             whileTap={{ scale: 0.95 }}
           >
             {cutType.popular && (
-              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-400 text-white text-xs px-2 py-1 rounded-full font-semibold z-10">
+              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-400 text-white text-xs px-2 py-1 rounded-lg font-semibold z-10">
                 Popular
               </span>
             )}

@@ -428,7 +428,7 @@ export default function Dashboard() {
                       </p>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-lg ${
                         statusColors[order.status].bg
                       } ${
                         statusColors[order.status].text

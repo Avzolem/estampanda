@@ -88,7 +88,7 @@ export default function SizeSelector({ selectedSize, onSizeChange }) {
             whileTap={{ scale: 0.98 }}
           >
             {size.popular && (
-              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-400 to-cyan-400 text-white text-xs px-2 py-1 rounded-full font-semibold">
+              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-400 to-cyan-400 text-white text-xs px-2 py-1 rounded-lg font-semibold">
                 Popular
               </span>
             )}

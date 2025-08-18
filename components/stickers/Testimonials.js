@@ -90,7 +90,7 @@ export default function Testimonials() {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-semibold mb-4"
           >
             <span>💬</span>
             Testimonios Reales
@@ -136,7 +136,7 @@ export default function Testimonials() {
               className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow relative"
             >
               {/* Product Badge */}
-              <div className="absolute -top-3 right-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs px-3 py-1 rounded-full font-semibold">
+              <div className="absolute -top-3 right-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs px-3 py-1 rounded-lg font-semibold">
                 {testimonial.product}
               </div>
 
@@ -148,11 +148,11 @@ export default function Testimonials() {
               </div>
 
               {/* Testimonial Text */}
-              <p className="text-gray-700 mb-6 italic">"{testimonial.text}"</p>
+              <p className="text-gray-700 mb-6 italic">&ldquo;{testimonial.text}&rdquo;</p>
 
               {/* Author */}
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center text-2xl">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center text-2xl">
                   {testimonial.avatar}
                 </div>
                 <div>
@@ -187,7 +187,7 @@ export default function Testimonials() {
             <button className="btn-accent text-lg px-8 py-4">
               Crear Mis Stickers
             </button>
-            <button className="px-8 py-4 bg-white/20 backdrop-blur text-white font-bold rounded-full border-2 border-white/50 hover:bg-white/30 transition-all">
+            <button className="px-8 py-4 bg-white/20 backdrop-blur text-white font-bold rounded-lg border-2 border-white/50 hover:bg-white/30 transition-all">
               Ver Más Reseñas
             </button>
           </div>

@@ -92,7 +92,7 @@ export default function QuickUploader() {
                 {["JPG", "PNG", "SVG", "AI"].map((format) => (
                   <span
                     key={format}
-                    className="px-2 py-1 bg-gray-100 text-xs font-medium rounded-full"
+                    className="px-2 py-1 bg-gray-100 text-xs font-medium rounded-lg"
                   >
                     {format}
                   </span>
@@ -132,7 +132,7 @@ export default function QuickUploader() {
                 >
                   <div className="text-center">
                     <motion.div
-                      className="w-16 h-16 mx-auto mb-4 border-4 border-purple-200 border-t-purple-600 rounded-full"
+                      className="w-16 h-16 mx-auto mb-4 border-4 border-purple-200 border-t-purple-600 rounded-lg"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />
@@ -145,7 +145,7 @@ export default function QuickUploader() {
 
               {uploadProgress === 100 && !isUploading && (
                 <motion.div
-                  className="absolute top-2 right-2 bg-green-500 text-white p-2 rounded-full"
+                  className="absolute top-2 right-2 bg-green-500 text-white p-2 rounded-lg"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 500, damping: 15 }}
@@ -180,7 +180,7 @@ export default function QuickUploader() {
 
             {uploadProgress > 0 && uploadProgress < 100 && (
               <div className="mt-4">
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-2 bg-gray-200 rounded-lg overflow-hidden">
                   <motion.div
                     className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
                     initial={{ width: "0%" }}

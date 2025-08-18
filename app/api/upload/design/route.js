@@ -1,20 +1,14 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/libs/next-auth";
+import { auth } from "@/libs/next-auth";
 import { uploadStickerDesign, removeBackground } from "@/libs/cloudinary";
 import connectMongo from "@/libs/mongoose";
 import Design from "@/models/Design";
 
 export async function POST(req) {
   try {
-    const session = await getServerSession(authOptions);
-    
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    const session = await auth();
+    // Allow both authenticated and guest uploads
+    const userId = session?.user?.id || `guest_${Date.now()}`;
 
     const formData = await req.formData();
     const file = formData.get("file");
@@ -52,7 +46,7 @@ export async function POST(req) {
 
     const uploadResult = await uploadStickerDesign(
       base64,
-      session.user.id,
+      userId,
       name
     );
 
@@ -72,47 +66,59 @@ export async function POST(req) {
       }
     }
 
-    await connectMongo();
+    // Only save to database if user is authenticated
+    let designId = `temp_${Date.now()}`;
+    
+    if (session?.user?.id) {
+      await connectMongo();
 
-    const design = await Design.create({
-      userId: session.user.id,
-      name,
-      originalFileUrl: uploadResult.data.originalUrl,
-      processedFileUrl,
-      thumbnailUrl: uploadResult.data.thumbnailUrl,
-      fileType: file.type.split("/")[1],
-      fileSize: uploadResult.data.size,
-      dimensions: {
-        width: uploadResult.data.width,
-        height: uploadResult.data.height,
-        unit: "px",
-        dpi: 300,
-      },
-      hasTransparency: uploadResult.data.isTransparent,
-      colors: uploadResult.data.colors,
-      tags,
-      category,
-      processingStatus: {
-        backgroundRemoved: removeBackgroundOption,
-        vectorized: false,
-        optimized: true,
-      },
-      metadata: {
-        dateCreated: new Date(),
-      },
-    });
+      const design = await Design.create({
+        userId: session.user.id,
+        name,
+        originalFileUrl: uploadResult.data.originalUrl,
+        processedFileUrl,
+        thumbnailUrl: uploadResult.data.thumbnailUrl,
+        fileType: file.type.split("/")[1],
+        fileSize: uploadResult.data.size,
+        dimensions: {
+          width: uploadResult.data.width,
+          height: uploadResult.data.height,
+          unit: "px",
+          dpi: 300,
+        },
+        hasTransparency: uploadResult.data.isTransparent,
+        colors: uploadResult.data.colors,
+        tags,
+        category,
+        processingStatus: {
+          backgroundRemoved: removeBackgroundOption,
+          vectorized: false,
+          optimized: true,
+        },
+        metadata: {
+          dateCreated: new Date(),
+        },
+      });
+      
+      designId = design._id;
+    }
 
     return NextResponse.json({
       success: true,
       design: {
-        id: design._id,
-        name: design.name,
-        thumbnailUrl: design.thumbnailUrl,
-        processedFileUrl: design.processedFileUrl,
-        originalFileUrl: design.originalFileUrl,
+        id: designId,
+        name: name,
+        thumbnailUrl: uploadResult.data.thumbnailUrl,
+        processedFileUrl: processedFileUrl,
+        originalFileUrl: uploadResult.data.originalUrl,
         previewUrl: uploadResult.data.previewUrl,
-        dimensions: design.dimensions,
-        hasTransparency: design.hasTransparency,
+        dimensions: {
+          width: uploadResult.data.width,
+          height: uploadResult.data.height,
+          unit: "px",
+          dpi: 300,
+        },
+        hasTransparency: uploadResult.data.isTransparent,
       },
     });
   } catch (error) {
@@ -126,7 +132,7 @@ export async function POST(req) {
 
 export async function GET(req) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     if (!session?.user?.id) {
       return NextResponse.json(
