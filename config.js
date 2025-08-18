@@ -1,4 +1,5 @@
-import themes from "daisyui/theme";
+// Import daisyui themes - using require for better compatibility
+const themes = require("daisyui/theme/object");
 
 const config = {
   // REQUIRED
