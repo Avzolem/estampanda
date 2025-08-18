@@ -44,9 +44,9 @@ export default function Header() {
             <Link href="/muestras" className="font-medium" style={{ color: '#275D5C' }}>
               Muestras
             </Link>
-            <a href="/#calculadora-precios" className="font-medium" style={{ color: '#275D5C' }}>
+            <Link href="/#calculadora-precios" className="font-medium" style={{ color: '#275D5C' }}>
               Precios
-            </a>
+            </Link>
             <Link href="/how-it-works" className="font-medium" style={{ color: '#275D5C' }}>
               Cómo Funciona
             </Link>
@@ -126,7 +126,7 @@ export default function Header() {
                       Muestras
                       <ArrowRightIcon className="w-4 h-4" />
                     </Link>
-                    <a 
+                    <Link 
                       href="/#calculadora-precios" 
                       onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center justify-between font-medium text-lg py-3 px-4 rounded-lg hover:bg-[#F5E6D3]/30 transition-colors" 
@@ -134,7 +134,7 @@ export default function Header() {
                     >
                       Precios
                       <ArrowRightIcon className="w-4 h-4" />
-                    </a>
+                    </Link>
                     <Link 
                       href="/how-it-works" 
                       onClick={() => setMobileMenuOpen(false)}

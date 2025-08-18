@@ -87,7 +87,7 @@ export async function POST(req) {
     }
 
     // Crear ID temporal para el diseño
-    const designId = `temp_${Date.now()}`;
+    let designId = `temp_${Date.now()}`;
     
     // Si hay MongoDB configurado y usuario autenticado, guardar en DB
     if (session?.user?.id && process.env.MONGODB_URI) {
