@@ -44,9 +44,9 @@ export default function Header() {
             <Link href="/muestras" className="font-medium" style={{ color: '#275D5C' }}>
               Muestras
             </Link>
-            <Link href="/precios" className="font-medium" style={{ color: '#275D5C' }}>
+            <a href="/#calculadora-precios" className="font-medium" style={{ color: '#275D5C' }}>
               Precios
-            </Link>
+            </a>
             <Link href="/how-it-works" className="font-medium" style={{ color: '#275D5C' }}>
               Cómo Funciona
             </Link>
@@ -54,8 +54,15 @@ export default function Header() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login" className="font-medium" style={{ color: '#275D5C' }}>
-              Iniciar sesión
+            <Link 
+              href="/stickers/tracking" 
+              className="flex items-center gap-2 font-medium hover:opacity-80 transition-opacity" 
+              style={{ color: '#275D5C' }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+              Rastrear pedido
             </Link>
             <Link
               href="/stickers/designer"
@@ -119,15 +126,15 @@ export default function Header() {
                       Muestras
                       <ArrowRightIcon className="w-4 h-4" />
                     </Link>
-                    <Link 
-                      href="/precios" 
+                    <a 
+                      href="/#calculadora-precios" 
                       onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center justify-between font-medium text-lg py-3 px-4 rounded-lg hover:bg-[#F5E6D3]/30 transition-colors" 
                       style={{ color: '#275D5C' }}
                     >
                       Precios
                       <ArrowRightIcon className="w-4 h-4" />
-                    </Link>
+                    </a>
                     <Link 
                       href="/how-it-works" 
                       onClick={() => setMobileMenuOpen(false)}
@@ -140,12 +147,15 @@ export default function Header() {
                     
                     <div className="border-t border-gray-200 pt-4 mt-4">
                       <Link 
-                        href="/login" 
+                        href="/stickers/tracking" 
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center justify-center font-medium text-lg py-3 px-4 rounded-lg border-2 border-[#275D5C] hover:bg-[#F5E6D3]/30 transition-colors mb-3" 
+                        className="flex items-center justify-center gap-2 font-medium text-lg py-3 px-4 rounded-lg border-2 border-[#275D5C] hover:bg-[#F5E6D3]/30 transition-colors mb-3" 
                         style={{ color: '#275D5C' }}
                       >
-                        Iniciar sesión
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        Rastrear pedido
                       </Link>
                       <Link
                         href="/stickers/designer"

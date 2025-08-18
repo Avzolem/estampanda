@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function PriceCalculator() {
   const [quantity, setQuantity] = useState(100);
@@ -13,7 +14,7 @@ export default function PriceCalculator() {
   const total = (quantity * pricePerUnit).toFixed(2);
 
   return (
-    <section className="py-20" style={{ backgroundColor: '#FBF7F2' }}>
+    <section id="calculadora-precios" className="py-20" style={{ backgroundColor: '#FBF7F2' }}>
       <div className="max-w-4xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -182,14 +183,16 @@ export default function PriceCalculator() {
               </div>
 
               {/* CTA Button */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full mt-8 px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 text-white text-sm sm:text-base md:text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
-                style={{ backgroundColor: '#275D5C' }}
-              >
-                Ordenar Ahora - Entrega en 48hrs
-              </motion.button>
+              <Link href="/stickers/designer">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full mt-8 px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 text-white text-sm sm:text-base md:text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+                  style={{ backgroundColor: '#275D5C' }}
+                >
+                  Ordenar Ahora - Entrega en 48hrs
+                </motion.button>
+              </Link>
             </div>
           </div>
         </motion.div>
