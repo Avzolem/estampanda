@@ -63,9 +63,10 @@ Estamos construyendo una plataforma de venta de stickers personalizados con:
 - **SIEMPRE preguntar "¿Quieres que haga push?" antes de ejecutar git push**
 - **NO hacer push automáticamente después de commits**
 - **NUNCA añadir co-authored-by de Claude en los commits**
-- **NO incluir emojis ni referencias a Claude en mensajes de commit**
+- **NUNCA incluir referencias a Claude, AI o "Generated with Claude" en mensajes de commit**
+- **SÍ usar emojis relevantes en los commits (✨, 🐛, 🔧, 📝, etc.)**
 - Solo hacer commits locales cuando sea necesario
-- Usar mensajes de commit descriptivos y profesionales
+- Usar mensajes de commit descriptivos y profesionales con emojis
 - **REGLA CRÍTICA: El comando `git push` SOLO se ejecuta cuando el usuario dice explícitamente "haz push" o "push"**
 
 ### Diseño Responsivo
