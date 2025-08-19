@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/libs/next-auth";
-import config from "@/config";
+import { verifyAuth } from "@/libs/simple-auth";
 import Sidebar from "./Sidebar";
 import MobileHeader from "./MobileHeader";
 
@@ -8,17 +7,14 @@ import MobileHeader from "./MobileHeader";
 // If not, it will redirect to the login page.
 // It's applied to all subpages of /admin/dashboard in /app/dashboard/*** pages
 export default async function LayoutAdminPrivate({ children }) {
-  const session = await auth();
+  const isAuthenticated = await verifyAuth();
 
-  console.log(session);
-
-  if (!session) {
-    redirect(config.auth.loginUrl);
+  if (!isAuthenticated) {
+    redirect("/login");
   }
 
-  if (session.user.role !== "admin") {
-    redirect(config.auth.callbackUrl);
-  }
+  // Note: With simple auth, all authenticated users are admins
+  // If you need role-based access, implement it in simple-auth
 
   return (
     <div className="drawer lg:drawer-open">

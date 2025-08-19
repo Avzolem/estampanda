@@ -1,10 +1,7 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { signIn } from "next-auth/react";
-import config from "@/config";
 
 // use this to interact with our own API (/app/api folder) from the front-end side
-// See https://shipfa.st/docs/tutorials/api-call
 const apiClient = axios.create({
   baseURL: "/api",
 });
@@ -18,9 +15,10 @@ apiClient.interceptors.response.use(
 
     if (error.response?.status === 401) {
       // User not auth, ask to re login
-      toast.error("Please login");
-      // automatically redirect to /dashboard page after login
-      return signIn(undefined, { callbackUrl: config.auth.callbackUrl });
+      toast.error("Por favor inicia sesión");
+      // Redirect to login page
+      window.location.href = "/login";
+      return;
     } else if (error.response?.status === 403) {
       // User not authorized, must subscribe/purchase/pick a plan
       message = "Pick a plan to use this feature";

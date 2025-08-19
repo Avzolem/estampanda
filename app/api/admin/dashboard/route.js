@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/libs/next-auth";
+import { auth } from "@/libs/simple-auth";
 import User from "@/models/User";
 import connectMongo from "@/libs/mongoose";
 

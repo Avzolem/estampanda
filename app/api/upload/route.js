@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/libs/next-auth";
+import { auth } from "@/libs/simple-auth";
 import connectMongo from "@/libs/mongoose";
 
 // Configuración de Cloudinary (cuando esté listo)
