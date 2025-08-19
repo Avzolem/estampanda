@@ -7,6 +7,28 @@ import { Bars3Icon, XMarkIcon, ArrowRightIcon } from "@heroicons/react/24/outlin
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Handle scroll effect and mobile detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // Check initial size
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Close menu when clicking outside or scrolling
   useEffect(() => {
@@ -21,7 +43,17 @@ export default function Header() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+    <header 
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={isMobile ? {
+        backgroundColor: 'white',
+        borderBottom: '1px solid #e5e7eb'
+      } : {
+        backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: `1px solid ${scrolled ? 'rgba(255, 255, 255, 0.1)' : 'transparent'}`
+      }}>
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -95,7 +127,7 @@ export default function Header() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setMobileMenuOpen(false)}
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+                className="fixed inset-0 bg-black/20 z-40 md:hidden"
               />
               
               {/* Mobile Menu */}
