@@ -17,6 +17,7 @@ export default function OrdersManager() {
 
   useEffect(() => {
     filterOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders, filter, searchTerm]);
 
   const fetchOrders = async () => {
@@ -25,7 +26,7 @@ export default function OrdersManager() {
       const data = await res.json();
       setOrders(data.orders || mockOrders);
       setLoading(false);
-    } catch (error) {
+    } catch {
       // Usar datos mock si falla la API
       setOrders(mockOrders);
       setLoading(false);
@@ -65,8 +66,8 @@ export default function OrdersManager() {
       if (selectedOrder?.id === orderId) {
         setSelectedOrder({ ...selectedOrder, status: newStatus });
       }
-    } catch (error) {
-      console.error("Error updating order:", error);
+    } catch {
+      console.error("Error updating order");
     }
   };
 

@@ -27,6 +27,7 @@ export default function PricingCalculator({
     if (material && size && cutType && quantity) {
       calculatePrice();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [material, size, cutType, quantity, rushOrder]);
 
   const calculatePrice = () => {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -19,7 +20,7 @@ export default function ProductsManager() {
       const data = await res.json();
       setProducts(data.products || mockProducts);
       setLoading(false);
-    } catch (error) {
+    } catch {
       setProducts(mockProducts);
       setLoading(false);
     }
@@ -47,8 +48,8 @@ export default function ProductsManager() {
       
       setShowAddModal(false);
       setEditingProduct(null);
-    } catch (error) {
-      console.error("Error saving product:", error);
+    } catch {
+      console.error("Error saving product");
     }
   };
 
@@ -57,8 +58,8 @@ export default function ProductsManager() {
       try {
         await fetch(`/api/products/${productId}`, { method: "DELETE" });
         setProducts(products.filter(p => p.id !== productId));
-      } catch (error) {
-        console.error("Error deleting product:", error);
+      } catch {
+        console.error("Error deleting product");
       }
     }
   };
@@ -76,8 +77,8 @@ export default function ProductsManager() {
         setProducts(products.map(p => 
           p.id === productId ? { ...p, active: newStatus } : p
         ));
-      } catch (error) {
-        console.error("Error updating product status:", error);
+      } catch {
+        console.error("Error updating product status");
       }
     }
   };
@@ -121,7 +122,13 @@ export default function ProductsManager() {
             {/* Product Image */}
             <div className="h-48 bg-gradient-to-br from-estampanda-cream to-estampanda-light relative">
               {product.image ? (
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               ) : (
                 <div className="flex items-center justify-center h-full">
                   <span className="text-6xl">📦</span>

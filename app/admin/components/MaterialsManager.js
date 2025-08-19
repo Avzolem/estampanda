@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -19,7 +20,7 @@ export default function MaterialsManager() {
       const data = await res.json();
       setMaterials(data.materials || mockMaterials);
       setLoading(false);
-    } catch (error) {
+    } catch {
       setMaterials(mockMaterials);
       setLoading(false);
     }
@@ -49,8 +50,8 @@ export default function MaterialsManager() {
       
       setShowAddModal(false);
       setEditingMaterial(null);
-    } catch (error) {
-      console.error("Error saving material:", error);
+    } catch {
+      console.error("Error saving material");
     }
   };
 
@@ -59,8 +60,8 @@ export default function MaterialsManager() {
       try {
         await fetch(`/api/materials/${materialId}`, { method: "DELETE" });
         setMaterials(materials.filter(m => m.id !== materialId));
-      } catch (error) {
-        console.error("Error deleting material:", error);
+      } catch {
+        console.error("Error deleting material");
       }
     }
   };
@@ -102,9 +103,15 @@ export default function MaterialsManager() {
             className="bg-white rounded-xl shadow-lg overflow-hidden"
           >
             {/* Material Image */}
-            <div className="h-48 bg-gradient-to-br from-estampanda-cream to-estampanda-light flex items-center justify-center">
+            <div className="relative h-48 bg-gradient-to-br from-estampanda-cream to-estampanda-light flex items-center justify-center">
               {material.image ? (
-                <img src={material.image} alt={material.name} className="w-full h-full object-cover" />
+                <Image 
+                  src={material.image} 
+                  alt={material.name} 
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               ) : (
                 <div className="text-6xl">{material.icon || "🎨"}</div>
               )}

@@ -61,30 +61,49 @@
 @layer components {
   /* Estampanda Button Styles */
   .btn-primary {
-    @apply px-6 py-3 bg-estampanda-primary text-white font-semibold rounded-lg transition-all duration-200;
-    @apply hover:bg-estampanda-dark hover:shadow-lg hover:-translate-y-0.5;
+    @apply px-6 py-3 bg-[#275D5C] text-white font-semibold rounded-lg transition-all duration-200;
+    @apply hover:bg-[#1A3B3A] hover:shadow-lg hover:-translate-y-0.5;
     @apply active:translate-y-0 active:shadow-md;
     @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-estampanda-cream text-estampanda-primary font-semibold rounded-lg transition-all duration-200;
-    @apply hover:bg-estampanda-cream-dark hover:shadow-lg hover:-translate-y-0.5;
+    @apply px-6 py-3 bg-[#F5E6D3] text-[#275D5C] font-semibold rounded-lg transition-all duration-200;
+    @apply hover:bg-[#E8D4BB] hover:shadow-lg hover:-translate-y-0.5;
     @apply active:translate-y-0 active:shadow-md;
   }
 
   .btn-outline {
-    @apply px-6 py-3 bg-transparent text-estampanda-primary font-semibold rounded-lg transition-all duration-200;
-    @apply border-2 border-estampanda-primary;
-    @apply hover:bg-estampanda-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5;
+    @apply px-6 py-3 bg-transparent text-[#275D5C] font-semibold rounded-lg transition-all duration-200;
+    @apply border-2 border-[#275D5C];
+    @apply hover:bg-[#275D5C] hover:text-white hover:shadow-lg hover:-translate-y-0.5;
     @apply active:translate-y-0 active:shadow-md;
   }
 
   .btn-ghost {
-    @apply px-6 py-3 bg-transparent text-estampanda-primary font-semibold rounded-lg transition-all duration-200;
-    @apply hover:bg-estampanda-primary/10;
-    @apply active:bg-estampanda-primary/20;
+    @apply px-6 py-3 bg-transparent text-[#275D5C] font-semibold rounded-lg transition-all duration-200;
+    @apply hover:bg-[#275D5C]/10;
+    @apply active:bg-[#275D5C]/20;
   }
+  
+  /* Utility classes for Estampanda colors */
+  .bg-estampanda-primary { background-color: #275D5C; }
+  .bg-estampanda-secondary { background-color: #3B7F7E; }
+  .bg-estampanda-accent { background-color: #4FA09F; }
+  .bg-estampanda-cream { background-color: #F5E6D3; }
+  .bg-estampanda-light { background-color: #FBF7F2; }
+  .bg-estampanda-dark { background-color: #1A3B3A; }
+  
+  .text-estampanda-primary { color: #275D5C; }
+  .text-estampanda-secondary { color: #3B7F7E; }
+  .text-estampanda-accent { color: #4FA09F; }
+  .text-estampanda-cream { color: #F5E6D3; }
+  .text-estampanda-light { color: #FBF7F2; }
+  .text-estampanda-dark { color: #1A3B3A; }
+  
+  .border-estampanda-primary { border-color: #275D5C; }
+  .border-estampanda-secondary { border-color: #3B7F7E; }
+  .border-estampanda-accent { border-color: #4FA09F; }
 
   /* Card Styles */
   .card {
@@ -118,7 +137,9 @@
   }
 
   .glass-dark {
-    @apply backdrop-blur-md bg-estampanda-dark/90 border border-white/10;
+    @apply backdrop-blur-md border;
+    background-color: rgba(26, 59, 58, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
   /* Sticker-specific Styles */
@@ -173,8 +194,16 @@
   }
 
   .badge-primary {
-    @apply bg-estampanda-primary/10 text-estampanda-primary;
+    background-color: rgba(39, 93, 92, 0.1);
+    color: #275D5C;
   }
+  
+  /* Opacity utilities for Estampanda colors */
+  .bg-estampanda-primary\/10 { background-color: rgba(39, 93, 92, 0.1); }
+  .bg-estampanda-primary\/20 { background-color: rgba(39, 93, 92, 0.2); }
+  .bg-estampanda-secondary\/10 { background-color: rgba(59, 127, 126, 0.1); }
+  .hover\:bg-estampanda-primary\/10:hover { background-color: rgba(39, 93, 92, 0.1); }
+  .hover\:bg-estampanda-primary\/20:hover { background-color: rgba(39, 93, 92, 0.2); }
 
   .badge-success {
     @apply bg-green-100 text-green-700;

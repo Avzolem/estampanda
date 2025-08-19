@@ -88,18 +88,36 @@ Estamos construyendo una plataforma de venta de stickers personalizados con:
 
 **⚠️ GitHub bloqueará automáticamente pushes con secrets expuestos ⚠️**
 
-### Git
+### Git - 🔴🔴🔴 REGLA MÁXIMA PRIORIDAD 🔴🔴🔴
 
-- **🚨 NUNCA JAMÁS hacer `git commit` sin permiso explícito del usuario 🚨**
-- **🚨 NUNCA JAMÁS hacer `git push` sin permiso explícito del usuario 🚨**
-- **NO hacer commits automáticamente después de cambios**
-- **NO hacer push automáticamente después de commits**
-- **SIEMPRE esperar a que el usuario diga "haz commit" o "commit" para hacer commit**
-- **SIEMPRE esperar a que el usuario diga "haz push" o "push" para hacer push**
+**⛔ PROHIBIDO ABSOLUTAMENTE:**
+- **NUNCA ejecutar `git commit` sin que el usuario escriba EXACTAMENTE "haz commit" o "commit"**
+- **NUNCA ejecutar `git push` sin que el usuario escriba EXACTAMENTE "haz push" o "push"**
+- **NUNCA hacer commits "para ayudar" o "para completar la tarea"**
+- **NUNCA hacer push "porque ya hice commit"**
+
+**SI HAGO COMMIT O PUSH SIN PERMISO:**
+- Es una violación GRAVE de confianza
+- El usuario tiene derecho a estar molesto
+- Debo disculparme inmediatamente
+- Debo esperar instrucciones explícitas
+
+**FRASES VÁLIDAS DEL USUARIO PARA COMMIT:**
+- "haz commit"
+- "commit"
+- "commitea"
+- NADA MÁS cuenta como permiso
+
+**FRASES VÁLIDAS DEL USUARIO PARA PUSH:**
+- "haz push"
+- "push"
+- "pushea"
+- NADA MÁS cuenta como permiso
+
+**OTRAS REGLAS GIT:**
 - **NUNCA añadir co-authored-by de Claude en los commits**
 - **NUNCA incluir referencias a Claude, AI o "Generated with Claude" en mensajes de commit**
-- **SÍ usar emojis relevantes en los commits (✨, 🐛, 🔧, 📝, etc.) CUANDO el usuario pida hacer commit**
-- **REGLA CRÍTICA ABSOLUTA: Los comandos `git commit` y `git push` SOLO se ejecutan con permiso explícito**
+- **SÍ usar emojis relevantes en los commits SOLO cuando el usuario pida hacer commit**
 
 ### Diseño Responsivo
 

@@ -1,7 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Simple sign in button that redirects to login page

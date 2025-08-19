@@ -1,22 +1,20 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   MagnifyingGlassIcon,
-  FunnelIcon,
   ArrowDownTrayIcon,
   CheckCircleIcon,
   ClockIcon,
   TruckIcon,
   XCircleIcon,
   DocumentTextIcon,
-  CalendarIcon,
   CurrencyDollarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EyeIcon,
-  PencilIcon,
   PrinterIcon,
   EnvelopeIcon,
   ArrowPathIcon,
@@ -222,6 +220,7 @@ export default function OrdersAdminPage() {
   };
 
   // Update multiple orders
+  // eslint-disable-next-line no-unused-vars
   const updateMultipleOrders = async (newStatus) => {
     if (selectedOrders.length === 0) {
       toast.error('Selecciona al menos un pedido');
@@ -517,7 +516,7 @@ export default function OrdersAdminPage() {
                   </tr>
                 ) : (
                   orders.map((order) => {
-                    const StatusIcon = statusColors[order.status]?.icon || ClockIcon;
+                    // const StatusIcon = statusColors[order.status]?.icon || ClockIcon;
                     return (
                       <motion.tr
                         key={order._id}
