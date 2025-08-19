@@ -98,7 +98,7 @@ export default function ProductsPage() {
       
       <main className="min-h-screen bg-gradient-to-b from-[#F5E6D3] via-white to-[#F5E6D3]">
         {/* Hero Section */}
-        <section className="relative px-8 pt-32 pb-20 overflow-hidden">
+        <section className="relative px-8 pt-32 pb-32 md:pb-40 lg:pb-48 overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -230,7 +230,7 @@ export default function ProductsPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-20 text-center"
+              className="mt-32 md:mt-40 lg:mt-48 text-center"
             >
               <div className="bg-gradient-to-r from-[#275D5C] to-[#3A7F7E] rounded-3xl p-12 text-white">
                 <h2 className="text-3xl font-bold mb-4">
