@@ -66,6 +66,28 @@ Estamos construyendo una plataforma de venta de stickers personalizados con:
 
 ## ⚠️ REGLAS IMPORTANTES DE DESARROLLO
 
+### 🔴 SEGURIDAD - REGLA CRÍTICA ABSOLUTA
+
+**NUNCA JAMÁS escribir claves de API, secrets, tokens, contraseñas o credenciales reales en:**
+- `.env.example` o cualquier archivo de ejemplo
+- Archivos de documentación (`.md`, `.txt`, etc.)
+- Comentarios en el código fuente
+- Scripts de configuración o testing
+- Archivos de debugging
+- NINGÚN archivo que pueda ser subido a git
+
+**SIEMPRE:**
+- Usar variables de entorno desde `.env.local` (que está en .gitignore)
+- En archivos de ejemplo, usar SOLO placeholders genéricos:
+  - `your-api-key-here`
+  - `sk_test_xxx...`
+  - `REPLACE_WITH_YOUR_SECRET`
+  - `your_mongodb_uri_here`
+- Verificar que archivos con secrets estén en `.gitignore`
+- Si accidentalmente se escribe un secret, informar INMEDIATAMENTE al usuario antes de cualquier commit
+
+**⚠️ GitHub bloqueará automáticamente pushes con secrets expuestos ⚠️**
+
 ### Git
 
 - **🚨 NUNCA JAMÁS hacer `git commit` sin permiso explícito del usuario 🚨**

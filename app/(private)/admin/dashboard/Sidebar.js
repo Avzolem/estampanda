@@ -7,7 +7,7 @@ import {
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Admin sidebar navigation options
 const sidebarOptions = [
@@ -25,9 +25,11 @@ const sidebarOptions = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
   };
 
   return (

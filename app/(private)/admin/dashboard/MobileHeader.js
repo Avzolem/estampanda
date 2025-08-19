@@ -1,11 +1,14 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 
 export default function MobileHeader() {
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
+  const router = useRouter();
+  
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
   };
 
   return (
