@@ -1,10 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
 
 export default function DashboardStats() {
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     totalOrders: 45,
     pendingOrders: 8,
     totalRevenue: 15420,
@@ -13,7 +13,7 @@ export default function DashboardStats() {
     weeklyGrowth: 12.5,
   });
 
-  const [recentOrders, setRecentOrders] = useState([
+  const [recentOrders] = useState([
     { id: "ORD-045", customer: "María López", amount: 299, status: "pending", time: "Hace 10 min" },
     { id: "ORD-044", customer: "Juan Pérez", amount: 450, status: "processing", time: "Hace 1 hora" },
     { id: "ORD-043", customer: "Ana García", amount: 189, status: "completed", time: "Hace 2 horas" },

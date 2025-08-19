@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,7 +22,7 @@ export default function GalleryManager() {
       const res = await fetch("/api/gallery");
       const data = await res.json();
       setImages(data.images || mockImages);
-    } catch (error) {
+    } catch {
       setImages(mockImages);
     }
   };
@@ -62,8 +63,8 @@ export default function GalleryManager() {
         }
         
         setUploadProgress(((i + 1) / files.length) * 100);
-      } catch (error) {
-        console.error("Error uploading file:", error);
+      } catch (err) {
+        console.error("Error uploading file:", err);
       }
     }
 
@@ -82,8 +83,8 @@ export default function GalleryManager() {
     for (const imageId of selectedImages) {
       try {
         await fetch(`/api/gallery/${imageId}`, { method: "DELETE" });
-      } catch (error) {
-        console.error("Error deleting image:", error);
+      } catch (err) {
+        console.error("Error deleting image:", err);
       }
     }
 
@@ -262,10 +263,12 @@ export default function GalleryManager() {
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
                      onClick={() => toggleImageSelection(image.id)}>
                   <div className="aspect-square bg-gray-100">
-                    <img
+                    <Image
                       src={image.url}
                       alt={image.name}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
                   </div>
                   <div className="p-3">
@@ -323,7 +326,7 @@ export default function GalleryManager() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
-                      <img src={image.url} alt={image.name} className="w-full h-full object-cover" />
+                      <Image src={image.url} alt={image.name} fill className="object-cover" sizes="64px" />
                     </div>
                   </td>
                   <td className="px-6 py-4 font-medium text-gray-900">{image.name}</td>

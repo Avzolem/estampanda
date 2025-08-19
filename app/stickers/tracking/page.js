@@ -14,8 +14,7 @@ import {
   ShieldCheckIcon,
   MapPinIcon,
   EnvelopeIcon,
-  PhoneIcon,
-  ArrowRightIcon
+  PhoneIcon
 } from "@heroicons/react/24/solid";
 
 // Datos de ejemplo - En producción vendría de la base de datos

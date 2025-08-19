@@ -6,7 +6,7 @@ import Design from "@/models/Design";
 // Safe session helper
 async function getSession() {
   try {
-    const { auth } = await import("@/libs/next-auth");
+    const { auth } = await import("@/libs/simple-auth");
     return await auth();
   } catch (error) {
     console.error("Auth error:", error);

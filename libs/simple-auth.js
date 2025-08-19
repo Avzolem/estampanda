@@ -65,3 +65,13 @@ export async function requireAuth() {
   }
   return session;
 }
+
+// Alias para compatibilidad con los archivos existentes
+export async function auth() {
+  return await getSession();
+}
+
+export async function verifyAuth() {
+  const session = await getSession();
+  return session !== null;
+}

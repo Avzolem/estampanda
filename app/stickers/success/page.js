@@ -12,7 +12,6 @@ import {
   HomeIcon,
   TruckIcon,
   ClockIcon,
-  ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 
 function SuccessContent() {
