@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,10 +13,14 @@ import {
   EnvelopeIcon,
   PhoneIcon,
   MapPinIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
+  ExclamationTriangleIcon,
+  SparklesIcon
 } from "@heroicons/react/24/outline";
+import { loadStripe } from "@stripe/stripe-js";
 import toast from "react-hot-toast";
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "pk_test_51O6mJvLM8ILLlIvY8ILLlIvY");
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -543,15 +546,9 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="flex gap-2 mb-4">
-                          <div className="relative w-12 h-8">
-                            <Image src="https://img.icons8.com/color/48/visa.png" alt="Visa" fill className="object-contain" sizes="48px" />
-                          </div>
-                          <div className="relative w-12 h-8">
-                            <Image src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" fill className="object-contain" sizes="48px" />
-                          </div>
-                          <div className="relative w-12 h-8">
-                            <Image src="https://img.icons8.com/color/48/amex.png" alt="Amex" fill className="object-contain" sizes="48px" />
-                          </div>
+                          <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" className="h-8" />
+                          <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" className="h-8" />
+                          <img src="https://img.icons8.com/color/48/amex.png" alt="Amex" className="h-8" />
                         </div>
 
                         <p className="text-xs text-gray-500">
@@ -659,15 +656,11 @@ export default function CheckoutPage() {
                     {/* Design preview */}
                     {configuration.designFile?.preview && (
                       <div className="bg-gray-50 rounded-lg p-4">
-                        <div className="relative w-full h-32">
-                          <Image
-                            src={configuration.designFile.preview}
-                            alt="Tu diseño"
-                            fill
-                            className="object-contain"
-                            sizes="(max-width: 768px) 100vw, 300px"
-                          />
-                        </div>
+                        <img
+                          src={configuration.designFile.preview}
+                          alt="Tu diseño"
+                          className="w-full h-32 object-contain"
+                        />
                       </div>
                     )}
 

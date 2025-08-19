@@ -1,15 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   PlusIcon,
   MagnifyingGlassIcon,
+  FunnelIcon,
   HeartIcon,
+  EyeIcon,
   TrashIcon,
+  PencilIcon,
   DocumentDuplicateIcon,
+  ArrowDownTrayIcon,
   ClockIcon,
   SparklesIcon,
   Squares2X2Icon,
@@ -342,12 +345,10 @@ export default function GalleryPage() {
                     className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer group"
                   >
                     <div className="relative aspect-square bg-gray-100">
-                      <Image
+                      <img
                         src={template.thumbnail}
                         alt={template.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="w-full h-full object-cover"
                       />
                       {template.isPremium && (
                         <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-2 py-1 rounded-lg text-xs font-bold">
@@ -387,12 +388,10 @@ export default function GalleryPage() {
                   className="bg-white rounded-xl shadow-lg overflow-hidden group"
                 >
                   <div className="relative aspect-square bg-gray-100">
-                    <Image
+                    <img
                       src={design.thumbnail}
                       alt={design.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="w-full h-full object-cover"
                     />
                     
                     {/* Hover Actions */}
@@ -477,15 +476,11 @@ export default function GalleryPage() {
                   transition={{ delay: index * 0.05 }}
                   className="bg-white rounded-xl shadow-lg p-3 sm:p-4 flex items-center gap-3 sm:gap-4"
                 >
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20">
-                    <Image
-                      src={design.thumbnail}
-                      alt={design.name}
-                      fill
-                      className="rounded-lg object-cover"
-                      sizes="80px"
-                    />
-                  </div>
+                  <img
+                    src={design.thumbnail}
+                    alt={design.name}
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
+                  />
                   
                   <div className="flex-1">
                     <h3 className="text-sm sm:text-base font-semibold text-gray-800">{design.name}</h3>
