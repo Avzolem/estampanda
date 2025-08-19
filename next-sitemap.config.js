@@ -1,7 +1,29 @@
 module.exports = {
-  // REQUIRED: add your own domain name here (e.g. https://shipfa.st),
-  siteUrl: process.env.SITE_URL || "https://shipfa.st",
+  siteUrl: process.env.SITE_URL || "https://estampanda.com",
   generateRobotsTxt: true,
-  // use this to exclude routes from the sitemap (i.e. a user dashboard). By default, NextJS app router metadata files are excluded (https://nextjs.org/docs/app/api-reference/file-conventions/metadata)
-  exclude: ["/twitter-image.*", "/opengraph-image.*", "/icon.*"],
+  changefreq: "daily",
+  priority: 0.7,
+  exclude: [
+    "/twitter-image.*", 
+    "/opengraph-image.*", 
+    "/icon.*",
+    "/admin",
+    "/admin/*",
+    "/api/*"
+  ],
+  additionalPaths: async (config) => [
+    await config.transform(config, "/"),
+    await config.transform(config, "/stickers/designer"),
+    await config.transform(config, "/stickers/gallery"),
+    await config.transform(config, "/stickers/materials"),
+  ],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/admin", "/api"],
+      },
+    ],
+  },
 };

@@ -1,38 +1,125 @@
-# ShipFast — Javascript
+# Estampanda - Plataforma de Stickers Personalizados 🎨
 
-Hey maker 👋 it's Marc from [ShipFast](https://shipfa.st/docs). Let's get your startup off the ground, FAST ⚡️
+Plataforma e-commerce para crear y vender stickers personalizados de alta calidad con envío rápido en México.
 
-<sub>**Watch/Star the repo to be notified when updates are pushed**</sub>
+## 🚀 Características
 
-## Get Started
+- **Diseñador de Stickers**: Herramienta intuitiva para personalizar stickers
+- **Múltiples Materiales**: Vinilo, holográfico, transparente, mate, brillante y más
+- **Tamaños Personalizables**: Desde 3cm hasta 50cm con dimensiones personalizadas
+- **Upload de Diseños**: Integración con Cloudinary para gestión de imágenes
+- **Panel Administrativo**: Gestión completa de pedidos, productos y materiales
+- **Sistema de Precios Dinámico**: Descuentos por volumen automáticos
+- **Tracking de Pedidos**: Seguimiento en tiempo real del estado del pedido
 
-1. Follow the [Get Started Tutorial](https://shipfa.st/docs) to clone the repo and run your local server 💻
+## 🛠️ Stack Tecnológico
 
-<sub>**Looking for the /pages router version?** Use this [documentation](https://shipfa.st/docs-old) instead</sub>
+- **Frontend**: Next.js 14, React 19, Tailwind CSS
+- **Backend**: Node.js, API Routes de Next.js
+- **Base de Datos**: MongoDB con Mongoose
+- **Storage**: Cloudinary para imágenes
+- **Pagos**: Stripe (pendiente de integración)
+- **Hosting**: Vercel
 
-2. Follow the [Ship In 5 Minutes Tutorial](https://shipfa.st/docs/tutorials/ship-in-5-minutes) to learn the foundation and ship your app quickly ⚡️
+## 📦 Instalación
 
-## Links
+1. Clona el repositorio:
+```bash
+git clone https://github.com/tu-usuario/estampanda.git
+cd estampanda
+```
 
--   [📚 Documentation](https://shipfa.st/docs)
--   [📣 Updates](https://shipfast.beehiiv.com/)
--   [🧑‍💻 Discord](https://shipfa.st/dashboard)
--   [🥇 Leaderboard](https://shipfa.st/leaderboard)
+2. Instala las dependencias:
+```bash
+npm install
+```
 
-## Support
+3. Configura las variables de entorno:
+```bash
+cp .env.example .env.local
+# Edita .env.local con tus credenciales
+```
 
-Reach out at hello@shipfa.st
+4. Ejecuta el servidor de desarrollo:
+```bash
+npm run dev
+```
 
-Let's ship it, FAST ⚡️
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-\_
+## 🔧 Variables de Entorno
 
-**📈 Grow your startup with [DataFast](https://datafa.st?ref=shipfast_readme)**
+```env
+# MongoDB
+MONGODB_URI=tu_uri_de_mongodb
 
--   Analyze your traffic
--   Get insights on your customers
--   Make data-driven decisions
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=tu_cloud_name
+CLOUDINARY_API_KEY=tu_api_key
+CLOUDINARY_API_SECRET=tu_api_secret
 
-ShipFast members get 30% OFF on all plans! 🎁
+# NextAuth
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=tu_secret
 
-![datafast](https://github.com/user-attachments/assets/085453a6-8a66-45be-b7ea-a7a08e856ed8)
+# Admin
+ADMIN_USERNAME=tu_usuario
+ADMIN_PASSWORD=tu_contraseña
+
+# Stripe (cuando lo configures)
+STRIPE_PUBLIC_KEY=pk_test_xxx
+STRIPE_SECRET_KEY=sk_test_xxx
+```
+
+## 📝 Scripts Disponibles
+
+- `npm run dev` - Servidor de desarrollo
+- `npm run build` - Build de producción
+- `npm start` - Ejecutar build de producción
+- `npm run lint` - Linter
+- `npm run postbuild` - Generar sitemap
+
+## 🎨 Paleta de Colores
+
+- **Primary**: #275D5C (Verde Teal Oscuro)
+- **Secondary**: #F5E6D3 (Beige/Crema)
+- **Accent**: #4FA09F (Teal Claro)
+- **Light**: #FBF7F2 (Crema Claro)
+
+## 📁 Estructura del Proyecto
+
+```
+estampanda/
+├── app/                # Páginas y rutas (App Router)
+│   ├── admin/         # Panel administrativo
+│   ├── api/           # API Routes
+│   └── stickers/      # Sección de stickers
+├── components/        # Componentes reutilizables
+├── models/           # Modelos de MongoDB
+├── libs/             # Utilidades y configuración
+└── public/           # Archivos estáticos
+```
+
+## 🚀 Estado del Proyecto
+
+- ✅ Frontend completo (95%)
+- ✅ Panel admin funcional
+- ✅ APIs implementadas
+- ✅ MongoDB conectado
+- ✅ Cloudinary integrado
+- ⏳ Stripe pendiente
+- ⏳ Sistema de emails pendiente
+
+## 📞 Soporte
+
+Para soporte o consultas sobre el proyecto, contacta a:
+- Email: soporte@estampanda.com
+- WhatsApp: +52 555 123 4567
+
+## 📄 Licencia
+
+© 2025 Estampanda. Todos los derechos reservados.
+
+---
+
+**Desarrollado con 💚 para crear los mejores stickers personalizados de México**

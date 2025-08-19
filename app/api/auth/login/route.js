@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
-const ADMIN_USER = 'admin';
-const ADMIN_PASSWORD = 'Estampanda2025!';
+const ADMIN_USER = process.env.ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'default-secret-key-change-in-production';
 
 export async function POST(request) {

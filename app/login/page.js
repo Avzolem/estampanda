@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -38,24 +40,72 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20 p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-base-100 rounded-2xl shadow-2xl p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-primary">ESTAMPANDA</h1>
-            <p className="text-base-content/60 mt-2">Panel de Administración</p>
+    <div className="min-h-screen flex items-center justify-center bg-estampanda-light p-4">
+      {/* Stickers decorativos flotantes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ 
+            y: [0, -20, 0],
+            rotate: [0, 10, 0]
+          }}
+          transition={{ duration: 6, repeat: Infinity }}
+          className="absolute top-20 left-10 text-6xl opacity-20"
+        >
+          🌟
+        </motion.div>
+        <motion.div
+          animate={{ 
+            y: [0, 20, 0],
+            rotate: [0, -10, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute bottom-20 right-10 text-6xl opacity-20"
+        >
+          ✨
+        </motion.div>
+        <motion.div
+          animate={{ 
+            y: [0, -15, 0],
+            x: [0, 10, 0]
+          }}
+          transition={{ duration: 7, repeat: Infinity }}
+          className="absolute top-40 right-20 text-5xl opacity-20"
+        >
+          🎨
+        </motion.div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md relative z-10"
+      >
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+          {/* Header con gradiente */}
+          <div className="bg-gradient-to-br from-estampanda-primary to-estampanda-accent p-8 text-white">
+            <Link href="/" className="inline-block mb-4">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="text-4xl font-bold"
+              >
+                ESTAMPANDA
+              </motion.div>
+            </Link>
+            <p className="text-estampanda-cream opacity-90">Panel de Administración</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Formulario */}
+          <form onSubmit={handleSubmit} className="p-8 space-y-6">
             <div>
-              <label className="label">
-                <span className="label-text font-medium">Usuario</span>
+              <label className="block text-sm font-medium text-estampanda-dark mb-2">
+                Usuario
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="input input-bordered w-full"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-estampanda-accent focus:ring-2 focus:ring-estampanda-accent/20 transition-all"
                 placeholder="Ingresa tu usuario"
                 required
                 disabled={loading}
@@ -63,14 +113,14 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="label">
-                <span className="label-text font-medium">Contraseña</span>
+              <label className="block text-sm font-medium text-estampanda-dark mb-2">
+                Contraseña
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input input-bordered w-full"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-estampanda-accent focus:ring-2 focus:ring-estampanda-accent/20 transition-all"
                 placeholder="Ingresa tu contraseña"
                 required
                 disabled={loading}
@@ -78,32 +128,55 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="alert alert-error">
-                <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{error}</span>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm"
+              >
+                {error}
+              </motion.div>
             )}
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
-              className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
+              className={`w-full py-3.5 px-6 bg-gradient-to-r from-estampanda-primary to-estampanda-secondary text-white font-semibold rounded-xl transition-all ${
+                loading ? "opacity-70 cursor-not-allowed" : "hover:shadow-lg"
+              }`}
               disabled={loading}
             >
-              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
-            </button>
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Iniciando sesión...
+                </div>
+              ) : (
+                "Iniciar Sesión"
+              )}
+            </motion.button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-base-300">
-            <div className="text-sm text-base-content/60 space-y-1">
-              <p className="font-medium">Credenciales de prueba:</p>
-              <p>Usuario: admin</p>
-              <p>Contraseña: Estampanda2025!</p>
-            </div>
-          </div>
         </div>
-      </div>
+
+        {/* Link de regreso */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-center mt-6"
+        >
+          <Link 
+            href="/" 
+            className="text-estampanda-primary hover:text-estampanda-secondary transition-colors text-sm"
+          >
+            ← Volver al sitio principal
+          </Link>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
