@@ -25,7 +25,7 @@ const mockDesigns = [
   {
     id: 1,
     name: "Logo Empresa",
-    thumbnail: "https://via.placeholder.com/300x300/275D5C/FFFFFF?text=Logo",
+    thumbnail: "/images/estampandalogonobg.png",
     createdAt: "2025-08-10",
     lastUsed: "2025-08-14",
     usageCount: 3,
@@ -39,7 +39,7 @@ const mockDesigns = [
   {
     id: 2,
     name: "Mascota Kawaii",
-    thumbnail: "https://via.placeholder.com/300x300/FF69B4/FFFFFF?text=Kawaii",
+    thumbnail: "/images/estampandalogo.png",
     createdAt: "2025-08-08",
     lastUsed: "2025-08-12",
     usageCount: 1,
@@ -53,7 +53,7 @@ const mockDesigns = [
   {
     id: 3,
     name: "Texto Motivacional",
-    thumbnail: "https://via.placeholder.com/300x300/4FA09F/FFFFFF?text=Motivación",
+    thumbnail: "/images/estampandalogonobg2.png",
     createdAt: "2025-08-05",
     lastUsed: "2025-08-05",
     usageCount: 1,
@@ -67,7 +67,7 @@ const mockDesigns = [
   {
     id: 4,
     name: "Patrón Geométrico",
-    thumbnail: "https://via.placeholder.com/300x300/F5E6D3/275D5C?text=Patrón",
+    thumbnail: "/images/Estampanda..png",
     createdAt: "2025-08-01",
     lastUsed: "2025-08-10",
     usageCount: 2,
@@ -77,6 +77,34 @@ const mockDesigns = [
     tags: ["patrón", "geométrico", "abstracto"],
     material: "Metálico",
     size: "8x8 cm",
+  },
+  {
+    id: 5,
+    name: "Logo Vintage",
+    thumbnail: "/images/Estampanda. (2).png",
+    createdAt: "2025-08-03",
+    lastUsed: "2025-08-11",
+    usageCount: 5,
+    likes: 34,
+    isPublic: true,
+    category: "business",
+    tags: ["vintage", "retro", "clásico"],
+    material: "Brillante",
+    size: "6x6 cm",
+  },
+  {
+    id: 6,
+    name: "Ilustración Panda",
+    thumbnail: "/images/panda-logo.svg",
+    createdAt: "2025-08-02",
+    lastUsed: "2025-08-13",
+    usageCount: 8,
+    likes: 67,
+    isPublic: true,
+    category: "art",
+    tags: ["panda", "animal", "ilustración"],
+    material: "Vinilo",
+    size: "9x9 cm",
   },
 ];
 
@@ -93,23 +121,44 @@ const templates = [
   {
     id: "t1",
     name: "Plantilla Negocio",
-    thumbnail: "https://via.placeholder.com/300x300/1A3B3A/FFFFFF?text=Business",
+    thumbnail: "/images/estampandalogo.png",
     category: "business",
     isPremium: false,
   },
   {
     id: "t2",
     name: "Plantilla Cute",
-    thumbnail: "https://via.placeholder.com/300x300/FFB6C1/FFFFFF?text=Cute",
+    thumbnail: "/images/estampandalogonobg.png",
     category: "art",
     isPremium: false,
   },
   {
     id: "t3",
     name: "Plantilla Premium",
-    thumbnail: "https://via.placeholder.com/300x300/FFD700/000000?text=Premium",
+    thumbnail: "/images/estampandalogonobg2.png",
     category: "premium",
     isPremium: true,
+  },
+  {
+    id: "t4",
+    name: "Plantilla Moderna",
+    thumbnail: "/images/Estampanda..png",
+    category: "business",
+    isPremium: false,
+  },
+  {
+    id: "t5",
+    name: "Plantilla Creativa",
+    thumbnail: "/images/Estampanda. (2).png",
+    category: "art",
+    isPremium: true,
+  },
+  {
+    id: "t6",
+    name: "Plantilla Minimalista",
+    thumbnail: "/images/menu.png",
+    category: "text",
+    isPremium: false,
   },
 ];
 
@@ -189,7 +238,7 @@ export default function GalleryPage() {
             <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
               <button
                 onClick={() => setShowTemplates(!showTemplates)}
-                className={`flex-1 sm:flex-none px-5 sm:px-6 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all ${
+                className={`flex-1 sm:flex-none px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all ${
                   showTemplates
                     ? "bg-[#F5E6D3] text-[#275D5C]"
                     : "bg-white text-[#275D5C] border-2 border-[#275D5C] hover:bg-[#F5E6D3]"
@@ -202,7 +251,7 @@ export default function GalleryPage() {
               </button>
               <Link
                 href="/stickers/designer"
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base font-semibold hover:bg-[#3B7F7E] transition-colors"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base font-semibold hover:bg-[#3B7F7E] transition-colors"
               >
                 <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 Nuevo Diseño
@@ -236,7 +285,7 @@ export default function GalleryPage() {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium whitespace-nowrap transition-all ${
+                  className={`px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 rounded-lg text-sm sm:text-base font-medium whitespace-nowrap transition-all ${
                     selectedCategory === category.id
                       ? "bg-[#275D5C] text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -254,7 +303,7 @@ export default function GalleryPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`p-3 rounded-lg transition-all ${
+                className={`px-8 py-2.5 sm:px-10 sm:py-3 md:px-12 md:py-3.5 rounded-lg transition-all ${
                   viewMode === "grid"
                     ? "bg-[#275D5C] text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -264,7 +313,7 @@ export default function GalleryPage() {
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-3 rounded-lg transition-all ${
+                className={`px-8 py-2.5 sm:px-10 sm:py-3 md:px-12 md:py-3.5 rounded-lg transition-all ${
                   viewMode === "list"
                     ? "bg-[#275D5C] text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -309,7 +358,7 @@ export default function GalleryPage() {
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Link
                           href="/stickers/designer"
-                          className="px-5 py-2.5 bg-white text-[#275D5C] rounded-lg font-semibold"
+                          className="px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 bg-white text-[#275D5C] rounded-lg font-semibold"
                         >
                           Usar plantilla
                         </Link>
@@ -351,19 +400,21 @@ export default function GalleryPage() {
                         <div className="flex gap-2">
                           <Link
                             href="/stickers/designer"
-                            className="flex-1 py-2 sm:py-2.5 bg-[#275D5C] text-white rounded-lg text-center text-xs sm:text-sm font-semibold hover:bg-[#3B7F7E] transition-colors"
+                            className="flex-1 px-6 py-2.5 sm:px-8 sm:py-3 bg-[#275D5C] text-white rounded-lg text-center text-xs sm:text-sm font-semibold hover:bg-[#3B7F7E] transition-colors"
                           >
-                            Usar
+                            Usar plantilla
                           </Link>
                           <button
                             onClick={() => duplicateDesign(design)}
-                            className="p-2 bg-white/90 text-gray-700 rounded-lg hover:bg-white transition-colors"
+                            className="px-6 py-2.5 sm:px-8 sm:py-3 bg-white/90 text-gray-700 rounded-lg hover:bg-white transition-colors"
+                            title="Duplicar diseño"
                           >
                             <DocumentDuplicateIcon className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => deleteDesign(design.id)}
-                            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                            className="px-6 py-2.5 sm:px-8 sm:py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                            title="Eliminar diseño"
                           >
                             <TrashIcon className="w-4 h-4" />
                           </button>
@@ -401,7 +452,7 @@ export default function GalleryPage() {
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs text-gray-500">
                         <ClockIcon className="w-3 h-3 sm:w-4 sm:h-4" />
-                        {new Date(design.createdAt).toLocaleDateString()}
+                        {design.createdAt}
                       </div>
                       <div className="flex items-center gap-1 text-xs">
                         <HeartIcon className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
@@ -451,19 +502,21 @@ export default function GalleryPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href="/stickers/designer"
-                      className="px-5 py-2.5 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
+                      className="px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
                     >
                       Usar diseño
                     </Link>
                     <button
                       onClick={() => duplicateDesign(design)}
-                      className="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                      title="Duplicar diseño"
                     >
                       <DocumentDuplicateIcon className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => toggleLike(design.id)}
-                      className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="px-6 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      title="Me gusta"
                     >
                       {likedDesigns.includes(design.id) ? (
                         <HeartSolidIcon className="w-5 h-5 text-red-500" />
@@ -473,7 +526,8 @@ export default function GalleryPage() {
                     </button>
                     <button
                       onClick={() => deleteDesign(design.id)}
-                      className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                      className="px-6 py-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                      title="Eliminar diseño"
                     >
                       <TrashIcon className="w-5 h-5" />
                     </button>
@@ -502,7 +556,7 @@ export default function GalleryPage() {
             </p>
             <Link
               href="/stickers/designer"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-2.5 sm:px-16 sm:py-3 md:px-24 md:py-3.5 bg-[#275D5C] text-white rounded-lg font-semibold hover:bg-[#3B7F7E] transition-colors"
             >
               <PlusIcon className="w-5 h-5" />
               Crear nuevo diseño

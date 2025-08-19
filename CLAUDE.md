@@ -55,19 +55,29 @@ Estamos construyendo una plataforma de venta de stickers personalizados con:
 - Ver `Plan de Construccion.md` para el roadmap completo
 - Ver `COMPONENTS_STRUCTURE.md` para entender la arquitectura actual
 
+## ⚠️ REGLAS CRÍTICAS - NUNCA ROMPER ESTAS REGLAS
+
+### 🚨 REGLAS ABSOLUTAS DE GIT 🚨
+1. **NUNCA hacer `git commit` sin que el usuario lo pida explícitamente**
+2. **NUNCA hacer `git push` sin que el usuario lo pida explícitamente**
+3. **Solo hacer commit cuando el usuario diga: "haz commit", "commit" o similar**
+4. **Solo hacer push cuando el usuario diga: "haz push", "push" o similar**
+5. **Los cambios en archivos SÍ se pueden hacer, pero NO commitear sin permiso**
+
 ## ⚠️ REGLAS IMPORTANTES DE DESARROLLO
 
 ### Git
 
+- **🚨 NUNCA JAMÁS hacer `git commit` sin permiso explícito del usuario 🚨**
 - **🚨 NUNCA JAMÁS hacer `git push` sin permiso explícito del usuario 🚨**
-- **SIEMPRE preguntar "¿Quieres que haga push?" antes de ejecutar git push**
+- **NO hacer commits automáticamente después de cambios**
 - **NO hacer push automáticamente después de commits**
+- **SIEMPRE esperar a que el usuario diga "haz commit" o "commit" para hacer commit**
+- **SIEMPRE esperar a que el usuario diga "haz push" o "push" para hacer push**
 - **NUNCA añadir co-authored-by de Claude en los commits**
 - **NUNCA incluir referencias a Claude, AI o "Generated with Claude" en mensajes de commit**
-- **SÍ usar emojis relevantes en los commits (✨, 🐛, 🔧, 📝, etc.)**
-- Solo hacer commits locales cuando sea necesario
-- Usar mensajes de commit descriptivos y profesionales con emojis
-- **REGLA CRÍTICA: El comando `git push` SOLO se ejecuta cuando el usuario dice explícitamente "haz push" o "push"**
+- **SÍ usar emojis relevantes en los commits (✨, 🐛, 🔧, 📝, etc.) CUANDO el usuario pida hacer commit**
+- **REGLA CRÍTICA ABSOLUTA: Los comandos `git commit` y `git push` SOLO se ejecutan con permiso explícito**
 
 ### Diseño Responsivo
 

@@ -93,46 +93,51 @@ export default function ProductsPage() {
   });
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="min-h-screen bg-gradient-to-b from-[#F5E6D3] via-white to-[#F5E6D3]">
-        {/* Hero Section */}
-        <section className="relative px-8 pt-32 pb-32 md:pb-40 lg:pb-48 overflow-hidden">
+      <main className="flex-grow bg-gradient-to-b from-[#FBF7F2] via-white to-[#F5E6D3]">
+        
+        {/* Hero Title Section - Separada */}
+        <section className="pt-24 pb-8 md:pt-32 md:pb-12 lg:pt-40 lg:pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-16"
+              className="text-center"
             >
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6">
                 Nuestros Productos
-                <span className="block text-3xl md:text-4xl text-[#275D5C] mt-2">
+                <span className="block text-2xl sm:text-3xl md:text-4xl text-[#275D5C] mt-2">
                   Elige el sticker perfecto para tu proyecto
                 </span>
               </h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
                 Desde diseños troquelados hasta efectos holográficos, 
                 tenemos el sticker ideal para cada necesidad
               </p>
             </motion.div>
+          </div>
+        </section>
 
-            {/* Category Filter */}
+        {/* Category Filter Section - Separada */}
+        <section className="py-4 md:py-6 lg:py-8 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-wrap justify-center gap-4 mb-12"
+              className="flex flex-wrap justify-center gap-3 md:gap-4"
             >
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105 ${
+                  className={`px-6 py-2.5 sm:px-8 sm:py-3 md:px-10 md:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all transform hover:scale-105 ${
                     selectedCategory === category.id
                       ? "bg-[#275D5C] text-white shadow-lg"
-                      : "bg-white text-gray-700 hover:bg-gray-50 shadow-md"
+                      : "bg-[#F5E6D3] text-[#275D5C] hover:bg-[#275D5C] hover:text-white shadow-md"
                   }`}
                 >
                   <span className="mr-2">{category.icon}</span>
@@ -140,8 +145,12 @@ export default function ProductsPage() {
                 </button>
               ))}
             </motion.div>
+          </div>
+        </section>
 
-            {/* Products Grid */}
+        {/* Products Grid Section - Separada */}
+        <section className="py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
               {filteredProducts.map((product, index) => (
                 <motion.div
@@ -224,65 +233,44 @@ export default function ProductsPage() {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
 
-            {/* Custom Request Section */}
+        {/* Espaciado moderado entre secciones */}
+        <div className="h-16 md:h-20 lg:h-24"></div>
+
+        {/* Custom Request Section - Con espaciado balanceado */}
+        <section className="py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-32 md:mt-40 lg:mt-48 text-center"
+              className="text-center"
             >
-              <div className="bg-gradient-to-r from-[#275D5C] to-[#3A7F7E] rounded-3xl p-12 text-white">
-                <h2 className="text-3xl font-bold mb-4">
+              <div className="bg-gradient-to-r from-[#275D5C] to-[#4FA09F] rounded-3xl p-8 md:p-12 lg:p-16 text-white shadow-2xl">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
                   ¿No encuentras lo que buscas?
                 </h2>
-                <p className="text-xl mb-8 opacity-90">
+                <p className="text-lg md:text-xl mb-6 md:mb-8 opacity-90">
                   Podemos crear stickers personalizados según tus necesidades específicas
                 </p>
                 <Link
                   href="/contact"
-                  className="inline-block bg-white text-[#275D5C] font-bold py-4 px-8 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all"
+                  className="inline-block px-8 py-2.5 sm:px-16 sm:py-3 md:px-24 md:py-3.5 bg-[#F5E6D3] text-[#275D5C] text-sm sm:text-base md:text-lg font-bold rounded-lg hover:bg-white hover:shadow-lg transform hover:scale-105 transition-all"
                 >
                   Solicitar Cotización Personalizada
                 </Link>
               </div>
             </motion.div>
           </div>
-
-          {/* Decorative Elements */}
-          <motion.div
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 10, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute top-20 left-10 text-6xl opacity-20"
-          >
-            🎨
-          </motion.div>
-          
-          <motion.div
-            animate={{
-              y: [0, 20, 0],
-              rotate: [0, -10, 0],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute bottom-20 right-10 text-6xl opacity-20"
-          >
-            ✨
-          </motion.div>
         </section>
+
+        {/* Spacer Section para separar del Footer */}
+        <div className="h-12 md:h-16 lg:h-20"></div>
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
