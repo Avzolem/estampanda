@@ -323,7 +323,7 @@ export default function OrdersAdminPage() {
             </div>
             <button
               onClick={exportToCSV}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#275D5C] text-white rounded-lg hover:bg-[#3B7F7E] transition-colors"
+              className="flex items-center gap-2 px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 bg-[#275D5C] text-white rounded-lg hover:bg-[#3B7F7E] transition-colors font-semibold"
             >
               <ArrowDownTrayIcon className="w-5 h-5" />
               Exportar CSV
@@ -616,19 +616,19 @@ export default function OrdersAdminPage() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => setShowOrderDetails(order)}
-                            className="p-1 text-gray-600 hover:text-[#275D5C] transition-colors"
+                            className="p-2 text-gray-600 hover:text-[#275D5C] hover:bg-gray-100 rounded-lg transition-all"
                             title="Ver detalles"
                           >
                             <EyeIcon className="w-5 h-5" />
                           </button>
                           <button
-                            className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+                            className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
                             title="Enviar email"
                           >
                             <EnvelopeIcon className="w-5 h-5" />
                           </button>
                           <button
-                            className="p-1 text-gray-600 hover:text-green-600 transition-colors"
+                            className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
                             title="Imprimir"
                           >
                             <PrinterIcon className="w-5 h-5" />
@@ -658,7 +658,7 @@ export default function OrdersAdminPage() {
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
@@ -666,9 +666,9 @@ export default function OrdersAdminPage() {
                   <button
                     key={index}
                     onClick={() => setCurrentPage(index + 1)}
-                    className={`px-3 py-1.5 rounded-lg ${
+                    className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
                       currentPage === index + 1
-                        ? "bg-[#275D5C] text-white"
+                        ? "bg-[#275D5C] text-white shadow-lg"
                         : "border border-gray-300 hover:bg-gray-50"
                     }`}
                   >
@@ -678,7 +678,7 @@ export default function OrdersAdminPage() {
                 <button
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
                 </button>
