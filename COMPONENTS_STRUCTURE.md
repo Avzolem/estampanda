@@ -230,4 +230,4 @@ Visitante → /blog → Lista artículos
 
 ---
 
-*Documentación generada para el proyecto Estampanda - Boilerplate SaaS con ShipFast*
+*Documentación generada para el proyecto Estampanda - Plataforma de Stickers Personalizados*

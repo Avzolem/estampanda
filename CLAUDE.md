@@ -137,7 +137,7 @@ npm run postbuild
 
 ## Architecture Overview
 
-This is a **ShipFast** Next.js 14 (App Router) SaaS boilerplate with pre-built features for rapid startup development.
+Esta es una aplicación Next.js 14 (App Router) para el e-commerce de Estampanda con características completas para venta de stickers personalizados.
 
 ### Core Stack
 

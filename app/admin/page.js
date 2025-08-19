@@ -2,62 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+
+// Componentes modulares del dashboard
+import OrdersManager from "./components/OrdersManager";
+import MaterialsManager from "./components/MaterialsManager";
+import GalleryManager from "./components/GalleryManager";
+import ProductsManager from "./components/ProductsManager";
+import DashboardStats from "./components/DashboardStats";
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("orders");
-  const [orders, setOrders] = useState([]);
-  const [stats, setStats] = useState({
-    totalOrders: 0,
-    pendingOrders: 0,
-    completedOrders: 0,
-    totalRevenue: 0
-  });
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simular carga de datos
-    setOrders([
-      {
-        id: "ORD-001",
-        customer: "Juan Pérez",
-        email: "juan@example.com",
-        product: "Stickers Personalizados 5x5cm",
-        quantity: 100,
-        total: 45.99,
-        status: "pending",
-        date: "2025-08-19",
-        image: "/images/sticker-1.png"
-      },
-      {
-        id: "ORD-002",
-        customer: "María García",
-        email: "maria@example.com",
-        product: "Stickers Holográficos 7x7cm",
-        quantity: 50,
-        total: 35.50,
-        status: "processing",
-        date: "2025-08-19",
-        image: "/images/sticker-2.png"
-      },
-      {
-        id: "ORD-003",
-        customer: "Carlos López",
-        email: "carlos@example.com",
-        product: "Stickers Mate 10x10cm",
-        quantity: 200,
-        total: 89.99,
-        status: "completed",
-        date: "2025-08-18",
-        image: "/images/sticker-3.png"
-      }
-    ]);
-
-    setStats({
-      totalOrders: 3,
-      pendingOrders: 1,
-      completedOrders: 1,
-      totalRevenue: 171.48
-    });
+    // Simular carga inicial
+    setTimeout(() => setLoading(false), 500);
   }, []);
 
   const handleLogout = async () => {
@@ -65,244 +28,274 @@ export default function AdminDashboard() {
     router.push("/login");
   };
 
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrders(orders.map(order => 
-      order.id === orderId ? { ...order, status: newStatus } : order
-    ));
-  };
+  const menuItems = [
+    { id: "dashboard", label: "Dashboard", icon: "📊" },
+    { id: "orders", label: "Pedidos", icon: "📦" },
+    { id: "products", label: "Productos", icon: "🏷️" },
+    { id: "materials", label: "Materiales", icon: "🎨" },
+    { id: "gallery", label: "Galería", icon: "🖼️" },
+    { id: "settings", label: "Configuración", icon: "⚙️" },
+  ];
 
-  const exportToCSV = () => {
-    const csv = [
-      ["ID", "Cliente", "Email", "Producto", "Cantidad", "Total", "Estado", "Fecha"],
-      ...orders.map(order => [
-        order.id,
-        order.customer,
-        order.email,
-        order.product,
-        order.quantity,
-        order.total,
-        order.status,
-        order.date
-      ])
-    ].map(row => row.join(",")).join("\n");
-
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "orders.csv";
-    a.click();
-  };
-
-  const getStatusBadge = (status) => {
-    const badges = {
-      pending: "badge-warning",
-      processing: "badge-info",
-      completed: "badge-success",
-      cancelled: "badge-error"
-    };
-    return badges[status] || "badge-ghost";
-  };
-
-  const getStatusText = (status) => {
-    const texts = {
-      pending: "Pendiente",
-      processing: "Procesando",
-      completed: "Completado",
-      cancelled: "Cancelado"
-    };
-    return texts[status] || status;
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-estampanda-light flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="text-6xl"
+        >
+          ✨
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-base-200">
-      {/* Header */}
-      <div className="navbar bg-base-100 shadow-lg">
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold text-primary px-4">ESTAMPANDA ADMIN</h1>
+    <div className="min-h-screen bg-estampanda-light">
+      {/* Sidebar Desktop */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 lg:translate-x-0 ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
+        <div className="flex flex-col h-full">
+          {/* Logo */}
+          <div className="p-6 bg-gradient-to-br from-estampanda-primary to-estampanda-secondary">
+            <Link href="/" className="block">
+              <h1 className="text-2xl font-bold text-white">ESTAMPANDA</h1>
+              <p className="text-estampanda-cream text-sm mt-1">Panel Admin</p>
+            </Link>
+          </div>
+
+          {/* Menu Items */}
+          <nav className="flex-1 p-4 space-y-2">
+            {menuItems.map((item) => (
+              <motion.button
+                key={item.id}
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center px-4 py-3 rounded-xl transition-all ${
+                  activeTab === item.id
+                    ? "bg-estampanda-primary text-white shadow-lg"
+                    : "hover:bg-estampanda-cream text-estampanda-dark"
+                }`}
+              >
+                <span className="text-xl mr-3">{item.icon}</span>
+                <span className="font-medium">{item.label}</span>
+              </motion.button>
+            ))}
+          </nav>
+
+          {/* Logout Button */}
+          <div className="p-4 border-t border-gray-100">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleLogout}
+              className="w-full px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl transition-all font-medium"
+            >
+              Cerrar Sesión
+            </motion.button>
+          </div>
         </div>
-        <div className="flex-none">
-          <button onClick={handleLogout} className="btn btn-ghost">
-            Cerrar Sesión
-          </button>
-        </div>
-      </div>
+      </aside>
 
-      {/* Stats */}
-      <div className="p-4 md:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="stat bg-base-100 rounded-lg shadow">
-            <div className="stat-title">Total Pedidos</div>
-            <div className="stat-value text-primary">{stats.totalOrders}</div>
-          </div>
-          <div className="stat bg-base-100 rounded-lg shadow">
-            <div className="stat-title">Pendientes</div>
-            <div className="stat-value text-warning">{stats.pendingOrders}</div>
-          </div>
-          <div className="stat bg-base-100 rounded-lg shadow">
-            <div className="stat-title">Completados</div>
-            <div className="stat-value text-success">{stats.completedOrders}</div>
-          </div>
-          <div className="stat bg-base-100 rounded-lg shadow">
-            <div className="stat-title">Ingresos</div>
-            <div className="stat-value text-info">${stats.totalRevenue}</div>
-          </div>
-        </div>
+      {/* Main Content */}
+      <div className="lg:ml-64">
+        {/* Top Bar */}
+        <header className="bg-white shadow-sm sticky top-0 z-40">
+          <div className="flex items-center justify-between px-4 py-4 lg:px-8">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            
+            <h2 className="text-xl font-bold text-estampanda-dark">
+              {menuItems.find(item => item.id === activeTab)?.label}
+            </h2>
 
-        {/* Tabs */}
-        <div className="tabs tabs-boxed mb-6">
-          <a 
-            className={`tab ${activeTab === "orders" ? "tab-active" : ""}`}
-            onClick={() => setActiveTab("orders")}
-          >
-            Pedidos
-          </a>
-          <a 
-            className={`tab ${activeTab === "products" ? "tab-active" : ""}`}
-            onClick={() => setActiveTab("products")}
-          >
-            Productos
-          </a>
-          <a 
-            className={`tab ${activeTab === "settings" ? "tab-active" : ""}`}
-            onClick={() => setActiveTab("settings")}
-          >
-            Configuración
-          </a>
-        </div>
-
-        {/* Content */}
-        {activeTab === "orders" && (
-          <div className="bg-base-100 rounded-lg shadow-lg p-4 md:p-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-              <h2 className="text-xl font-bold">Gestión de Pedidos</h2>
-              <button onClick={exportToCSV} className="btn btn-sm btn-primary">
-                Exportar CSV
-              </button>
-            </div>
-
-            {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order.id}>
-                      <td className="font-mono">{order.id}</td>
-                      <td>
-                        <div>
-                          <div className="font-bold">{order.customer}</div>
-                          <div className="text-sm opacity-50">{order.email}</div>
-                        </div>
-                      </td>
-                      <td>{order.product}</td>
-                      <td>{order.quantity}</td>
-                      <td className="font-bold">${order.total}</td>
-                      <td>
-                        <span className={`badge ${getStatusBadge(order.status)}`}>
-                          {getStatusText(order.status)}
-                        </span>
-                      </td>
-                      <td>{order.date}</td>
-                      <td>
-                        <select 
-                          className="select select-sm select-bordered"
-                          value={order.status}
-                          onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                        >
-                          <option value="pending">Pendiente</option>
-                          <option value="processing">Procesando</option>
-                          <option value="completed">Completado</option>
-                          <option value="cancelled">Cancelado</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Mobile Cards */}
-            <div className="md:hidden space-y-4">
-              {orders.map((order) => (
-                <div key={order.id} className="card bg-base-100 shadow-xl">
-                  <div className="card-body">
-                    <div className="flex justify-between items-start">
-                      <h3 className="card-title text-sm">{order.id}</h3>
-                      <span className={`badge ${getStatusBadge(order.status)}`}>
-                        {getStatusText(order.status)}
-                      </span>
-                    </div>
-                    <div className="space-y-2 text-sm">
-                      <p><span className="font-bold">Cliente:</span> {order.customer}</p>
-                      <p><span className="font-bold">Email:</span> {order.email}</p>
-                      <p><span className="font-bold">Producto:</span> {order.product}</p>
-                      <p><span className="font-bold">Cantidad:</span> {order.quantity}</p>
-                      <p><span className="font-bold">Total:</span> ${order.total}</p>
-                      <p><span className="font-bold">Fecha:</span> {order.date}</p>
-                    </div>
-                    <div className="card-actions justify-end mt-4">
-                      <select 
-                        className="select select-sm select-bordered w-full"
-                        value={order.status}
-                        onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                      >
-                        <option value="pending">Pendiente</option>
-                        <option value="processing">Procesando</option>
-                        <option value="completed">Completado</option>
-                        <option value="cancelled">Cancelado</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "products" && (
-          <div className="bg-base-100 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Gestión de Productos</h2>
-            <p className="text-base-content/60">Próximamente: configuración de productos y precios</p>
-          </div>
-        )}
-
-        {activeTab === "settings" && (
-          <div className="bg-base-100 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Configuración</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-bold mb-2">Integraciones</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-3 bg-base-200 rounded">
-                    <span>Cloudinary</span>
-                    <span className="badge badge-success">Configurado</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-base-200 rounded">
-                    <span>Stripe</span>
-                    <span className="badge badge-warning">Pendiente</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-base-200 rounded">
-                    <span>MongoDB</span>
-                    <span className="badge badge-error">No conectado</span>
-                  </div>
-                </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">Admin</span>
+              <div className="w-10 h-10 bg-estampanda-primary rounded-full flex items-center justify-center text-white font-bold">
+                A
               </div>
             </div>
           </div>
-        )}
+        </header>
+
+        {/* Content Area */}
+        <main className="p-4 lg:p-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {activeTab === "dashboard" && <DashboardStats />}
+              {activeTab === "orders" && <OrdersManager />}
+              {activeTab === "products" && <ProductsManager />}
+              {activeTab === "materials" && <MaterialsManager />}
+              {activeTab === "gallery" && <GalleryManager />}
+              {activeTab === "settings" && <SettingsPanel />}
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </div>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+// Settings Panel Component
+function SettingsPanel() {
+  const [settings, setSettings] = useState({
+    siteName: "Estampanda",
+    currency: "MXN",
+    shippingFree: true,
+    minOrder: 0,
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-2xl shadow-lg p-6">
+        <h3 className="text-lg font-bold text-estampanda-dark mb-6">Configuración General</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Nombre del Sitio
+            </label>
+            <input
+              type="text"
+              value={settings.siteName}
+              onChange={(e) => setSettings({...settings, siteName: e.target.value})}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-estampanda-accent focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Moneda
+            </label>
+            <select
+              value={settings.currency}
+              onChange={(e) => setSettings({...settings, currency: e.target.value})}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-estampanda-accent focus:border-transparent"
+            >
+              <option value="MXN">MXN - Peso Mexicano</option>
+              <option value="USD">USD - Dólar</option>
+              <option value="EUR">EUR - Euro</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Envío Gratis
+            </label>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                checked={settings.shippingFree}
+                onChange={(e) => setSettings({...settings, shippingFree: e.target.checked})}
+                className="w-5 h-5 text-estampanda-primary rounded focus:ring-estampanda-accent"
+              />
+              <span className="ml-2 text-sm text-gray-600">Activar envío gratuito</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Pedido Mínimo
+            </label>
+            <input
+              type="number"
+              value={settings.minOrder}
+              onChange={(e) => setSettings({...settings, minOrder: e.target.value})}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-estampanda-accent focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-6 py-2.5 bg-estampanda-primary text-white rounded-lg hover:bg-estampanda-secondary transition-colors"
+          >
+            Guardar Cambios
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Integration Status */}
+      <div className="bg-white rounded-2xl shadow-lg p-6">
+        <h3 className="text-lg font-bold text-estampanda-dark mb-6">Estado de Integraciones</h3>
+        
+        <div className="space-y-4">
+          <IntegrationItem 
+            name="Cloudinary" 
+            status="active" 
+            description="Gestión de imágenes y uploads"
+          />
+          <IntegrationItem 
+            name="Stripe" 
+            status="pending" 
+            description="Procesamiento de pagos"
+          />
+          <IntegrationItem 
+            name="MongoDB" 
+            status="active" 
+            description="Base de datos"
+          />
+          <IntegrationItem 
+            name="Resend" 
+            status="pending" 
+            description="Servicio de emails"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IntegrationItem({ name, status, description }) {
+  const statusColors = {
+    active: "bg-green-100 text-green-700",
+    pending: "bg-yellow-100 text-yellow-700",
+    error: "bg-red-100 text-red-700"
+  };
+
+  const statusLabels = {
+    active: "Activo",
+    pending: "Pendiente",
+    error: "Error"
+  };
+
+  return (
+    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+      <div>
+        <h4 className="font-semibold text-estampanda-dark">{name}</h4>
+        <p className="text-sm text-gray-600">{description}</p>
+      </div>
+      <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}>
+        {statusLabels[status]}
+      </span>
     </div>
   );
 }

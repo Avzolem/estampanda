@@ -4,7 +4,7 @@ import config from "@/config";
 // It prefills data with default title/description/OG, etc.. and you can cusotmize it for each page.
 // It's already added in the root layout.js so you don't have to add it to every pages
 // But I recommend to set the canonical URL for each page (export const metadata = getSEOTags({canonicalUrlRelative: "/"});)
-// See https://shipfa.st/docs/features/seo
+// SEO configuration for Estampanda
 export const getSEOTags = ({
   title,
   description,
@@ -41,7 +41,7 @@ export const getSEOTags = ({
       //     height: 660,
       //   },
       // ],
-      locale: "en_US",
+      locale: "es_MX",
       type: "website",
     },
 
@@ -51,7 +51,7 @@ export const getSEOTags = ({
       // If you add an twitter-image.(jpg|jpeg|png|gif) image to the /app folder, you don't need the code below
       // images: [openGraph?.image || defaults.og.image],
       card: "summary_large_image",
-      creator: "@marc_louvion",
+      creator: "@estampanda",
     },
 
     // If a canonical URL is given, we add it. The metadataBase will turn the relative URL into a fully qualified URL
@@ -70,7 +70,7 @@ export const getSEOTags = ({
 // You don't have to use this component, but it increase your chances of having a rich snippet on Google.
 // I recommend this one below to your /page.js for software apps: It tells Google your AppName is a Software, and it has a rating of 4.8/5 from 12 reviews.
 // Fill the fields with your own data
-// See https://shipfa.st/docs/features/seo
+// SEO configuration for Estampanda
 export const renderSchemaTags = () => {
   return (
     <script
@@ -78,29 +78,33 @@ export const renderSchemaTags = () => {
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({
           "@context": "http://schema.org",
-          "@type": "SoftwareApplication",
+          "@type": "Store",
           name: config.appName,
           description: config.appDescription,
           image: `https://${config.domainName}/icon.png`,
           url: `https://${config.domainName}/`,
-          author: {
-            "@type": "Person",
-            name: "Marc Lou",
+          address: {
+            "@type": "PostalAddress",
+            addressCountry: "MX",
+            addressRegion: "CDMX",
           },
-          datePublished: "2023-08-01",
-          applicationCategory: "EducationalApplication",
+          priceRange: "$",
+          servesCuisine: "Stickers Personalizados",
+          telephone: "+52 555 123 4567",
+          email: "hola@estampanda.com",
           aggregateRating: {
             "@type": "AggregateRating",
-            ratingValue: "4.8",
-            ratingCount: "12",
+            ratingValue: "4.9",
+            ratingCount: "47",
           },
-          offers: [
-            {
-              "@type": "Offer",
-              price: "9.00",
-              priceCurrency: "USD",
-            },
-          ],
+          offers: {
+            "@type": "AggregateOffer",
+            priceCurrency: "MXN",
+            lowPrice: "0.45",
+            highPrice: "15.00",
+            offerCount: "100+",
+            availability: "https://schema.org/InStock",
+          },
         }),
       }}
     ></script>

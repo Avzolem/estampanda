@@ -2,28 +2,8 @@ import Link from "next/link";
 import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
 
-// CHATGPT PROMPT TO GENERATE YOUR TERMS & SERVICES — replace with your own data 👇
-
-// 1. Go to https://chat.openai.com/
-// 2. Copy paste bellow
-// 3. Replace the data with your own (if needed)
-// 4. Paste the answer from ChatGPT directly in the <pre> tag below
-
-// You are an excellent lawyer.
-
-// I need your help to write a simple Terms & Services for my website. Here is some context:
-// - Website: https://shipfa.st
-// - Name: ShipFast
-// - Contact information: marc@shipfa.st
-// - Description: A JavaScript code boilerplate to help entrepreneurs launch their startups faster
-// - Ownership: when buying a package, users can download code to create apps. They own the code but they do not have the right to resell it. They can ask for a full refund within 7 day after the purchase.
-// - User data collected: name, email and payment information
-// - Non-personal data collection: web cookies
-// - Link to privacy-policy: https://shipfa.st/privacy-policy
-// - Governing Law: France
-// - Updates to the Terms: users will be updated by email
-
-// Please write a simple Terms & Services for my site. Add the current date. Do not add or explain your reasoning. Answer:
+// Términos y Condiciones para Estampanda
+// Actualizado para el sitio de stickers personalizados
 
 export const metadata = getSEOTags({
   title: `Terms and Conditions | ${config.appName}`,
@@ -57,39 +37,57 @@ const TOS = () => {
           className="leading-relaxed whitespace-pre-wrap"
           style={{ fontFamily: "sans-serif" }}
         >
-          {`Last Updated: September 26, 2023
+          {`Última actualización: 19 de Agosto, 2025
 
-Welcome to ShipFast!
+¡Bienvenido a Estampanda!
 
-These Terms of Service ("Terms") govern your use of the ShipFast website at https://shipfa.st ("Website") and the services provided by ShipFast. By using our Website and services, you agree to these Terms.
+Estos Términos de Servicio ("Términos") rigen el uso del sitio web de Estampanda en https://estampanda.com ("Sitio") y los servicios proporcionados por Estampanda. Al usar nuestro Sitio y servicios, aceptas estos Términos.
 
-1. Description of ShipFast
+1. Descripción de Estampanda
 
-ShipFast is a platform that offers a JavaScript code boilerplate to assist entrepreneurs in launching their startups more efficiently.
+Estampanda es una plataforma de comercio electrónico especializada en la creación y venta de stickers personalizados de alta calidad con envío rápido en México.
 
-2. Ownership and Usage Rights
+2. Productos y Servicios
 
-When you purchase a package from ShipFast, you gain the right to download and use the code provided for creating applications. You own the code you create but do not have the right to resell it. We offer a full refund within 7 days of purchase, as specified in our refund policy.
+Ofrecemos stickers personalizados en diversos materiales, tamaños y acabados. Los precios incluyen diseño, producción y envío según las especificaciones seleccionadas por el cliente.
 
-3. User Data and Privacy
+3. Pedidos y Pagos
 
-We collect and store user data, including name, email, and payment information, as necessary to provide our services. For details on how we handle your data, please refer to our Privacy Policy at https://shipfa.st/privacy-policy.
+- Los pedidos se procesan tras la confirmación del pago
+- Aceptamos pagos mediante tarjeta de crédito/débito a través de Stripe
+- Los precios están en pesos mexicanos (MXN)
+- Ofrecemos garantía de satisfacción con reembolso completo en los primeros 7 días si el producto no cumple con las especificaciones acordadas
 
-4. Non-Personal Data Collection
+4. Envíos y Entregas
 
-We use web cookies to collect non-personal data for the purpose of improving our services and user experience.
+- Tiempo de producción estándar: 3-5 días hábiles
+- Envío express disponible con costo adicional
+- Enviamos a toda la República Mexicana
+- Los tiempos de entrega pueden variar según la ubicación
 
-5. Governing Law
+5. Propiedad Intelectual
 
-These Terms are governed by the laws of France.
+Los clientes son responsables de asegurar que tienen los derechos necesarios sobre las imágenes y diseños que suben. Estampanda no se hace responsable por violaciones de derechos de autor.
 
-6. Updates to the Terms
+6. Datos del Usuario y Privacidad
 
-We may update these Terms from time to time. Users will be notified of any changes via email.
+Recopilamos y almacenamos datos del usuario, incluyendo nombre, email e información de pago, según sea necesario para proporcionar nuestros servicios. Para detalles sobre cómo manejamos tus datos, consulta nuestra Política de Privacidad en https://estampanda.com/privacy-policy.
 
-For any questions or concerns regarding these Terms of Service, please contact us at marc@shipfa.st.
+7. Cookies y Datos No Personales
 
-Thank you for using ShipFast!`}
+Usamos cookies web para recopilar datos no personales con el propósito de mejorar nuestros servicios y experiencia del usuario.
+
+8. Ley Aplicable
+
+Estos Términos se rigen por las leyes de México.
+
+9. Actualizaciones de los Términos
+
+Podemos actualizar estos Términos ocasionalmente. Los usuarios serán notificados de cualquier cambio vía email.
+
+Para preguntas o inquietudes sobre estos Términos de Servicio, contáctanos en hola@estampanda.com.
+
+¡Gracias por usar Estampanda!`}
         </pre>
       </div>
     </main>

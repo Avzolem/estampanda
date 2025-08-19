@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { getSEOTags } from "@/libs/seo";
 import { 
   PlusIcon,
   MagnifyingGlassIcon,
