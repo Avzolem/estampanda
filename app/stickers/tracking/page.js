@@ -142,7 +142,7 @@ export default function TrackingPage() {
   return (
     <div className="min-h-screen bg-[#F5E6D3]">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-[#F5E6D3]">
         <div className="container mx-auto px-4 py-4 sm:py-6">
           <div className="flex items-center justify-between">
             <Link

@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { 
   PlusIcon,
   MagnifyingGlassIcon,
@@ -222,26 +224,31 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FBF7F2] via-white to-[#F5E6D3]/20">
-      {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-20">
-        <div className="container mx-auto px-4 py-4 sm:py-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#275D5C]">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-grow bg-gradient-to-br from-[#FBF7F2] via-white to-[#F5E6D3]/20">
+        
+        {/* Hero Section - Similar a products */}
+        <section className="pt-24 pb-8 md:pt-32 md:pb-12 lg:pt-40 lg:pb-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#275D5C] mb-2 md:mb-4">
                 Mi Galería de Diseños
               </h1>
-              <p className="text-sm sm:text-base text-gray-600 mt-1">
+              <p className="text-base sm:text-lg md:text-xl text-gray-600">
                 {designs.length} diseños guardados
               </p>
             </div>
-            <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+            
+            {/* Action Buttons */}
+            <div className="flex justify-center gap-3 sm:gap-4 mt-6 md:mt-8">
               <button
                 onClick={() => setShowTemplates(!showTemplates)}
-                className={`flex-1 sm:flex-none px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all ${
+                className={`px-6 py-2.5 sm:px-8 sm:py-3 md:px-10 md:py-3.5 rounded-lg text-sm sm:text-base font-semibold transition-all transform hover:scale-105 ${
                   showTemplates
-                    ? "bg-[#F5E6D3] text-[#275D5C]"
-                    : "bg-white text-[#275D5C] border-2 border-[#275D5C] hover:bg-[#F5E6D3]"
+                    ? "bg-[#F5E6D3] text-[#275D5C] shadow-lg"
+                    : "bg-white text-[#275D5C] border-2 border-[#275D5C] hover:bg-[#F5E6D3] shadow-md"
                 }`}
               >
                 <span className="flex items-center gap-2">
@@ -251,32 +258,31 @@ export default function GalleryPage() {
               </button>
               <Link
                 href="/stickers/designer"
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-2.5 sm:px-12 sm:py-3 md:px-16 md:py-3.5 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base font-semibold hover:bg-[#3B7F7E] transition-colors"
+                className="flex items-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 md:px-10 md:py-3.5 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base font-semibold hover:bg-[#3B7F7E] shadow-lg transition-all transform hover:scale-105"
               >
                 <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 Nuevo Diseño
               </Link>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <div className="container mx-auto px-4 py-6 sm:py-8">
+        {/* Filters and Content Section - Separada */}
+        <section className="py-4 md:py-6 lg:py-8 pb-16 sm:pb-20 md:pb-24 lg:pb-32 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
         {/* Filters and Search */}
         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
             {/* Search */}
-            <div className="flex-1">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar por nombre o etiqueta..."
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pl-10 sm:pl-12 text-sm sm:text-base border-2 border-gray-200 rounded-xl focus:border-[#275D5C] focus:outline-none"
-                />
-                <MagnifyingGlassIcon className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-              </div>
+            <div className="flex-1 flex items-center gap-3">
+              <MagnifyingGlassIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar por nombre o etiqueta..."
+                className="w-full px-4 py-2.5 sm:py-3 text-sm sm:text-base border-2 border-gray-200 rounded-xl focus:border-[#275D5C] focus:outline-none"
+              />
             </div>
 
             {/* Categories */}
@@ -563,7 +569,11 @@ export default function GalleryPage() {
             </Link>
           </motion.div>
         )}
-      </div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
     </div>
   );
 }
