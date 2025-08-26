@@ -119,20 +119,64 @@ Estamos construyendo una plataforma de venta de stickers personalizados con:
 - **NUNCA incluir referencias a Claude, AI o "Generated with Claude" en mensajes de commit**
 - **SÍ usar emojis relevantes en los commits SOLO cuando el usuario pida hacer commit**
 
-### Diseño Responsivo
+### Diseño Responsivo y Espaciado - 🎯 REGLA CRÍTICA 🎯
 
-- **SIEMPRE diseñar primero para desktop y luego optimizar para mobile**
-- Cuando se pidan modificaciones visuales, aplicar primero en desktop (md: o lg:)
-- Luego añadir breakpoints para tablet (sm:) y móvil (base)
-- Orden de trabajo: Desktop → Tablet → Móvil
+**OBLIGATORIO EN TODOS LOS COMPONENTES:**
+
+1. **Espaciado Responsivo Progresivo:**
+   - Móvil (base): Espaciados base más pequeños
+   - Tablet (sm/md): Espaciados medianos  
+   - Desktop (lg/xl): Espaciados generosos
+   - Ejemplo padding: `p-4 sm:p-6 md:p-8 lg:p-10`
+   - Ejemplo gap: `gap-4 sm:gap-6 md:gap-8 lg:gap-10`
+
+2. **Secciones con Espaciado Vertical:**
+   - Hero sections: `pt-24 pb-12 sm:pt-28 sm:pb-16 md:pt-32 md:pb-20 lg:pt-40 lg:pb-24`
+   - Secciones normales: `py-8 sm:py-12 md:py-16 lg:py-20`
+   - Entre elementos: `mb-4 sm:mb-6 md:mb-8 lg:mb-10`
+
+3. **Breakpoints Consistentes:**
+   - base: < 640px (móvil)
+   - sm: ≥ 640px (móvil grande)
+   - md: ≥ 768px (tablet)
+   - lg: ≥ 1024px (desktop)
+   - xl: ≥ 1280px (desktop grande)
+
+4. **Texto Escalable:**
+   - Títulos: `text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl`
+   - Subtítulos: `text-xl sm:text-2xl md:text-3xl lg:text-4xl`
+   - Párrafos: `text-base sm:text-lg md:text-xl lg:text-2xl`
+
+5. **Cards y Contenedores:**
+   - SIEMPRE usar padding interno progresivo: `p-6 sm:p-8 md:p-10`
+   - Gap entre cards: `gap-6 sm:gap-8 md:gap-10 lg:gap-12`
+   - Margin bottom entre secciones: `mb-8 sm:mb-12 md:mb-16`
+
+6. **Separación con Footer - OBLIGATORIO:**
+   - **REGLA CRÍTICA**: El último elemento antes del Footer SIEMPRE debe tener margin-bottom
+   - Último componente/card: `mb-12 sm:mb-16 md:mb-20 lg:mb-24`
+   - Última sección: `pb-16 sm:pb-20 md:pb-24 lg:pb-32`
+   - NUNCA dejar elementos pegados al Footer
+   - Si usas `<section>`, aplicar padding-bottom a la sección
+   - Si no hay section, aplicar margin-bottom al último elemento
+
+7. **Orden de trabajo:** Desktop → Tablet → Móvil
 
 ### Estándares de Botones
 
-**REGLA CRÍTICA: SIEMPRE aplicar padding a TODOS los botones sin excepción**
+**REGLA CRÍTICA: SIEMPRE aplicar padding RESPONSIVO a TODOS los botones sin excepción**
 
-- **Desktop (md:)**: px-24 py-3.5
-- **Tablet (sm:)**: px-16 py-3
-- **Móvil (base)**: px-8 py-2.5
+**Padding Obligatorio Progresivo:**
+- Base (móvil): `px-6 py-3`
+- Small (sm): `px-8 py-3.5` o `px-8 py-4`
+- Medium (md): `px-10 py-4` o `px-12 py-4.5`
+- Large (lg): `px-12 py-5` o `px-16 py-5`
+- Extra Large (xl): `px-16 py-5` o `px-20 py-6`
+
+**Ejemplo correcto de botón responsivo:**
+```jsx
+className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 lg:px-12 lg:py-5 xl:px-16 xl:py-6"
+```
 
 **IMPORTANTE**: 
 - Nunca crear botones sin padding

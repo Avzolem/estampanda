@@ -1,3 +1,33 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <path fill="currentColor" d="M120 104c-22 0-40 18-40 40 0 44 36 80 80 80 22 0 40-18 40-40-22-44-36-80-80-80zm272 0c-44 0-58 36-80 80 0 22 18 40 40 40 44 0 80-36 80-80 0-22-18-40-40-40zM260 190c-22 0-40 18-40 40 0 22 18 40 40 40s40-18 40-40c0-22-18-40-40-40zm80 0c-22 0-40 18-40 40 0 22 18 40 40 40s40-18 40-40c0-22-18-40-40-40zM300 250c-22 0-40 18-40 40 0 11 4 20 11 27l-11 23c-44 0-80 36-80 80-44 0-80-36-124-36 44 0 80 36 80 80-36-44-72-80-80-80 44 0 80 36 80 80-36-44-72-80-80-80 44 0 80 36 80 80l44-44c44-44 80-80 124-80 0-44-36-80-44-80 7-7 11-16 11-27 0-22-18-40-40-40z"/>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Orejas -->
+  <ellipse cx="50" cy="50" rx="25" ry="30" fill="#1a1a1a" transform="rotate(-30 50 50)"/>
+  <ellipse cx="150" cy="50" rx="25" ry="30" fill="#1a1a1a" transform="rotate(30 150 50)"/>
+  
+  <!-- Cabeza principal (blanca) -->
+  <ellipse cx="100" cy="100" rx="70" ry="65" fill="#ffffff"/>
+  
+  <!-- Manchas de ojos (negras) -->
+  <ellipse cx="70" cy="90" rx="20" ry="25" fill="#1a1a1a" transform="rotate(-20 70 90)"/>
+  <ellipse cx="130" cy="90" rx="20" ry="25" fill="#1a1a1a" transform="rotate(20 130 90)"/>
+  
+  <!-- Ojos -->
+  <circle cx="70" cy="88" r="8" fill="#ffffff"/>
+  <circle cx="130" cy="88" r="8" fill="#ffffff"/>
+  <circle cx="72" cy="90" r="5" fill="#000000"/>
+  <circle cx="128" cy="90" r="5" fill="#000000"/>
+  
+  <!-- Brillos en los ojos -->
+  <circle cx="74" cy="88" r="2" fill="#ffffff"/>
+  <circle cx="130" cy="88" r="2" fill="#ffffff"/>
+  
+  <!-- Nariz -->
+  <ellipse cx="100" cy="115" rx="8" ry="6" fill="#1a1a1a"/>
+  
+  <!-- Boca -->
+  <path d="M 100 115 Q 90 125 85 120" stroke="#1a1a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 100 115 Q 110 125 115 120" stroke="#1a1a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Mejillas rosadas (opcional, sutil) -->
+  <ellipse cx="45" cy="105" rx="12" ry="8" fill="#ffb3ba" opacity="0.3"/>
+  <ellipse cx="155" cy="105" rx="12" ry="8" fill="#ffb3ba" opacity="0.3"/>
 </svg>

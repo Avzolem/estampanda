@@ -42,7 +42,7 @@ export default function HowItWorksPage() {
       <Header />
       <main className="min-h-screen bg-[#FBF7F2]">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-white to-[#FBF7F2] py-16 sm:py-20">
+        <div className="bg-gradient-to-b from-white to-[#FBF7F2]" style={{ paddingTop: '80px', paddingBottom: '64px' }}>
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

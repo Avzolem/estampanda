@@ -90,7 +90,7 @@ export const renderSchemaTags = () => {
           },
           priceRange: "$",
           servesCuisine: "Stickers Personalizados",
-          telephone: "+52 555 123 4567",
+          telephone: "+52 625 121 7055",
           email: "hola@estampanda.com",
           aggregateRating: {
             "@type": "AggregateRating",

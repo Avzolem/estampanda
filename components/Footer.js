@@ -19,7 +19,7 @@ export default function Footer() {
             </p>
             {/* WhatsApp Button */}
             <a
-              href="#"
+              href="https://wa.me/526251217055?text=¡Hola%20Estampanda!%20Me%20gustaría%20crear%20stickers%20personalizados.%20¿Me%20pueden%20ayudar?"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg transition-all transform hover:scale-105"
@@ -45,7 +45,7 @@ export default function Footer() {
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span>Próximamente</span>
+                <span>+52 625 121 7055</span>
               </li>
               <li className="flex items-center gap-3">
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +78,7 @@ export default function Footer() {
 
       {/* Floating WhatsApp Button (Mobile) */}
       <a
-        href="https://wa.me/5216251217055?text=Hola!%20Me%20interesa%20información%20sobre%20stickers%20personalizados"
+        href="https://wa.me/526251217055?text=¡Hola%20Estampanda!%20Me%20gustaría%20crear%20stickers%20personalizados.%20¿Me%20pueden%20ayudar?"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 md:hidden bg-green-500 text-white p-4 rounded-lg shadow-2xl hover:bg-green-600 transition-all transform hover:scale-110"

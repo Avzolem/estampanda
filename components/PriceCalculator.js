@@ -205,10 +205,21 @@ export default function PriceCalculator() {
           transition={{ delay: 0.4 }}
           className="mt-8 text-center text-gray-600"
         >
-          <p className="flex items-center justify-center gap-2">
+          <p className="flex items-center justify-center gap-2 mb-6">
             <span>💡</span>
             <span>¿Necesitas ayuda? Contáctanos para cotizaciones especiales en pedidos grandes</span>
           </p>
+          
+          <Link href="/contact">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-2 sm:px-16 sm:py-3 md:px-24 md:py-3.5 text-white text-sm sm:text-base md:text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+              style={{ backgroundColor: '#275D5C' }}
+            >
+              Contactar Ahora
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>
