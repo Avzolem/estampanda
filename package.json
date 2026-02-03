@@ -30,7 +30,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.1",
     "multer": "^2.0.2",
-    "next": "^15.4.6",
+    "next": "15.4.10",
     "next-sitemap": "^4.2.3",
     "nextjs-toploader": "^3.8.16",
     "postcss": "^8.5.6",
