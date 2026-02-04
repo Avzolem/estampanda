@@ -5,16 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { 
+import {
   PlusIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
   HeartIcon,
-  EyeIcon,
   TrashIcon,
-  PencilIcon,
   DocumentDuplicateIcon,
-  ArrowDownTrayIcon,
   ClockIcon,
   SparklesIcon,
   Squares2X2Icon,

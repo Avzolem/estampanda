@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ArrowLeftIcon, 
-  ArrowRightIcon, 
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
   CheckCircleIcon,
   CreditCardIcon,
   TruckIcon,
@@ -13,14 +13,9 @@ import {
   EnvelopeIcon,
   PhoneIcon,
   MapPinIcon,
-  ShieldCheckIcon,
-  ExclamationTriangleIcon,
-  SparklesIcon
+  ShieldCheckIcon
 } from "@heroicons/react/24/outline";
-import { loadStripe } from "@stripe/stripe-js";
 import toast from "react-hot-toast";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "pk_test_51O6mJvLM8ILLlIvY8ILLlIvY");
 
 export default function CheckoutPage() {
   const router = useRouter();

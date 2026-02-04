@@ -1,18 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   CheckIcon,
   XMarkIcon,
   SparklesIcon,
-  InformationCircleIcon,
   ArrowRightIcon,
   SwatchIcon,
-  ShieldCheckIcon,
   SunIcon,
-  BeakerIcon,
 } from "@heroicons/react/24/outline";
 
 const materials = [
