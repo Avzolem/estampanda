@@ -1,6 +1,6 @@
 # Estado del Proyecto - Estampanda
 
-**Última actualización:** 4 de Febrero 2026
+**Última actualización:** 8 de Mayo 2026
 
 ---
 
@@ -17,7 +17,7 @@ Plataforma de venta de stickers personalizados con Next.js 14. El frontend está
 | 0 | Setup y Configuración | ✅ COMPLETO |
 | 1 | Sistema de Diseño | ✅ COMPLETO |
 | 2 | Landing y Catálogo | ✅ COMPLETO |
-| 3 | Upload y Checkout | ✅ COMPLETO (falta integración) |
+| 3 | Upload y Checkout | ✅ COMPLETO |
 | 4 | Panel Admin Básico | 🔄 EN PROGRESO |
 
 ---
@@ -58,12 +58,8 @@ Plataforma de venta de stickers personalizados con Next.js 14. El frontend está
 
 ## Integraciones Pendientes para Producción
 
-### 1. Cloudinary (PENDIENTE)
-- **Archivo:** `components/stickers/FileUploader.js`
-- **Estado:** Mock con URL.createObjectURL
-- **Pendiente:**
-  - Configurar API keys reales
-  - Implementar upload real
+### 1. Cloudinary ✅ COMPLETO
+- Direct signed upload implementado, sesión anónima, modelo Cart con TTL 24h, cron de limpieza
 
 ### 2. Stripe (PENDIENTE)
 - **Archivos:** `app/api/stripe/*`
@@ -79,12 +75,8 @@ Plataforma de venta de stickers personalizados con Next.js 14. El frontend está
   - APIs completas de CRUD
   - Seeders de datos iniciales
 
-### 4. Emails - Resend (PENDIENTE)
-- **Estado:** Dependencia eliminada (no se usaba)
-- **Pendiente:**
-  - Reinstalar cuando se necesite
-  - Crear plantillas de email
-  - Configurar API key
+### 4. Emails (PENDIENTE)
+- sub-proyecto futuro. Resend fue eliminado, considerar AWS SES, Mailgun o reinstalar Resend cuando se necesite.
 
 ---
 
@@ -167,6 +159,17 @@ npm run lint
 ---
 
 ## Historial de Cambios Recientes
+
+### 8 May 2026 - Sub-proyecto #1: Upload + Carrito anónimo COMPLETO
+- Direct signed upload a Cloudinary (browser → Cloudinary directo, fuera del límite Vercel 4.5MB)
+- Sesión anónima por cookie cart-session-id (httpOnly, 30d)
+- Modelo Cart nuevo con items embebidos y TTL 24h auto-recalculado
+- Refactor Design: soporta sessionId para guests, eliminados campos heredados
+- Background removal en cliente con @imgly/background-removal (cero costo, sin lock-in, ~80MB lazy load)
+- Cron diario de limpieza con Vercel Cron a 03:00 UTC
+- Endpoints legacy /api/upload, /api/upload/design eliminados (nota: GalleryManager admin todavía los usa, pendiente migrar)
+- Credenciales admin movidas de hardcoded a env vars (ADMIN_USERNAME, ADMIN_PASSWORD)
+- libs/pricing.js: lógica única de precios extraída de calculadoras duplicadas
 
 ### 4 Feb 2026 - Optimización y Seguridad
 - Corregidas 8 vulnerabilidades de seguridad

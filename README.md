@@ -14,7 +14,7 @@ Plataforma e-commerce para crear y vender stickers personalizados de alta calida
 
 ## 🛠️ Stack Tecnológico
 
-- **Frontend**: Next.js 14, React 19, Tailwind CSS
+- **Frontend**: Next.js 15, React 19, Tailwind CSS
 - **Backend**: Node.js, API Routes de Next.js
 - **Base de Datos**: MongoDB con Mongoose
 - **Storage**: Cloudinary para imágenes
@@ -51,24 +51,26 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ```env
 # MongoDB
-MONGODB_URI=tu_uri_de_mongodb
+MONGODB_URI=
+
+# Admin auth (libs/simple-auth.js)
+ADMIN_USERNAME=
+ADMIN_PASSWORD=
+NEXTAUTH_SECRET=
 
 # Cloudinary
-CLOUDINARY_CLOUD_NAME=tu_cloud_name
-CLOUDINARY_API_KEY=tu_api_key
-CLOUDINARY_API_SECRET=tu_api_secret
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_UPLOAD_PRESET=estampanda-stickers
 
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=tu_secret
+# Stripe (sub-proyecto #2)
+STRIPE_PUBLIC_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
 
-# Admin
-ADMIN_USERNAME=tu_usuario
-ADMIN_PASSWORD=tu_contraseña
-
-# Stripe (cuando lo configures)
-STRIPE_PUBLIC_KEY=pk_test_xxx
-STRIPE_SECRET_KEY=sk_test_xxx
+# Cron de limpieza
+CRON_SECRET=
 ```
 
 ## 📝 Scripts Disponibles

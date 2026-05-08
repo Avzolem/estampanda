@@ -41,20 +41,6 @@ const config = {
       },
     ],
   },
-  aws: {
-    // If you use AWS S3/Cloudfront, put values in here
-    bucket: "bucket-name",
-    bucketUrl: `https://bucket-name.s3.amazonaws.com/`,
-    cdn: "https://cdn-id.cloudfront.net/",
-  },
-  resend: {
-    // REQUIRED — Email 'From' field to be used when sending magic login links
-    fromNoReply: `Estampanda <noreply@estampanda.com>`,
-    // REQUIRED — Email 'From' field to be used when sending other emails, like abandoned carts, updates etc..
-    fromAdmin: `Equipo Estampanda <hola@estampanda.com>`,
-    // Email shown to customer if need support. Leave empty if not needed => if empty, set up Crisp above, otherwise you won't be able to offer customer support."
-    supportEmail: "soporte@estampanda.com",
-  },
   colors: {
     // REQUIRED — The DaisyUI theme to use (added to the main layout.js). Leave blank for default (light & dark mode). If you any other theme than light/dark, you need to add it in config.tailwind.js in daisyui.themes.
     theme: "estampanda",

@@ -173,7 +173,7 @@ npm run postbuild
 3. Variables realmente usadas en el código:
    - `MONGODB_URI` — connection string de MongoDB (consumida en `libs/mongoose.js`)
    - `NEXTAUTH_SECRET` — secret para firmar JWT del admin (generar con `openssl rand -base64 32`). El nombre se mantiene por compatibilidad histórica; **no** hay NextAuth instalado.
-   - `ADMIN_USERNAME` / `ADMIN_PASSWORD` — credenciales del único admin. **Hoy están hardcoded** en `libs/simple-auth.js:5-6`; pendiente moverlas a env (viola la regla de seguridad nº 10).
+   - `ADMIN_USERNAME` / `ADMIN_PASSWORD` — credenciales del único admin. Leídas desde env vars en `libs/simple-auth.js` (movidas de hardcoded en sub-proyecto #1).
    - `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` / `CLOUDINARY_UPLOAD_PRESET` — usadas en `libs/cloudinary.js` y `app/api/upload/*`
    - `STRIPE_PUBLIC_KEY` / `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` — `libs/stripe.js`, `app/api/stripe/*`, `app/api/webhook/stripe/*`
    - `NEXT_PUBLIC_*` equivalents donde aplique (Stripe public)
@@ -224,9 +224,8 @@ Aplicación **Next.js 15** (App Router, React 19) para el e-commerce de stickers
 
 5. **Upload de diseños (Cloudinary)**:
    - `libs/cloudinary.js` envuelve el SDK
-   - `app/api/upload/route.js` y `app/api/upload/design/route.js` manejan subidas
-   - `app/api/test-cloudinary/` para pruebas de conectividad
-   - El componente cliente que aún muestra mock con `URL.createObjectURL` está en `components/stickers/FileUploader.js` (ver pendientes en STATUS.md)
+   - Direct signed upload: browser pide firma a `/api/upload/signature`, sube directo a Cloudinary, registra en Mongo via `/api/designs`
+   - Endpoints legacy `/api/upload` y `/api/upload/design` eliminados (GalleryManager admin aún los usa, pendiente migrar)
 
 6. **Organización de componentes**:
    - `/components` — compartidos (Header, Footer, Hero, PriceCalculator, ButtonSupport, LayoutClient)
@@ -234,6 +233,14 @@ Aplicación **Next.js 15** (App Router, React 19) para el e-commerce de stickers
    - `/components/admin` — UI de administración
    - `/components/common` — primitivas (LoadingCircle, Pagination, PageSizeSelect)
    - Componentes específicos de ruta colocalizados en sus carpetas de `/app`
+
+7. **Upload de diseños y carrito anónimo** (sub-proyecto #1):
+   - Sesión anónima por cookie `cart-session-id` (middleware crea, 30d, httpOnly)
+   - Direct signed upload: browser pide firma a `/api/upload/signature`, sube directo a Cloudinary, registra en Mongo via `/api/designs`
+   - Modelo `Cart` con items embebidos, TTL 24h (recalculado en cada touch via pre-save hook)
+   - Background removal en browser con `@imgly/background-removal` (cero costo, sin lock-in, lazy load ~80MB la primera vez)
+   - Cleanup automatizado con Vercel Cron diario a 03:00 UTC (`/api/cron/cleanup-expired`, autorizado con `CRON_SECRET`)
+   - Lógica de precios centralizada en `libs/pricing.js` (BASE_PRICE_PER_CM2 + multipliers + descuentos por volumen)
 
 ### Configuración central (`config.js`)
 
@@ -250,11 +257,14 @@ Endpoints existentes en `/app/api`:
 - `auth/login`, `auth/logout` — login JWT del admin
 - `lead` — captura de email para waitlist
 - `orders`, `orders/[id]` — CRUD de pedidos
-- `upload`, `upload/design` — subidas a Cloudinary
+- `upload/signature` — genera firma para direct upload a Cloudinary
+- `upload/design` — legacy, solo admin (GalleryManager); pendiente migrar
+- `designs`, `designs/[id]` — registro de diseños en Mongo tras upload
+- `cart`, `cart/items`, `cart/items/[itemId]` — carrito anónimo por sesión
 - `stripe/create-checkout`, `stripe/create-portal`
 - `webhook/stripe` — verificación de firma + actualización de estado
 - `admin/dashboard`, `admin/users/[id]` — operaciones protegidas
-- `test-cloudinary` — diagnóstico
+- `cron/cleanup-expired` — limpieza diaria de carts y designs expirados (Vercel Cron)
 
 ### Estilos
 
