@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bars3Icon, XMarkIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import CartBadge from "@/components/cart/CartBadge";
@@ -59,10 +60,13 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <img 
-              src="/images/estampandalogonobg.png" 
-              alt="Estampanda" 
-              className="h-12"
+            <Image
+              src="/images/estampandalogonobg.png"
+              alt="Estampanda"
+              width={48}
+              height={48}
+              priority
+              className="h-12 w-auto"
             />
             <span className="text-2xl md:text-3xl font-bold text-[#275D5C]">
               Estampanda.
