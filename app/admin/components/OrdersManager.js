@@ -104,6 +104,24 @@ export default function OrdersManager() {
 
   return (
     <div className="space-y-6">
+      {/* Banner: estado del módulo */}
+      <div className="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">🚧</span>
+          <div>
+            <p className="font-semibold text-amber-900">
+              Módulo en transición
+            </p>
+            <p className="text-sm text-amber-800 mt-1">
+              La data mostrada abajo es de demostración. Los pedidos reales
+              aparecerán cuando se complete el sub-proyecto #2 (Stripe checkout).
+              El refactor del modelo Order para soportar el carrito multi-diseño
+              también ocurre allí.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Header y Filtros */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center mb-6">

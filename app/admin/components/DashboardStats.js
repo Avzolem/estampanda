@@ -1,52 +1,98 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 
+/**
+ * Dashboard del admin con stats reales del sistema.
+ * Consume /api/admin/dashboard.
+ *
+ * NOTA: la sección de "Pedidos" e "Ingresos" será implementada cuando
+ * se complete el sub-proyecto #2 (Stripe checkout). Hoy mostramos las
+ * stats que SÍ tenemos: designs subidos y carts activos.
+ */
 export default function DashboardStats() {
-  const [stats] = useState({
-    totalOrders: 45,
-    pendingOrders: 8,
-    totalRevenue: 15420,
-    totalCustomers: 32,
-    todayOrders: 5,
-    weeklyGrowth: 12.5,
-  });
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [recentOrders] = useState([
-    { id: "ORD-045", customer: "María López", amount: 299, status: "pending", time: "Hace 10 min" },
-    { id: "ORD-044", customer: "Juan Pérez", amount: 450, status: "processing", time: "Hace 1 hora" },
-    { id: "ORD-043", customer: "Ana García", amount: 189, status: "completed", time: "Hace 2 horas" },
-  ]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/admin/dashboard")
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((res) => {
+        if (!cancelled) {
+          setData(res.data);
+          setLoading(false);
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setError(e.message);
+          setLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-12 h-12 border-4 border-estampanda-primary border-t-transparent rounded-full"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700">
+        <p className="font-semibold mb-1">No se pudieron cargar los datos</p>
+        <p className="text-sm">{error}</p>
+      </div>
+    );
+  }
+
+  const { designs, carts, recentDesigns } = data;
 
   const statCards = [
-    { 
-      title: "Pedidos Totales", 
-      value: stats.totalOrders, 
-      icon: "📦", 
+    {
+      title: "Diseños subidos",
+      value: designs.total,
+      icon: "🖼️",
       color: "from-blue-500 to-blue-600",
-      change: "+12%"
+      sub: `${designs.last24h} en últimas 24h · ${designs.lastWeek} en la semana`,
     },
-    { 
-      title: "Pedidos Pendientes", 
-      value: stats.pendingOrders, 
-      icon: "⏳", 
-      color: "from-yellow-500 to-yellow-600",
-      change: "-3"
+    {
+      title: "Carritos activos",
+      value: carts.active,
+      icon: "🛒",
+      color: "from-emerald-500 to-emerald-600",
+      sub: `${carts.empty} carritos vacíos en sesión`,
     },
-    { 
-      title: "Ingresos Totales", 
-      value: `$${stats.totalRevenue.toLocaleString()}`, 
-      icon: "💰", 
-      color: "from-green-500 to-green-600",
-      change: "+18%"
+    {
+      title: "Stickers en carritos",
+      value: carts.totalItems.toLocaleString(),
+      icon: "📦",
+      color: "from-amber-500 to-amber-600",
+      sub: "Cantidad acumulada en items pendientes",
     },
-    { 
-      title: "Clientes", 
-      value: stats.totalCustomers, 
-      icon: "👥", 
+    {
+      title: "Valor potencial",
+      value: `$${carts.totalValue.toLocaleString("es-MX", { maximumFractionDigits: 0 })}`,
+      icon: "💰",
       color: "from-purple-500 to-purple-600",
-      change: "+5"
+      sub: "MXN. Suma de carritos sin pagar",
     },
   ];
 
@@ -54,123 +100,124 @@ export default function DashboardStats() {
     <div className="space-y-6">
       {/* Welcome Message */}
       <div className="bg-gradient-to-r from-estampanda-primary to-estampanda-secondary text-white rounded-2xl p-6 shadow-xl">
-        <h1 className="text-2xl font-bold mb-2">¡Bienvenido de vuelta!</h1>
-        <p className="opacity-90">Aquí está el resumen de tu negocio hoy</p>
+        <h1 className="text-2xl font-bold mb-2">Resumen del sistema</h1>
+        <p className="opacity-90">
+          Estado en tiempo real. Pedidos pagados aparecerán cuando se complete
+          el sub-proyecto Stripe.
+        </p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((stat, index) => (
+        {statCards.map((c, i) => (
           <motion.div
-            key={stat.title}
+            key={c.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-xl shadow-lg overflow-hidden"
+            transition={{ delay: i * 0.05 }}
+            className={`bg-gradient-to-br ${c.color} text-white rounded-2xl p-5 shadow-lg`}
           >
-            <div className={`h-2 bg-gradient-to-r ${stat.color}`} />
-            <div className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-3xl">{stat.icon}</span>
-                <span className={`text-sm font-medium ${
-                  stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {stat.change}
-                </span>
-              </div>
-              <h3 className="text-2xl font-bold text-estampanda-dark">{stat.value}</h3>
-              <p className="text-sm text-gray-600 mt-1">{stat.title}</p>
+            <div className="flex items-start justify-between mb-3">
+              <span className="text-3xl">{c.icon}</span>
             </div>
+            <p className="text-3xl font-bold">{c.value}</p>
+            <p className="text-sm opacity-90 mt-1">{c.title}</p>
+            <p className="text-xs opacity-75 mt-2">{c.sub}</p>
           </motion.div>
         ))}
       </div>
 
-      {/* Charts and Recent Orders */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Sales Chart */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-estampanda-dark mb-4">Ventas del Mes</h3>
-          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-            <div className="text-center">
-              <div className="text-6xl mb-3">📈</div>
-              <p className="text-gray-500">Gráfico de ventas</p>
-              <p className="text-sm text-gray-400 mt-2">Conectar con Chart.js para visualización real</p>
-            </div>
-          </div>
+      {/* Insights row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Background-removal usage */}
+        <div className="bg-white rounded-2xl p-6 shadow-md">
+          <p className="text-sm text-gray-500 mb-1">Uso de &quot;Quitar fondo&quot;</p>
+          <p className="text-3xl font-bold text-estampanda-primary mb-1">
+            {designs.total
+              ? Math.round((designs.withBgRemoved / designs.total) * 100)
+              : 0}
+            %
+          </p>
+          <p className="text-sm text-gray-600">
+            {designs.withBgRemoved} de {designs.total} diseños procesados
+          </p>
+          <p className="text-xs text-gray-400 mt-3">
+            Modelo open-source en browser. Costo: $0
+          </p>
         </div>
 
-        {/* Recent Orders */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-estampanda-dark mb-4">Pedidos Recientes</h3>
-          <div className="space-y-3">
-            {recentOrders.map((order) => (
-              <motion.div
-                key={order.id}
-                whileHover={{ x: 4 }}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+        {/* Conversion placeholder */}
+        <div className="bg-white rounded-2xl p-6 shadow-md">
+          <p className="text-sm text-gray-500 mb-1">Conversión a pedido</p>
+          <p className="text-3xl font-bold text-gray-400 mb-1">—</p>
+          <p className="text-sm text-gray-500">Pendiente de Stripe</p>
+          <Link
+            href="#"
+            className="text-xs text-estampanda-primary underline-offset-4 hover:underline mt-3 inline-block"
+          >
+            Ver sub-proyecto #2 →
+          </Link>
+        </div>
+
+        {/* System health */}
+        <div className="bg-white rounded-2xl p-6 shadow-md">
+          <p className="text-sm text-gray-500 mb-1">Cron de limpieza</p>
+          <p className="text-3xl font-bold text-emerald-600 mb-1">Activo</p>
+          <p className="text-sm text-gray-600">
+            Diario 03:00 UTC · TTL 24h en carts
+          </p>
+          <p className="text-xs text-gray-400 mt-3">
+            Logs en Vercel → Functions
+          </p>
+        </div>
+      </div>
+
+      {/* Recent designs */}
+      <div className="bg-white rounded-2xl p-6 shadow-md">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-gray-800">
+            Diseños recientes
+          </h2>
+          <span className="text-xs text-gray-400">
+            últimos {recentDesigns.length}
+          </span>
+        </div>
+
+        {recentDesigns.length === 0 ? (
+          <p className="text-sm text-gray-400 py-8 text-center">
+            Sin diseños subidos aún. Cuando un cliente suba algo, aparecerá aquí.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            {recentDesigns.map((d) => (
+              <div
+                key={d.id}
+                className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden border border-gray-100"
+                title={`${d.name} · sesión ${d.sessionPrefix ?? "—"}`}
               >
-                <div>
-                  <p className="font-semibold text-estampanda-dark">{order.id}</p>
-                  <p className="text-sm text-gray-600">{order.customer} • {order.time}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-estampanda-primary">${order.amount}</p>
-                  <StatusBadge status={order.status} />
-                </div>
-              </motion.div>
+                {d.thumbnailUrl ? (
+                  <Image
+                    src={d.thumbnailUrl}
+                    alt={d.name}
+                    fill
+                    className="object-contain p-1"
+                    sizes="(max-width: 640px) 50vw, 12vw"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-300 text-xl">
+                    ?
+                  </div>
+                )}
+                {d.backgroundRemoved && (
+                  <span className="absolute top-1 right-1 bg-emerald-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                    sin fondo
+                  </span>
+                )}
+              </div>
             ))}
           </div>
-          <button className="mt-4 w-full py-2 text-estampanda-primary hover:bg-estampanda-cream rounded-lg transition-colors text-sm font-medium">
-            Ver todos los pedidos →
-          </button>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-bold text-estampanda-dark mb-4">Acciones Rápidas</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <QuickAction icon="➕" label="Nuevo Producto" color="bg-blue-100 text-blue-600" />
-          <QuickAction icon="🎨" label="Añadir Material" color="bg-green-100 text-green-600" />
-          <QuickAction icon="📸" label="Subir a Galería" color="bg-purple-100 text-purple-600" />
-          <QuickAction icon="📊" label="Exportar Datos" color="bg-orange-100 text-orange-600" />
-        </div>
+        )}
       </div>
     </div>
-  );
-}
-
-function StatusBadge({ status }) {
-  const colors = {
-    pending: "bg-yellow-100 text-yellow-700",
-    processing: "bg-blue-100 text-blue-700",
-    completed: "bg-green-100 text-green-700",
-    cancelled: "bg-red-100 text-red-700",
-  };
-
-  const labels = {
-    pending: "Pendiente",
-    processing: "Procesando",
-    completed: "Completado",
-    cancelled: "Cancelado",
-  };
-
-  return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[status]}`}>
-      {labels[status]}
-    </span>
-  );
-}
-
-function QuickAction({ icon, label, color }) {
-  return (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className={`p-4 rounded-xl ${color} transition-all`}
-    >
-      <div className="text-2xl mb-2">{icon}</div>
-      <p className="text-sm font-medium">{label}</p>
-    </motion.button>
   );
 }
