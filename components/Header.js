@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bars3Icon, XMarkIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import CartBadge from "@/components/cart/CartBadge";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -86,9 +87,9 @@ export default function Header() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link 
-              href="/stickers/tracking" 
-              className="flex items-center gap-2 font-medium hover:opacity-80 transition-opacity" 
+            <Link
+              href="/stickers/tracking"
+              className="flex items-center gap-2 font-medium hover:opacity-80 transition-opacity"
               style={{ color: '#275D5C' }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,12 +97,18 @@ export default function Header() {
               </svg>
               Rastrear pedido
             </Link>
+            <CartBadge />
             <Link
               href="/stickers/designer"
               className="px-8 sm:px-16 md:px-24 py-2 sm:py-3 md:py-3.5 bg-[#275D5C] text-white rounded-lg text-sm sm:text-base md:text-lg font-semibold hover:bg-[#3B7F7E] transition-all"
             >
               Crear stickers
             </Link>
+          </div>
+
+          {/* Mobile Cart Badge */}
+          <div className="md:hidden">
+            <CartBadge />
           </div>
 
           {/* Mobile menu button */}

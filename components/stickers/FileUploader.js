@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
+import { uploadDesignToCloudinary } from "@/libs/cloudinary-client";
 import {
   CloudArrowUpIcon,
   DocumentIcon,
@@ -31,101 +32,55 @@ export default function FileUploader({ onFileUpload, uploadedFile }) {
   const onDrop = useCallback(async (acceptedFiles, rejectedFiles) => {
     setError("");
 
-    // Handle rejected files
     if (rejectedFiles.length > 0) {
       const rejection = rejectedFiles[0];
-      if (rejection.errors[0]?.code === 'file-too-large') {
-        setError(`El archivo es muy grande. Máximo 50MB.`);
-      } else if (rejection.errors[0]?.code === 'file-invalid-type') {
-        setError(`Formato no válido. Usa JPG, PNG, SVG o WebP.`);
+      if (rejection.errors[0]?.code === "file-too-large") {
+        setError("El archivo es muy grande. Máximo 50 MB.");
+      } else if (rejection.errors[0]?.code === "file-invalid-type") {
+        setError("Formato no válido. Usa JPG, PNG, SVG o WebP.");
       } else {
-        setError(`Error al subir el archivo. Intenta de nuevo.`);
+        setError("Error al subir el archivo. Intenta de nuevo.");
       }
       return;
     }
-
     if (acceptedFiles.length === 0) return;
 
     const selectedFile = acceptedFiles[0];
-    
-    // Create local preview immediately
-    const reader = new FileReader();
-    reader.onload = async (readerEvent) => {
-      const previewUrl = readerEvent.target.result;
-      setPreview(previewUrl);
-      setIsUploading(true);
-      setFile(selectedFile);
-      
-      try {
-        // Prepare FormData for upload
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('name', selectedFile.name.split('.')[0]);
-        formData.append('category', 'user-upload');
-        formData.append('tags', 'sticker,custom');
-        formData.append('removeBackground', 'false');
-        
-        // Track upload progress
-        const xhr = new XMLHttpRequest();
-        
-        xhr.upload.onprogress = (event) => {
-          if (event.lengthComputable) {
-            const percentComplete = Math.round((event.loaded / event.total) * 100);
-            setUploadProgress(percentComplete);
-          }
-        };
-        
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            
-            if (response.success) {
-              setIsUploading(false);
-              setUploadProgress(100);
-              
-              // Call parent callback with Cloudinary URLs
-              if (onFileUpload) {
-                onFileUpload({
-                  file: selectedFile,
-                  preview: response.design.thumbnailUrl || previewUrl,
-                  url: response.design.processedFileUrl,
-                  originalUrl: response.design.originalFileUrl,
-                  thumbnailUrl: response.design.thumbnailUrl,
-                  previewUrl: response.design.previewUrl,
-                  name: response.design.name,
-                  size: selectedFile.size,
-                  type: selectedFile.type,
-                  dimensions: response.design.dimensions,
-                  hasTransparency: response.design.hasTransparency,
-                  designId: response.design.id,
-                });
-              }
-            } else {
-              throw new Error(response.error || 'Upload failed');
-            }
-          } else {
-            throw new Error(`Upload failed with status ${xhr.status}`);
-          }
-        };
-        
-        xhr.onerror = () => {
-          throw new Error('Network error during upload');
-        };
-        
-        // Send request to our API endpoint
-        xhr.open('POST', '/api/upload/design');
-        xhr.send(formData);
-        
-      } catch (error) {
-        console.error('Upload error:', error);
-        setError(error.message || 'Error al subir el archivo. Intenta de nuevo.');
-        setIsUploading(false);
-        setFile(null);
-        setPreview(null);
-        setUploadProgress(0);
+    setFile(selectedFile);
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const design = await uploadDesignToCloudinary(selectedFile, setUploadProgress);
+      setIsUploading(false);
+      setUploadProgress(100);
+
+      setPreview(design.thumbnailUrl || design.originalFileUrl);
+
+      if (onFileUpload) {
+        onFileUpload({
+          designId: design.id,
+          file: selectedFile,
+          preview: design.thumbnailUrl || design.originalFileUrl,
+          url: design.previewUrl,
+          originalUrl: design.originalFileUrl,
+          thumbnailUrl: design.thumbnailUrl,
+          previewUrl: design.previewUrl,
+          name: design.name,
+          size: selectedFile.size,
+          type: selectedFile.type,
+          dimensions: design.dimensions,
+          hasTransparency: design.hasTransparency,
+        });
       }
-    };
-    reader.readAsDataURL(selectedFile);
+    } catch (err) {
+      console.error("Upload error:", err);
+      setError(err.message || "Error al subir el archivo. Intenta de nuevo.");
+      setIsUploading(false);
+      setFile(null);
+      setPreview(null);
+      setUploadProgress(0);
+    }
   }, [onFileUpload]);
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({

@@ -1,290 +1,114 @@
 "use client";
+import { useMemo } from "react";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-
-export default function DesignPreview({ 
-  designFile, 
-  material, 
-  size, 
-  cutType 
+export default function DesignPreview({
+  designFile,
+  material,
+  size,
+  cutType,
+  totalPrice,
+  onAddToCart,
+  // eslint-disable-next-line no-unused-vars
+  onProcessed, // reservado para Fase D (botón "Quitar fondo")
+  isAdding = false,
 }) {
-  const [previewMode, setPreviewMode] = useState("flat");
-  const [rotation, setRotation] = useState(0);
+  const dpi = useMemo(() => {
+    if (!designFile?.dimensions || !size?.width) return null;
+    return Math.round((designFile.dimensions.width / size.width) * 2.54);
+  }, [designFile, size]);
 
-  const mockupViews = [
-    { id: "flat", name: "Plano", icon: "📄" },
-    { id: "laptop", name: "Laptop", icon: "💻" },
-    { id: "bottle", name: "Botella", icon: "🍶" },
-    { id: "phone", name: "Móvil", icon: "📱" },
-  ];
-
-  // Simular efecto del material
-  const getMaterialEffect = () => {
-    if (!material) return {};
-    
-    const effects = {
-      matte: { filter: "saturate(0.9)" },
-      glossy: { filter: "saturate(1.2) brightness(1.1)" },
-      transparent: { opacity: 0.9 },
-      holographic: {
-        background: "linear-gradient(45deg, #ff0080, #ff8000, #00ff00, #0080ff, #8000ff)",
-        backgroundSize: "200% 200%",
-        animation: "shimmer 3s ease infinite",
-        mixBlendMode: "overlay",
-      },
-      glow: { filter: "brightness(1.2) contrast(1.1)" },
-      metallic: { filter: "contrast(1.2) brightness(1.05)" },
-    };
-    
-    return effects[material?.id] || {};
-  };
-
-  // Simular forma de corte
-  const getCutPath = () => {
-    if (!cutType) return "none";
-    
-    const paths = {
-      square: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-      round: "circle(50%)",
-      oval: "ellipse(50% 40%)",
-      diecut: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)",
-      custom: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
-    };
-    
-    return paths[cutType?.id] || "none";
-  };
+  const dpiStatus = useMemo(() => {
+    if (dpi === null) return null;
+    if (dpi >= 300) return { color: "green", label: `${dpi} DPI · Excelente` };
+    if (dpi >= 200) return { color: "amber", label: `${dpi} DPI · Aceptable` };
+    return { color: "red", label: `${dpi} DPI · Puede pixelarse` };
+  }, [dpi]);
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
-          Vista Previa
-        </h2>
-        <div className="flex gap-2">
-          {mockupViews.map((view) => (
-            <button
-              key={view.id}
-              onClick={() => setPreviewMode(view.id)}
-              className={`px-3 py-2 rounded-lg transition-all ${
-                previewMode === view.id
-                  ? "bg-estampanda-primary text-white"
-                  : "bg-gray-100 hover:bg-gray-200"
-              }`}
-              title={view.name}
-            >
-              <span className="text-xl">{view.icon}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Vista Previa</h2>
 
-      {/* Área de preview */}
-      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-8 min-h-[400px] flex items-center justify-center overflow-hidden">
-        {(designFile?.preview || designFile) ? (
-          <motion.div
-            className="relative"
-            animate={{ rotate: rotation }}
-            transition={{ type: "spring", stiffness: 100 }}
-          >
-            {/* Preview según el modo */}
-            {previewMode === "flat" && (
-              <div className="relative">
-                {/* Sombra del sticker */}
-                <div
-                  className="absolute inset-0 bg-black/20 blur-xl"
-                  style={{
-                    clipPath: getCutPath(),
-                    transform: "translate(4px, 4px)",
-                  }}
-                />
-                
-                {/* Sticker */}
-                <div
-                  className="relative bg-white p-2"
-                  style={{
-                    clipPath: getCutPath(),
-                    width: `${size?.width * 20}px`,
-                    height: `${size?.height * 20}px`,
-                  }}
-                >
-                  {/* Efecto del material */}
-                  {material?.id === "holographic" && (
-                    <div
-                      className="absolute inset-0"
-                      style={getMaterialEffect()}
-                    />
-                  )}
-                  
-                  {/* Imagen del diseño */}
-                  <div
-                    className="w-full h-full flex items-center justify-center"
-                    style={material?.id !== "holographic" ? getMaterialEffect() : {}}
-                  >
-                    {(designFile?.preview || designFile) ? (
-                      <img
-                        src={designFile?.preview || designFile}
-                        alt="Diseño"
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    ) : (
-                      <div className="text-6xl">🎨</div>
-                    )}
-                  </div>
-                  
-                  {/* Brillo para material glossy */}
-                  {material?.id === "glossy" && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent pointer-events-none" />
-                  )}
-                </div>
-                
-                {/* Borde blanco del sticker */}
-                <div
-                  className="absolute inset-0 border-4 border-white"
-                  style={{
-                    clipPath: getCutPath(),
-                  }}
-                />
-              </div>
-            )}
-
-            {previewMode === "laptop" && (
-              <div className="relative">
-                <div className="w-80 h-48 bg-gray-800 rounded-t-lg flex items-center justify-center">
-                  <div className="w-72 h-40 bg-gray-900 rounded flex items-center justify-center">
-                    <div
-                      className="bg-white p-1"
-                      style={{
-                        clipPath: getCutPath(),
-                        width: `${size?.width * 10}px`,
-                        height: `${size?.height * 10}px`,
-                      }}
-                    >
-                      {typeof designFile === "string" ? (
-                        <img
-                          src={designFile}
-                          alt="Diseño"
-                          className="w-full h-full object-contain"
-                          style={getMaterialEffect()}
-                        />
-                      ) : (
-                        <div className="text-4xl text-center">🎨</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="w-96 h-4 bg-gray-700 rounded-b-lg" />
-              </div>
-            )}
-
-            {previewMode === "bottle" && (
-              <div className="relative">
-                <div className="w-32 h-64 bg-gradient-to-b from-blue-400 to-blue-600 rounded-3xl flex items-center justify-center">
-                  <div
-                    className="bg-white p-1"
-                    style={{
-                      clipPath: getCutPath(),
-                      width: `${Math.min(size?.width * 8, 80)}px`,
-                      height: `${Math.min(size?.height * 8, 80)}px`,
-                    }}
-                  >
-                    {typeof designFile === "string" ? (
-                      <img
-                        src={designFile}
-                        alt="Diseño"
-                        className="w-full h-full object-contain"
-                        style={getMaterialEffect()}
-                      />
-                    ) : (
-                      <div className="text-3xl text-center">🎨</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {previewMode === "phone" && (
-              <div className="relative">
-                <div className="w-40 h-80 bg-gray-900 rounded-3xl p-2">
-                  <div className="w-full h-full bg-gray-800 rounded-2xl flex items-center justify-center">
-                    <div
-                      className="bg-white p-1"
-                      style={{
-                        clipPath: getCutPath(),
-                        width: `${Math.min(size?.width * 10, 100)}px`,
-                        height: `${Math.min(size?.height * 10, 100)}px`,
-                      }}
-                    >
-                      {typeof designFile === "string" ? (
-                        <img
-                          src={designFile}
-                          alt="Diseño"
-                          className="w-full h-full object-contain"
-                          style={getMaterialEffect()}
-                        />
-                      ) : (
-                        <div className="text-4xl text-center">🎨</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </motion.div>
+      <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
+        {designFile?.preview ? (
+          <div
+            style={{
+              clipPath: getCutPath(cutType),
+              width: "70%",
+              height: "70%",
+              background: `url(${designFile.preview}) center/contain no-repeat`,
+              ...getMaterialEffect(material),
+            }}
+          />
         ) : (
-          <div className="text-center">
-            <div className="text-6xl mb-4 opacity-30">📸</div>
-            <p className="text-gray-500">
-              Sube un diseño para ver la vista previa
-            </p>
+          <p className="text-gray-400">Sube un diseño para previsualizarlo</p>
+        )}
+
+        {dpiStatus && (
+          <div
+            className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold ${
+              dpiStatus.color === "green"
+                ? "bg-green-100 text-green-800"
+                : dpiStatus.color === "amber"
+                ? "bg-amber-100 text-amber-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {dpiStatus.label}
+          </div>
+        )}
+
+        {size && (
+          <div className="absolute bottom-4 left-4 right-4 text-center text-xs text-gray-600">
+            ← {size.width} cm × {size.height} cm →
           </div>
         )}
       </div>
 
-      {/* Controles de rotación */}
-      <div className="mt-4 flex items-center justify-center gap-4">
+      <div className="mt-6 flex flex-col gap-3">
+        <div className="flex justify-between text-lg">
+          <span>Total:</span>
+          <span className="font-bold text-[#275D5C]">
+            ${totalPrice ? totalPrice.toFixed(2) : "0.00"} MXN
+          </span>
+        </div>
+
         <button
-          onClick={() => setRotation(rotation - 90)}
-          className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          onClick={onAddToCart}
+          disabled={!designFile || !material || !size || !cutType || isAdding}
+          className="w-full px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-[#275D5C] hover:bg-[#3B7F7E] disabled:bg-gray-300 text-white rounded-lg font-semibold transition-colors"
         >
-          ↺ Rotar izquierda
-        </button>
-        <button
-          onClick={() => setRotation(0)}
-          className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-        >
-          ⟲ Restablecer
-        </button>
-        <button
-          onClick={() => setRotation(rotation + 90)}
-          className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-        >
-          ↻ Rotar derecha
+          {isAdding ? "Añadiendo…" : "Añadir al carrito"}
         </button>
       </div>
-
-      {/* Información del sticker */}
-      {material && size && cutType && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-          <h3 className="font-semibold text-gray-800 mb-2">
-            Especificaciones:
-          </h3>
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            <div>
-              <p className="text-gray-500">Material:</p>
-              <p className="font-semibold">{material.name}</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Tamaño:</p>
-              <p className="font-semibold">{size.width} x {size.height} cm</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Corte:</p>
-              <p className="font-semibold">{cutType.name}</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
+}
+
+function getCutPath(cutType) {
+  if (!cutType) return "none";
+  const paths = {
+    square: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+    round: "circle(50%)",
+    oval: "ellipse(50% 40%)",
+    diecut: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)",
+    custom:
+      "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
+  };
+  return paths[cutType.id] || "none";
+}
+
+function getMaterialEffect(material) {
+  if (!material) return {};
+  const effects = {
+    matte: { filter: "saturate(0.9)" },
+    glossy: { filter: "saturate(1.2) brightness(1.1)" },
+    transparent: { opacity: 0.9 },
+    holographic: {
+      filter: "saturate(1.3) hue-rotate(15deg)",
+      mixBlendMode: "overlay",
+    },
+    glow: { filter: "brightness(1.2) contrast(1.1)" },
+    metallic: { filter: "contrast(1.2) brightness(1.05)" },
+  };
+  return effects[material.id] || {};
 }
