@@ -1,26 +1,17 @@
 "use client";
 
-import config from "@/config";
+import Link from "next/link";
 
-// Button to open support email in the default email client
+// Botón de soporte: redirige a /contact (formulario interno).
+// Si en el futuro se cablea Crisp, leer config.crisp.id y reemplazar por crisp.show().
 const ButtonSupport = () => {
-  const handleClick = () => {
-    if (config.resend?.supportEmail) {
-      // open default email client in new window with "need help with ${config.appName}" as subject
-      window.open(
-        `mailto:${config.resend.supportEmail}?subject=Necesito ayuda con ${config.appName}`,
-        "_blank"
-      );
-    }
-  };
-
   return (
-    <button
+    <Link
+      href="/contact"
       className="btn btn-sm"
-      onClick={handleClick}
       data-tooltip-id="tooltip"
-      data-tooltip-content="Talk to support"
-      title="Chat with support"
+      data-tooltip-content="Habla con nosotros"
+      title="Contacto"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -34,8 +25,8 @@ const ButtonSupport = () => {
           clipRule="evenodd"
         />
       </svg>
-      Support
-    </button>
+      Soporte
+    </Link>
   );
 };
 
