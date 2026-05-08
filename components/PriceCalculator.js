@@ -1,5 +1,7 @@
 "use client";
 
+// NOTE: este componente es la calculadora marketing del homepage. Para el cálculo real del configurador ver libs/pricing.js + components/stickers/PricingCalculator.js (este último está siendo retirado).
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";

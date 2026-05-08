@@ -3,146 +3,73 @@ import toJSON from "./plugins/toJSON";
 
 const designSchema = mongoose.Schema(
   {
+    // Identidad: uno de los dos requerido (validación pre-save)
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
     },
+    sessionId: {
+      type: String,
+      required: false,
+      index: true,
+    },
+
     name: {
       type: String,
       required: true,
+      default: "Sin título",
     },
-    originalFileUrl: {
-      type: String,
-      required: true,
-    },
-    processedFileUrl: {
-      type: String,
-    },
-    thumbnailUrl: {
-      type: String,
-    },
+
+    // Cloudinary
+    cloudinaryPublicId: { type: String, required: true },
+    cloudinaryProcessedPublicId: { type: String },
+    cloudinaryFolder: { type: String },
+
+    originalFileUrl: { type: String, required: true },
+    thumbnailUrl: String,
+    previewUrl: String,
+    processedFileUrl: String,
+
+    // Metadata de archivo
     fileType: {
       type: String,
       required: true,
-      enum: ["jpg", "jpeg", "png", "svg", "ai", "pdf", "eps"],
+      enum: ["jpg", "jpeg", "png", "svg", "webp"],
     },
-    fileSize: {
-      type: Number,
-      required: true,
-    },
+    fileSize: { type: Number, required: true },
     dimensions: {
-      width: {
-        type: Number,
-        required: true,
-      },
-      height: {
-        type: Number,
-        required: true,
-      },
-      unit: {
-        type: String,
-        default: "px",
-      },
-      dpi: {
-        type: Number,
-        default: 300,
-      },
+      width: { type: Number, required: true },
+      height: { type: Number, required: true },
     },
-    hasTransparency: {
-      type: Boolean,
-      default: false,
-    },
-    colors: [
-      {
-        hex: String,
-        rgb: {
-          r: Number,
-          g: Number,
-          b: Number,
-        },
-        percentage: Number,
-      },
-    ],
-    tags: [String],
-    category: {
-      type: String,
-      enum: ["personal", "business", "art", "meme", "text", "logo", "illustration", "photo", "other"],
-    },
-    isPublic: {
-      type: Boolean,
-      default: false,
-    },
-    isTemplate: {
-      type: Boolean,
-      default: false,
-    },
-    usageCount: {
-      type: Number,
-      default: 0,
-    },
-    likes: {
-      type: Number,
-      default: 0,
-    },
+    hasTransparency: { type: Boolean, default: false },
+
+    // Estado
     status: {
       type: String,
       default: "active",
-      enum: ["active", "archived", "deleted", "processing", "error"],
+      enum: ["active", "deleted"],
     },
     processingStatus: {
-      backgroundRemoved: {
-        type: Boolean,
-        default: false,
-      },
-      vectorized: {
-        type: Boolean,
-        default: false,
-      },
-      optimized: {
-        type: Boolean,
-        default: false,
-      },
+      backgroundRemoved: { type: Boolean, default: false },
+      optimized: { type: Boolean, default: true },
     },
-    metadata: {
-      software: String,
-      camera: String,
-      location: String,
-      dateCreated: Date,
-    },
-    aiGenerated: {
-      type: Boolean,
-      default: false,
-    },
-    aiPrompt: String,
-    lastUsed: {
-      type: Date,
-    },
+
+    // Lifecycle: null = no expira (vinculado a Order pagada)
+    expiresAt: { type: Date, index: true },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
+designSchema.index({ sessionId: 1, status: 1 });
 designSchema.index({ userId: 1, status: 1 });
-designSchema.index({ isPublic: 1, category: 1 });
-designSchema.index({ tags: 1 });
 
 designSchema.pre("save", function (next) {
-  if (this.isModified("originalFileUrl")) {
-    const extension = this.originalFileUrl.split(".").pop().toLowerCase();
-    if (["jpg", "jpeg", "png", "svg", "ai", "pdf", "eps"].includes(extension)) {
-      this.fileType = extension === "jpeg" ? "jpg" : extension;
-    }
+  if (!this.userId && !this.sessionId) {
+    return next(new Error("Design requires either userId or sessionId"));
   }
   next();
 });
-
-designSchema.methods.incrementUsage = function () {
-  this.usageCount += 1;
-  this.lastUsed = new Date();
-  return this.save();
-};
 
 designSchema.plugin(toJSON);
 
