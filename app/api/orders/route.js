@@ -4,6 +4,24 @@ import connectMongo from "@/libs/mongoose";
 import Order from "@/models/Order";
 import User from "@/models/User";
 
+/**
+ * ⚠️ DEUDA TÉCNICA — endpoints actualmente NO funcionales en producción.
+ *
+ * Bug raíz: `auth()` (libs/simple-auth.js) devuelve { name, email, role }
+ * sin `id`. `User.findById(session.user.id)` siempre será null porque el
+ * sistema admin es hardcoded en env vars, no hay tabla `User` con admins.
+ *
+ * Estos endpoints fueron diseñados para 1-orden-por-checkout-individual del
+ * código heredado. El sub-proyecto #2 (Stripe checkout) los va a refactorizar:
+ *   - Order soportará múltiples items (uno por CartItem del Cart)
+ *   - Auth de pedidos del cliente: por sessionId/orderNumber, no por User
+ *   - Admin endpoints separados a /api/admin/orders/*
+ *
+ * NO TOCAR este archivo hasta sub-proyecto Stripe. Si algún caller falla
+ * (admin GalleryManager o flow checkout legacy), aceptar el fallo: nada
+ * en producción depende de esto todavía.
+ */
+
 // GET - Obtener pedidos (con filtros opcionales)
 export async function GET(req) {
   try {
