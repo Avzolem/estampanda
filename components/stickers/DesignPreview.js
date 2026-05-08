@@ -1,6 +1,10 @@
 "use client";
-import { useMemo, useState } from "react";
-import { removeBackgroundFromUrl, isBackgroundRemovalSupported } from "@/libs/background-removal";
+import { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  removeBackgroundFromUrl,
+  isBackgroundRemovalSupported,
+} from "@/libs/background-removal";
 import { uploadProcessedToCloudinary } from "@/libs/cloudinary-client";
 
 export default function DesignPreview({
@@ -9,10 +13,22 @@ export default function DesignPreview({
   size,
   cutType,
   totalPrice,
+  unitPrice,
+  quantity,
   onAddToCart,
   onProcessed,
   isAdding = false,
 }) {
+  // "original" | "processed" — qué versión mostrar cuando ambas existen
+  const [activeView, setActiveView] = useState("original");
+
+  const hasProcessed = !!designFile?.processedFileUrl;
+
+  // Si llega una versión procesada por primera vez, saltar a verla
+  useEffect(() => {
+    if (hasProcessed) setActiveView("processed");
+  }, [hasProcessed]);
+
   const dpi = useMemo(() => {
     if (!designFile?.dimensions || !size?.width) return null;
     return Math.round((designFile.dimensions.width / size.width) * 2.54);
@@ -20,95 +36,213 @@ export default function DesignPreview({
 
   const dpiStatus = useMemo(() => {
     if (dpi === null) return null;
-    if (dpi >= 300) return { color: "green", label: `${dpi} DPI · Excelente` };
-    if (dpi >= 200) return { color: "amber", label: `${dpi} DPI · Aceptable` };
-    return { color: "red", label: `${dpi} DPI · Puede pixelarse` };
+    if (dpi >= 300) {
+      return {
+        tone: "green",
+        label: `${dpi} DPI`,
+        msg: "Calidad de impresión excelente",
+      };
+    }
+    if (dpi >= 200) {
+      return {
+        tone: "amber",
+        label: `${dpi} DPI`,
+        msg: "Calidad aceptable. Para mejor resultado usa al menos 300 DPI.",
+      };
+    }
+    return {
+      tone: "red",
+      label: `${dpi} DPI`,
+      msg: "Tu diseño puede verse pixelado a este tamaño. Considera reducir las dimensiones del sticker.",
+    };
   }, [dpi]);
 
-  return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Vista Previa</h2>
+  const displayUrl = useMemo(() => {
+    if (!designFile) return null;
+    if (activeView === "processed" && hasProcessed) {
+      return designFile.processedFileUrl;
+    }
+    return designFile.originalUrl || designFile.preview;
+  }, [designFile, activeView, hasProcessed]);
 
-      <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
-        {designFile?.preview ? (
-          <div
-            style={{
-              clipPath: getCutPath(cutType),
-              width: "70%",
-              height: "70%",
-              background: `url(${designFile.preview}) center/contain no-repeat`,
-              ...getMaterialEffect(material),
-            }}
-          />
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Vista Previa</h2>
+
+        {hasProcessed && (
+          <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden text-xs">
+            <button
+              onClick={() => setActiveView("original")}
+              className={`px-3 py-1.5 transition-colors ${
+                activeView === "original"
+                  ? "bg-[#275D5C] text-white"
+                  : "bg-white text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              Original
+            </button>
+            <button
+              onClick={() => setActiveView("processed")}
+              className={`px-3 py-1.5 transition-colors ${
+                activeView === "processed"
+                  ? "bg-[#275D5C] text-white"
+                  : "bg-white text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              Sin fondo
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="relative aspect-square bg-[conic-gradient(at_50%_50%,_#f3f4f6_0_25%,_#ffffff_25%_50%,_#f3f4f6_50%_75%,_#ffffff_75%)] bg-[length:24px_24px] rounded-xl flex items-center justify-center overflow-hidden">
+        {displayUrl ? (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${activeView}-${cutType?.id ?? ""}-${material?.id ?? ""}`}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              style={{
+                clipPath: getCutPath(cutType),
+                width: "70%",
+                height: "70%",
+                background: `url(${displayUrl}) center/contain no-repeat`,
+                ...getMaterialEffect(material),
+              }}
+            />
+          </AnimatePresence>
         ) : (
-          <p className="text-gray-400">Sube un diseño para previsualizarlo</p>
+          <p className="text-gray-400 text-sm sm:text-base">
+            Sube un diseño para previsualizarlo
+          </p>
         )}
 
         {dpiStatus && (
-          <div
-            className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold ${
-              dpiStatus.color === "green"
-                ? "bg-green-100 text-green-800"
-                : dpiStatus.color === "amber"
-                ? "bg-amber-100 text-amber-800"
-                : "bg-red-100 text-red-800"
+          <motion.div
+            key={dpiStatus.tone}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`absolute top-3 right-3 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm ${
+              dpiStatus.tone === "green"
+                ? "bg-green-100 text-green-800 border border-green-200"
+                : dpiStatus.tone === "amber"
+                ? "bg-amber-100 text-amber-800 border border-amber-200"
+                : "bg-red-100 text-red-800 border border-red-200"
             }`}
           >
             {dpiStatus.label}
-          </div>
+          </motion.div>
         )}
 
         {size && (
-          <div className="absolute bottom-4 left-4 right-4 text-center text-xs text-gray-600">
+          <div className="absolute bottom-3 left-3 right-3 text-center text-[11px] sm:text-xs text-gray-500 bg-white/70 rounded-md py-1">
             ← {size.width} cm × {size.height} cm →
           </div>
         )}
       </div>
 
+      {dpiStatus && dpiStatus.tone !== "green" && (
+        <motion.p
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className={`mt-3 text-xs sm:text-sm ${
+            dpiStatus.tone === "amber" ? "text-amber-700" : "text-red-700"
+          }`}
+        >
+          ⚠ {dpiStatus.msg}
+        </motion.p>
+      )}
+
       <div className="mt-6 flex flex-col gap-3">
-        <div className="flex justify-between text-lg">
-          <span>Total:</span>
-          <span className="font-bold text-[#275D5C]">
-            ${totalPrice ? totalPrice.toFixed(2) : "0.00"} MXN
-          </span>
+        <div className="flex justify-between items-baseline">
+          <div>
+            <p className="text-xs text-gray-500">Precio unitario</p>
+            <p className="text-base font-semibold text-gray-700">
+              ${unitPrice ? unitPrice.toFixed(2) : "0.00"} MXN
+              {quantity > 1 && (
+                <span className="text-xs text-gray-400 ml-1">× {quantity}</span>
+              )}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-gray-500">Total</p>
+            <motion.p
+              key={totalPrice}
+              initial={{ scale: 1.1, color: "#3B7F7E" }}
+              animate={{ scale: 1, color: "#275D5C" }}
+              className="text-2xl sm:text-3xl font-bold text-[#275D5C]"
+            >
+              ${totalPrice ? totalPrice.toFixed(2) : "0.00"}
+            </motion.p>
+          </div>
         </div>
 
-        <BackgroundRemovalButton design={designFile} onProcessed={onProcessed} />
+        <BackgroundRemovalButton
+          design={designFile}
+          onProcessed={onProcessed}
+          hasProcessed={hasProcessed}
+        />
 
         <button
           onClick={onAddToCart}
           disabled={!designFile || !material || !size || !cutType || isAdding}
-          className="w-full px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-[#275D5C] hover:bg-[#3B7F7E] disabled:bg-gray-300 text-white rounded-lg font-semibold transition-colors"
+          className="w-full px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-[#275D5C] hover:bg-[#3B7F7E] disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-colors shadow-sm hover:shadow-md"
         >
           {isAdding ? "Añadiendo…" : "Añadir al carrito"}
         </button>
+
+        {(!material || !size || !cutType) && designFile && (
+          <p className="text-xs text-center text-gray-400">
+            Completa material, tamaño y tipo de corte para continuar
+          </p>
+        )}
       </div>
     </div>
   );
 }
 
-function BackgroundRemovalButton({ design, onProcessed }) {
-  const [state, setState] = useState("idle"); // idle | loading | uploading | done | error
+function BackgroundRemovalButton({ design, onProcessed, hasProcessed }) {
+  const [state, setState] = useState("idle"); // idle | loading | uploading | error
   const [percent, setPercent] = useState(0);
   const [phase, setPhase] = useState("");
 
-  if (!design || !isBackgroundRemovalSupported()) return null;
+  if (!design) return null;
+
+  // Si ya hay versión procesada, ofrecer reprocesar (re-runs el modelo).
+  // Si no soporta WASM SIMD, no mostrar el botón.
+  const supported = isBackgroundRemovalSupported();
+  if (!supported) {
+    return (
+      <p className="text-xs text-center text-gray-400">
+        Tu navegador no soporta procesamiento de imagen avanzado.
+      </p>
+    );
+  }
 
   const handleClick = async () => {
     setState("loading");
+    setPercent(0);
     try {
       setPhase("Preparando herramienta…");
-      const blob = await removeBackgroundFromUrl(design.originalUrl, (key, pct) => {
-        setPercent(pct);
-        if (key.startsWith("fetch:")) setPhase("Descargando IA…");
-        else if (key.startsWith("compute:")) setPhase("Quitando fondo…");
-      });
+      const blob = await removeBackgroundFromUrl(
+        design.originalUrl,
+        (key, pct) => {
+          setPercent(pct);
+          if (key.startsWith("fetch:")) setPhase("Descargando IA (1ª vez ~10s)…");
+          else if (key.startsWith("compute:")) setPhase("Quitando fondo…");
+        }
+      );
 
       setState("uploading");
       setPhase("Guardando resultado…");
-      const { publicId, url } = await uploadProcessedToCloudinary(blob, design.name || "sticker");
+      const { publicId, url } = await uploadProcessedToCloudinary(
+        blob,
+        design.name || "sticker"
+      );
 
-      // Notificar al server
       const res = await fetch(`/api/designs/${design.designId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -121,7 +255,8 @@ function BackgroundRemovalButton({ design, onProcessed }) {
       if (!res.ok) throw new Error("Failed to save processed");
       const data = await res.json();
 
-      setState("done");
+      setState("idle");
+      setPercent(0);
       onProcessed?.({ ...data.design, preview: url });
     } catch (e) {
       console.error(e);
@@ -129,24 +264,51 @@ function BackgroundRemovalButton({ design, onProcessed }) {
     }
   };
 
-  if (state === "idle") {
+  if (state === "loading" || state === "uploading") {
     return (
-      <button
-        onClick={handleClick}
-        className="w-full px-6 py-3 sm:px-8 sm:py-4 bg-white border-2 border-[#275D5C] text-[#275D5C] rounded-lg font-semibold hover:bg-[#F5E6D3]/30"
-      >
-        ✨ Quitar fondo
-      </button>
+      <div className="rounded-lg bg-[#F5E6D3]/40 border border-[#F5E6D3] p-4">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-sm font-semibold text-gray-800">{phase}</p>
+          <p className="text-sm font-bold text-[#275D5C]">{percent}%</p>
+        </div>
+        <div className="w-full bg-white/70 rounded-full h-2 overflow-hidden">
+          <motion.div
+            className="h-full bg-[#275D5C]"
+            initial={{ width: 0 }}
+            animate={{ width: `${percent}%` }}
+            transition={{ duration: 0.2 }}
+          />
+        </div>
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          🔒 Tu imagen no sale de tu navegador
+        </p>
+      </div>
     );
   }
+
   if (state === "error") {
-    return <p className="text-sm text-red-600">No pudimos procesar. Intenta con un PNG transparente.</p>;
+    return (
+      <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-center">
+        <p className="text-sm text-red-700 mb-2">
+          No pudimos procesar. Intenta con un PNG transparente o reintenta.
+        </p>
+        <button
+          onClick={handleClick}
+          className="text-xs underline text-red-700 hover:text-red-900"
+        >
+          Reintentar
+        </button>
+      </div>
+    );
   }
+
   return (
-    <div className="text-center py-4">
-      <p className="text-sm font-semibold text-gray-700">{phase} {percent > 0 ? `${percent}%` : ""}</p>
-      <p className="text-xs text-gray-500 mt-1">🔒 Tu imagen no sale de tu navegador</p>
-    </div>
+    <button
+      onClick={handleClick}
+      className="w-full px-6 py-3 sm:px-8 sm:py-4 bg-white border-2 border-[#275D5C] text-[#275D5C] rounded-lg font-semibold hover:bg-[#F5E6D3]/30 transition-colors"
+    >
+      {hasProcessed ? "🔄 Procesar de nuevo" : "✨ Quitar fondo"}
+    </button>
   );
 }
 
