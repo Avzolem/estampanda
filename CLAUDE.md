@@ -2,58 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 🎯 PROYECTO ACTUAL: ESTAMPANDA - Plataforma de Stickers Personalizados
+## 🎯 PROYECTO: ESTAMPANDA - Plataforma de Stickers Personalizados
 
-### 🚨 PENDIENTES CRÍTICOS PARA PRODUCCIÓN
+Plataforma e-commerce para crear y vender stickers personalizados (Next.js 15, App Router). Incluye landing animada, upload de diseños, configurador de materiales/tamaños/cortes, calculadora de precios dinámica y panel de administración.
 
-**IMPORTANTE**: El frontend está 90% completo, pero faltan las integraciones reales:
+### 📍 Estado del Proyecto
 
-1. **Cloudinary** (FileUploader.js):
+**Fuente de verdad: `STATUS.md`** — leer SIEMPRE al iniciar sesión. Contiene el estado de sprints, integraciones pendientes (Cloudinary real, Stripe producción, emails), vulnerabilidades y stack actualizado. No duplicar ese contenido aquí para evitar desincronización.
 
-   - Configurar API keys reales
-   - Implementar upload real en lugar de URL.createObjectURL
+### 📚 Documentos de Referencia
 
-2. **Stripe** (checkout/page.js):
-
-   - Configurar keys de producción
-   - Crear endpoint `/api/stripe/create-checkout`
-   - Implementar webhook `/api/stripe/webhook`
-
-3. **MongoDB** - Crear APIs:
-
-   - `/api/orders` - CRUD de pedidos
-   - `/api/upload` - Gestión de uploads
-   - `/api/admin/orders` - Panel admin
-
-4. **Emails** (Resend):
-   - Configurar plantillas de confirmación
-   - Email de cambio de estado
-
-### 📍 ÚLTIMO PROGRESO (15 Agosto 2025)
-
-- ✅ Sprint 0: Setup y Configuración - COMPLETO
-- ✅ Sprint 1: Sistema de Diseño - COMPLETO
-- ✅ Sprint 2: Landing y Catálogo - COMPLETO
-- ✅ Sprint 3: Upload y Checkout - COMPLETO (falta integración)
-- 🔄 **SPRINT ACTUAL**: Sprint 4 - Panel Admin Básico
-  - Lista de pedidos
-  - Cambio de estados
-  - Exportar CSV
-
-### 🎨 CONTEXTO DEL PROYECTO
-
-Estamos construyendo una plataforma de venta de stickers personalizados con:
-
-- Hero page animado con temática de stickers
-- Sistema de upload y diseño de stickers
-- Configurador de materiales, tamaños y tipos de corte
-- Calculadora de precios dinámica
-- Panel de administración completo
-
-### 📚 DOCUMENTOS DE REFERENCIA
-
-- Ver `Plan de Construccion.md` para el roadmap completo
-- Ver `COMPONENTS_STRUCTURE.md` para entender la arquitectura actual
+- `STATUS.md` — estado actual y pendientes
+- `Plan de Construccion.md` — roadmap completo
+- `COMPONENTS_STRUCTURE.md` — inventario de componentes y rutas (nota: contiene secciones de plantilla original — blog, NextAuth — que no aplican; ver "Architecture Overview" más abajo para lo que realmente existe)
 
 ## ⚠️ REGLAS CRÍTICAS - NUNCA ROMPER ESTAS REGLAS
 
@@ -207,96 +168,101 @@ npm run postbuild
 
 ### Environment Setup
 
-1. **Node Version**: Requires Node.js 20+ (check `.nvmrc`)
-2. Copy `.env.example` to `.env.local`
-3. Fill in required environment variables:
-   - `NEXTAUTH_SECRET`: Generate with `openssl rand -base64 32`
-   - `NEXTAUTH_URL`: Set to `http://localhost:3000` for development
-   - `MONGODB_URI`: MongoDB connection string
-   - `GOOGLE_ID` & `GOOGLE_SECRET`: From Google Cloud Console OAuth 2.0 credentials
-   - `STRIPE_PUBLIC_KEY` & `STRIPE_SECRET_KEY`: From Stripe Dashboard (use test keys for development)
-   - `STRIPE_WEBHOOK_SECRET`: From Stripe webhook endpoint settings (configure at `/api/webhook/stripe`)
-   - `RESEND_API_KEY`: From Resend Dashboard for transactional emails
-   - `EMAIL_FROM`: Default sender email address
+1. **Node Version**: Node.js 20+ (ver `.nvmrc`)
+2. Copiar `.env.example` a `.env.local`
+3. Variables realmente usadas en el código:
+   - `MONGODB_URI` — connection string de MongoDB (consumida en `libs/mongoose.js`)
+   - `NEXTAUTH_SECRET` — secret para firmar JWT del admin (generar con `openssl rand -base64 32`). El nombre se mantiene por compatibilidad histórica; **no** hay NextAuth instalado.
+   - `ADMIN_USERNAME` / `ADMIN_PASSWORD` — credenciales del único admin. **Hoy están hardcoded** en `libs/simple-auth.js:5-6`; pendiente moverlas a env (viola la regla de seguridad nº 10).
+   - `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` / `CLOUDINARY_UPLOAD_PRESET` — usadas en `libs/cloudinary.js` y `app/api/upload/*`
+   - `STRIPE_PUBLIC_KEY` / `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` — `libs/stripe.js`, `app/api/stripe/*`, `app/api/webhook/stripe/*`
+   - `NEXT_PUBLIC_*` equivalents donde aplique (Stripe public)
+
+> Nota: `.env.example` heredado de la plantilla ShipFast lista `GOOGLE_ID`, `GOOGLE_SECRET`, `RESEND_API_KEY`, etc. Esas integraciones **no existen** en el código actual y pueden ignorarse hasta que se reactiven.
 
 ## Architecture Overview
 
-Esta es una aplicación Next.js 14 (App Router) para el e-commerce de Estampanda con características completas para venta de stickers personalizados.
+Aplicación **Next.js 15** (App Router, React 19) para el e-commerce de stickers personalizados.
 
 ### Core Stack
 
-- **Frontend**: Next.js 14 with React 19, Tailwind CSS + DaisyUI
-- **Auth**: NextAuth.js v5 beta (Google OAuth + Magic Links)
-- **Database**: MongoDB with Mongoose ODM
-- **Payments**: Stripe (subscriptions + customer portal)
-- **Email**: Resend for transactional emails
-- **Support**: Crisp chat integration
+- **Framework**: Next.js 15.4.x + React 19, Tailwind CSS 4 + DaisyUI 5
+- **Animación**: Framer Motion
+- **Auth admin**: JWT propio (sin NextAuth) — ver `libs/simple-auth.js`
+- **DB**: MongoDB + Mongoose 8
+- **Pagos**: Stripe (checkout único por pedido — no suscripciones)
+- **Imágenes**: Cloudinary (upload de diseños del cliente) + `sharp` para procesado local
+- **Soporte**: Crisp chat opcional vía `components/ButtonSupport.js` (id en `config.js`, hoy vacío)
+- **Email**: ninguno actualmente — Resend fue eliminado (ver STATUS.md, 4 Feb 2026). `config.js` aún conserva un bloque `resend` con direcciones, pero no hay SDK instalado.
 
-### Key Architectural Decisions
+### Decisiones arquitectónicas clave
 
-1. **App Router Structure**: Uses Next.js 14 app directory with:
+1. **Routing (App Router)**:
+   - `/app` con grupo `(private)/admin` para rutas autenticadas
+   - Páginas públicas: `/`, `/stickers`, `/products`, `/precios`, `/muestras`, `/how-it-works`, `/contact`, `/login`, `/privacy-policy`, `/tos`
+   - Sin sistema de blog (a pesar de lo que diga `COMPONENTS_STRUCTURE.md`)
+   - Alias de imports `@/*` configurado en `jsconfig.json`
 
-   - `(private)/` group for authenticated routes
-   - Parallel route groups for user and admin dashboards
-   - API routes in `/app/api/`
-   - Path imports using `@/*` alias
+2. **Auth (admin único)**:
+   - `libs/simple-auth.js` emite un JWT firmado con `NEXTAUTH_SECRET` y lo guarda en cookie `auth-token` (httpOnly, 7 días)
+   - `middleware.js` protege `/admin/*` exigiendo presencia del token; la verificación real (jwt.verify) ocurre en server components / API
+   - Helpers exportados: `login`, `logout`, `getSession`, `requireAuth`, `auth` (alias), `verifyAuth`
+   - Endpoints: `app/api/auth/login/route.js`, `app/api/auth/logout/route.js`
+   - **No hay** `/api/auth/[...nextauth]`, MongoDB adapter, Google OAuth, ni magic links
 
-2. **Authentication Flow**:
+3. **Modelos Mongoose** (`/models`):
+   - `User.js` — cuenta de usuario (incluye campos heredados para Stripe customer y rol; el sistema de auth no los usa hoy)
+   - `Order.js` — pedidos de stickers
+   - `Design.js` — diseños subidos por el cliente
+   - `models/plugins/toJSON.js` — serializador JSON consistente para respuestas API
 
-   - NextAuth v5 configuration in `/libs/next-auth.js`
-   - MongoDB adapter for session storage
-   - Role-based access control (user, admin, editor, moderator)
-   - JWT strategy with database sessions
-   - Protected routes use session checks from `libs/next-auth.js`
+4. **Pagos (Stripe)**:
+   - Pago único por pedido, no suscripción (ver `config.js:18-43`, `priceId` placeholder según `NODE_ENV`)
+   - Endpoints: `app/api/stripe/create-checkout/`, `app/api/stripe/create-portal/`
+   - Webhook con verificación de firma: `app/api/webhook/stripe/`
+   - El precio se calcula dinámicamente en `components/PriceCalculator.js` según material, tamaño y cantidad
 
-3. **Database Architecture**:
+5. **Upload de diseños (Cloudinary)**:
+   - `libs/cloudinary.js` envuelve el SDK
+   - `app/api/upload/route.js` y `app/api/upload/design/route.js` manejan subidas
+   - `app/api/test-cloudinary/` para pruebas de conectividad
+   - El componente cliente que aún muestra mock con `URL.createObjectURL` está en `components/stickers/FileUploader.js` (ver pendientes en STATUS.md)
 
-   - Models in `/models/` directory with Mongoose ODM
-   - User model with Stripe customer integration and role management
-   - Lead capture model for waitlist functionality
-   - Custom JSON serialization plugin for clean API responses
+6. **Organización de componentes**:
+   - `/components` — compartidos (Header, Footer, Hero, PriceCalculator, ButtonSupport, LayoutClient)
+   - `/components/stickers` — específicos del flujo de stickers (FileUploader, etc.)
+   - `/components/admin` — UI de administración
+   - `/components/common` — primitivas (LoadingCircle, Pagination, PageSizeSelect)
+   - Componentes específicos de ruta colocalizados en sus carpetas de `/app`
 
-4. **Payment Integration**:
+### Configuración central (`config.js`)
 
-   - Stripe checkout flow: `/app/api/stripe/create-checkout/`
-   - Webhook handling: `/app/api/webhook/stripe/` with signature verification
-   - Customer portal: `/app/api/stripe/create-portal/`
-   - Plans configured in `config.js`
-   - Automatic access management based on payment status
+- Metadatos de app (`appName`, `domainName`, descripción)
+- Configuración de Crisp (id, rutas donde mostrar)
+- Plan único de Stripe para pedidos de stickers
+- Bloque `resend` legacy con direcciones (no se envía mail hoy)
+- Tema DaisyUI personalizado `estampanda` con paleta corporativa (`colors`)
 
-5. **Component Organization**:
-   - Shared components in `/components/`
-   - Route-specific components colocated with pages
-   - Blog components in `/app/blog/_assets/components/`
+### Patrón de rutas API
 
-### Configuration Management
+Endpoints existentes en `/app/api`:
 
-**Central config file**: `config.js` contains:
+- `auth/login`, `auth/logout` — login JWT del admin
+- `lead` — captura de email para waitlist
+- `orders`, `orders/[id]` — CRUD de pedidos
+- `upload`, `upload/design` — subidas a Cloudinary
+- `stripe/create-checkout`, `stripe/create-portal`
+- `webhook/stripe` — verificación de firma + actualización de estado
+- `admin/dashboard`, `admin/users/[id]` — operaciones protegidas
+- `test-cloudinary` — diagnóstico
 
-- App metadata and branding
-- Stripe pricing plans configuration
-- Email settings and templates
-- Theme/color customization
-- Authentication redirect paths
-- Customer support settings (Crisp)
+### Estilos
 
-### API Route Patterns
+- Tailwind CSS v4 con `@tailwindcss/postcss`
+- DaisyUI 5 con tema custom `estampanda`
+- Animaciones custom (wiggle, popup, shimmer, appearFromRight) y Framer Motion para transiciones de página/hero
+- Glass morphism en el header (ver commits recientes)
 
-All API routes follow RESTful conventions:
+### Sin framework de testing
 
-- `/api/auth/[...nextauth]/` - NextAuth.js handlers
-- `/api/lead` - Lead capture and waitlist
-- `/api/stripe/*` - Payment operations
-- `/api/admin/*` - Admin operations (protected)
-- `/api/webhook/*` - External webhooks
-
-### Styling Approach
-
-- Tailwind CSS with custom animations (wiggle, popup, shimmer, appearFromRight)
-- DaisyUI component classes with theme support
-- Light/dark theme switching
-- Custom gradients and glass morphism effects
-
-### No Testing Framework
-
-Currently no automated tests - consider adding Jest/React Testing Library for unit tests and Playwright for E2E tests when needed.
+No hay tests automatizados. Antes de declarar un cambio "completo" en flujos críticos (upload, checkout, webhooks), validar manualmente en `npm run dev` y registrar lo probado en el commit.
