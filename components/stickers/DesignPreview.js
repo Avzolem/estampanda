@@ -1,5 +1,7 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { removeBackgroundFromUrl, isBackgroundRemovalSupported } from "@/libs/background-removal";
+import { uploadProcessedToCloudinary } from "@/libs/cloudinary-client";
 
 export default function DesignPreview({
   designFile,
@@ -8,8 +10,7 @@ export default function DesignPreview({
   cutType,
   totalPrice,
   onAddToCart,
-  // eslint-disable-next-line no-unused-vars
-  onProcessed, // reservado para Fase D (botón "Quitar fondo")
+  onProcessed,
   isAdding = false,
 }) {
   const dpi = useMemo(() => {
@@ -72,6 +73,8 @@ export default function DesignPreview({
           </span>
         </div>
 
+        <BackgroundRemovalButton design={designFile} onProcessed={onProcessed} />
+
         <button
           onClick={onAddToCart}
           disabled={!designFile || !material || !size || !cutType || isAdding}
@@ -80,6 +83,69 @@ export default function DesignPreview({
           {isAdding ? "Añadiendo…" : "Añadir al carrito"}
         </button>
       </div>
+    </div>
+  );
+}
+
+function BackgroundRemovalButton({ design, onProcessed }) {
+  const [state, setState] = useState("idle"); // idle | loading | uploading | done | error
+  const [percent, setPercent] = useState(0);
+  const [phase, setPhase] = useState("");
+
+  if (!design || !isBackgroundRemovalSupported()) return null;
+
+  const handleClick = async () => {
+    setState("loading");
+    try {
+      setPhase("Preparando herramienta…");
+      const blob = await removeBackgroundFromUrl(design.originalUrl, (key, pct) => {
+        setPercent(pct);
+        if (key.startsWith("fetch:")) setPhase("Descargando IA…");
+        else if (key.startsWith("compute:")) setPhase("Quitando fondo…");
+      });
+
+      setState("uploading");
+      setPhase("Guardando resultado…");
+      const { publicId, url } = await uploadProcessedToCloudinary(blob, design.name || "sticker");
+
+      // Notificar al server
+      const res = await fetch(`/api/designs/${design.designId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          processedFileUrl: url,
+          processedPublicId: publicId,
+          backgroundRemoved: true,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to save processed");
+      const data = await res.json();
+
+      setState("done");
+      onProcessed?.({ ...data.design, preview: url });
+    } catch (e) {
+      console.error(e);
+      setState("error");
+    }
+  };
+
+  if (state === "idle") {
+    return (
+      <button
+        onClick={handleClick}
+        className="w-full px-6 py-3 sm:px-8 sm:py-4 bg-white border-2 border-[#275D5C] text-[#275D5C] rounded-lg font-semibold hover:bg-[#F5E6D3]/30"
+      >
+        ✨ Quitar fondo
+      </button>
+    );
+  }
+  if (state === "error") {
+    return <p className="text-sm text-red-600">No pudimos procesar. Intenta con un PNG transparente.</p>;
+  }
+  return (
+    <div className="text-center py-4">
+      <p className="text-sm font-semibold text-gray-700">{phase} {percent > 0 ? `${percent}%` : ""}</p>
+      <p className="text-xs text-gray-500 mt-1">🔒 Tu imagen no sale de tu navegador</p>
     </div>
   );
 }

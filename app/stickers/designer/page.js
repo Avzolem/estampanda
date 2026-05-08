@@ -67,6 +67,7 @@ export default function StickerDesignerPage() {
               totalPrice={totalPrice}
               onAddToCart={handleAdd}
               isAdding={isAdding}
+              onProcessed={(updated) => setDesign({ ...design, ...updated })}
             />
           </div>
           <div className="space-y-6">
