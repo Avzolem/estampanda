@@ -2,19 +2,27 @@
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
-const ADMIN_USER = 'admin';
-const ADMIN_PASSWORD = '***REDACTED***';
-const JWT_SECRET = process.env.NEXTAUTH_SECRET || '***REDACTED***';
+function getEnv(name) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Variable de entorno requerida no configurada: ${name}`);
+  }
+  return value;
+}
 
 export async function login(username, password) {
-  if (username === ADMIN_USER && password === ADMIN_PASSWORD) {
+  const adminUser = getEnv('ADMIN_USERNAME');
+  const adminPassword = getEnv('ADMIN_PASSWORD');
+  const jwtSecret = getEnv('NEXTAUTH_SECRET');
+
+  if (username === adminUser && password === adminPassword) {
     const token = jwt.sign(
-      { 
-        username: ADMIN_USER, 
+      {
+        username: adminUser,
         role: 'admin',
         email: 'admin@estampanda.com'
       },
-      JWT_SECRET,
+      jwtSecret,
       { expiresIn: '7d' }
     );
     
@@ -26,7 +34,7 @@ export async function login(username, password) {
       maxAge: 60 * 60 * 24 * 7 // 7 días
     });
     
-    return { success: true, user: { username: ADMIN_USER, role: 'admin' } };
+    return { success: true, user: { username: adminUser, role: 'admin' } };
   }
   
   return { success: false, error: 'Credenciales inválidas' };
@@ -45,7 +53,7 @@ export async function getSession() {
     
     if (!token) return null;
     
-    const decoded = jwt.verify(token.value, JWT_SECRET);
+    const decoded = jwt.verify(token.value, getEnv('NEXTAUTH_SECRET'));
     return {
       user: {
         name: decoded.username,
